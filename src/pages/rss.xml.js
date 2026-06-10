@@ -4,7 +4,7 @@ import { SITE_DESCRIPTION, SITE_LANG, SITE_TITLE } from '../consts';
 import { withBase } from '../utils/paths';
 
 export async function GET(context) {
-  const posts = (await getCollection('posts'))
+  const projects = (await getCollection('projects'))
     .filter((p) => !p.data.draft)
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
@@ -13,11 +13,11 @@ export async function GET(context) {
     description: SITE_DESCRIPTION,
     site: new URL(withBase('/'), context.site),
     customData: `<language>${SITE_LANG}</language>`,
-    items: posts.map((post) => ({
-      title: post.data.title,
-      description: post.data.description,
-      pubDate: post.data.pubDate,
-      link: withBase(`/posts/${post.id}/`),
+    items: projects.map((project) => ({
+      title: project.data.title,
+      description: project.data.description,
+      pubDate: project.data.pubDate,
+      link: withBase(`/projects/${project.id}/`),
     })),
   });
 }

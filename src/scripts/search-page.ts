@@ -65,7 +65,7 @@ async function initSearchPage() {
       element: '#search',
       showSubResults: true,
       translations: {
-        placeholder: 'Search posts...',
+        placeholder: 'Search projects...',
         zero_results: 'No results for [QUERY]',
       },
     });

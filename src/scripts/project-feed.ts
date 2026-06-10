@@ -1,5 +1,5 @@
-function initPostFeeds(root: ParentNode = document) {
-  root.querySelectorAll<HTMLElement>('[data-post-feed]').forEach((feed) => {
+function initProjectFeeds(root: ParentNode = document) {
+  root.querySelectorAll<HTMLElement>('[data-project-feed]').forEach((feed) => {
     if (feed.dataset.ready === 'true') return;
     feed.dataset.ready = 'true';
 
@@ -22,8 +22,10 @@ function initPostFeeds(root: ParentNode = document) {
 
     const matchesFilter = (item: HTMLElement) => {
       if (active === 'all') return true;
-      if (active.startsWith('category:')) {
-        return item.dataset.category === active.slice('category:'.length);
+      if (active.startsWith('tag:')) {
+        const tag = active.slice('tag:'.length);
+        const tags = (item.dataset.tags || '').split(',');
+        return tags.includes(tag);
       }
       return false;
     };
@@ -182,6 +184,6 @@ function initPostFeeds(root: ParentNode = document) {
   });
 }
 
-export function mountPostFeeds() {
-  initPostFeeds();
+export function mountProjectFeeds() {
+  initProjectFeeds();
 }

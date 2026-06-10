@@ -2,51 +2,64 @@
 import '../styles/pages/home.css';
 import { Image, getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import FeaturedPostGrid from '../components/FeaturedPostGrid.astro';
-import FormattedDate from '../components/FormattedDate.astro';
+import FeaturedProjectGrid from '../components/FeaturedProjectGrid.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { DATE_LOCALE, SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import SocialIsland from '../components/SocialIsland.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getUiText } from '../ui';
 import { withBase } from '../utils/paths';
+import config from '../../astro-theme-config';
 const tr = getUiText();
 
-const posts = (await getCollection('posts'))
+const slugMap: Record<string, string> = {
+  'React.js': 'react',
+  'Next.js': 'nextdotjs',
+  'Node.js': 'nodedotjs',
+  'Express.js': 'express',
+  NestJS: 'nestjs',
+  'Tailwind CSS': 'tailwindcss',
+  JavaScript: 'javascript',
+  TypeScript: 'typescript',
+  Python: 'python',
+  Flask: 'flask',
+  Django: 'django',
+  PHP: 'php',
+  FastAPI: 'fastapi',
+  MongoDB: 'mongodb',
+  MySQL: 'mysql',
+  Firebase: 'firebase',
+  PostgresSQL: 'postgresql',
+  Docker: 'docker',
+  Git: 'git',
+  GitHub: 'github',
+  HTML: 'html5',
+  CSS: 'css3',
+  Redux: 'redux',
+  pandas: 'pandas',
+  'scikit-learn': 'scikitlearn',
+  Transformers: 'huggingface',
+  Graphql: 'graphql',
+  'CI/CD': 'githubactions',
+  'REST APIs': 'openai',
+  Agile: 'jira',
+};
+
+const projects = (await getCollection('projects'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const featured = posts.find((post) => post.data.homeFeatured) ?? posts[0];
-const heroCandidates = posts.filter((post) => post.id !== featured?.id);
-const pinnedHeroPosts = posts
-  .filter((post) => post.id !== featured?.id && post.data.homeHeroOrder)
-  .sort((a, b) => {
-    const orderDelta = (a.data.homeHeroOrder ?? 0) - (b.data.homeHeroOrder ?? 0);
-    if (orderDelta !== 0) return orderDelta;
-    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
-  });
-const fallbackHeroPosts = heroCandidates.filter((post) => !post.data.homeHeroOrder);
-const heroPosts = [...pinnedHeroPosts, ...fallbackHeroPosts].slice(0, 2);
-const heroDateFormatter = new Intl.DateTimeFormat(DATE_LOCALE, {
-  year: 'numeric',
-  month: 'short',
-  day: '2-digit',
-});
-const getHeroDateParts = (date: Date) => {
-  const parts = heroDateFormatter.formatToParts(date);
-  return {
-    label: heroDateFormatter.format(date),
-    parts,
-  };
-};
-const gridCandidates = posts.filter((post) => post.id !== featured?.id);
-const pinnedGridPosts = gridCandidates
-  .filter((post) => post.data.homeOrder)
+const featured = projects.find((project) => project.data.homeFeatured) ?? projects[0];
+const gridCandidates = projects.filter((project) => project.id !== featured?.id);
+const pinnedGridProjects = gridCandidates
+  .filter((project) => project.data.homeOrder)
   .sort((a, b) => {
     const orderDelta = (a.data.homeOrder ?? 0) - (b.data.homeOrder ?? 0);
     if (orderDelta !== 0) return orderDelta;
     return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
   });
-const fallbackGridPosts = gridCandidates.filter((post) => !post.data.homeOrder);
-const gridPosts = [...pinnedGridPosts, ...fallbackGridPosts].slice(0, 3);
+const fallbackGridProjects = gridCandidates.filter((project) => !project.data.homeOrder);
+const gridProjects = [...pinnedGridProjects, ...fallbackGridProjects].slice(0, 3);
+
 const featuredPlaceholder = featured?.data.heroImage
   ? await getImage({
       src: featured.data.heroImage,
@@ -63,60 +76,46 @@ const featuredPlaceholderStyle = featuredPlaceholder
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <main id="main-content" class="home-main">
     <section class="hero">
+      {
+        config.about.profileImage && (
+          <Image
+            src={config.about.profileImage}
+            alt={config.about.name}
+            width={100}
+            height={100}
+            class="hero-avatar"
+            loading="eager"
+          />
+        )
+      }
       <h1 class="hero-title">
-        <span class="hero-title-line">{tr.heroTitle}</span>
+        <span class="hero-title-line hero-name">{tr.heroTitle}</span>
         {
           tr.heroTitleLine2 && (
-            <span class="hero-title-line hero-title-line--accent">{tr.heroTitleLine2}</span>
+            <span class="hero-title-line hero-title-line--accent hero-role">{tr.heroTitleLine2}</span>
           )
         }
       </h1>
+
+      <div class="hero-status">
+        <span class="hero-status-dot" aria-hidden="true"></span>
+        Open to work
+      </div>
 
       <p class="hero-desc">{SITE_DESCRIPTION}</p>
 
       <div class="hero-divider" aria-hidden="true"></div>
 
-      {
-        heroPosts.length > 0 && (
-          <nav class="hero-recent" aria-label="Selected posts">
-            <div class="hero-recent-list">
-              {
-                heroPosts.map((post) => {
-                  const heroDate = getHeroDateParts(post.data.pubDate);
-
-                  return (
-                    <a href={withBase(`/posts/${post.id}/`)} class="hero-recent-item">
-                      <span class="hero-recent-main">
-                        <span class="hero-recent-title">{post.data.title}</span>
-                        <span class="hero-recent-arrow" aria-hidden="true">
-                          ↗
-                        </span>
-                      </span>
-                      <span class="hero-recent-date">
-                        <time datetime={post.data.pubDate.toISOString()} aria-label={heroDate.label}>{
-                          heroDate.parts.map((part) => (
-                            <span class={`hero-recent-date-${part.type}`}>{part.value}</span>
-                          ))
-                        }</time>
-                      </span>
-                    </a>
-                  );
-                })
-              }
-            </div>
-          </nav>
-        )
-      }
+      <div class="hero-social">
+        <SocialIsland />
+      </div>
     </section>
 
     {
       featured && (
-        <section class="featured-section">
-          <a href={withBase(`/posts/${featured.id}/`)} class="featured-card">
+        <section class="featured-section fade-in-on-scroll">
+          <a href={withBase(`/projects/${featured.id}/`)} class="featured-card">
             <div class="featured-text">
-              <p class="featured-meta">
-                <FormattedDate date={featured.data.pubDate} />
-              </p>
               <h2 class="featured-title">{featured.data.title}</h2>
               {featured.data.description && (
                 <p class="featured-desc">{featured.data.description}</p>
@@ -144,16 +143,71 @@ const featuredPlaceholderStyle = featuredPlaceholder
     }
 
     {
-      gridPosts.length > 0 && (
-        <section class="posts-section">
-          <div class="posts-header">
-            <a href={withBase('/posts')} class="view-all">
+      gridProjects.length > 0 && (
+        <section class="projects-section fade-in-on-scroll">
+          <div class="projects-header">
+            <a href={withBase('/projects')} class="view-all">
               {tr.viewAll}
             </a>
           </div>
-          <FeaturedPostGrid posts={gridPosts} />
+          <FeaturedProjectGrid projects={gridProjects} />
         </section>
       )
     }
+
+    <section class="about-teaser-section fade-in-on-scroll">
+      <div class="about-teaser-header">
+        <p class="about-teaser-eyebrow">About</p>
+        <a href={withBase('/about')} class="view-all">About me →</a>
+      </div>
+      <div class="about-teaser-body">
+        <p class="about-teaser-lead">{config.about.shortBio}</p>
+        <ul class="about-skills-grid">
+          {config.skills.map((category) => (
+            <li class="about-skills-category">
+              <p class="about-skills-label">{category.label}</p>
+              <div class="about-skills-tags">
+                {category.names.slice(0, 5).map((name) => {
+                  const slug = slugMap[name];
+                  return (
+                    <span class="skill-badge">
+                      {slug && (
+                        <img
+                          src={`https://cdn.simpleicons.org/${slug}/888888`}
+                          alt=""
+                          width="13"
+                          height="13"
+                          class="skill-icon"
+                          loading="lazy"
+                          onerror="this.style.display='none'"
+                        />
+                      )}
+                      {name}
+                    </span>
+                  );
+                })}
+                {category.names.length > 5 && (
+                  <span class="skill-badge skill-badge--more">+{category.names.length - 5}</span>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   </main>
 </BaseLayout>
+
+<style>
+  .hero-avatar {
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: var(--space-4);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .hero-social {
+    margin-top: var(--space-2);
+  }
+</style>

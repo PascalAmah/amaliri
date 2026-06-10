@@ -33,3 +33,11 @@ playwright-report/
 local-docs/
 .codex/
 .playwright-mcp/
+
+# kiro workspace
+.kiro/
+
+# zip archives and old version folders
+public/Portfolio-Website-V2-portfolio_v2.1.zip
+public/Portfolio-Website-V2-portfolio_v2.2.zip
+public/Portfolio-Website-V2-portfolio_v2.2/

@@ -1,0 +1,217 @@
+---
+import 'toc-rail/style.css';
+import '../styles/layouts/project.css';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import Comments from '../components/Comments.astro';
+import FeaturedProjectGrid from '../components/FeaturedProjectGrid.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import ImageLightbox from '../components/ImageLightbox.astro';
+import ScrollFocus from '../components/ScrollFocus.astro';
+import BaseLayout from './BaseLayout.astro';
+import { SITE_AUTHOR, SITE_LANG, SITE_TITLE } from '../consts';
+import { getUiText } from '../ui';
+import { withBase } from '../utils/paths';
+import { serializeScriptJson } from '../utils/serialize-script-json';
+
+type Props = CollectionEntry<'projects'>['data'] & {
+  readingTime?: number;
+  relatedProjects?: CollectionEntry<'projects'>[];
+  uiImages?: ImageMetadata[];
+};
+
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage,
+  readingTime,
+  focusEffect,
+  githubUrl,
+  liveUrl,
+  relatedProjects = [],
+  uiImages,
+  tags = [],
+  problem,
+  whatWasBuilt,
+  highlights,
+  challenges,
+} = Astro.props;
+
+const tr = getUiText();
+const projectsBase = withBase('/projects');
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const pubDateISO = pubDate.toISOString();
+const updatedDateISO = updatedDate?.toISOString();
+
+const jsonLd = serializeScriptJson({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: pubDateISO,
+  ...(updatedDateISO && { dateModified: updatedDateISO }),
+  url: canonicalURL.href,
+  ...(heroImage && { image: new URL(heroImage.src, Astro.site).href }),
+  author: { '@type': 'Person', name: SITE_AUTHOR },
+  publisher: { '@type': 'Organization', name: SITE_TITLE },
+  inLanguage: SITE_LANG,
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={heroImage}
+  type="article"
+  pubDate={pubDateISO}
+  updatedDate={updatedDateISO}
+  bodyClass="project-page"
+>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
+  </Fragment>
+
+  {focusEffect && <ScrollFocus variant={focusEffect} />}
+
+  <main id="main-content" class="project-main">
+    <article data-pagefind-body>
+      <a href={projectsBase} class="back-link">{tr.backLink}</a>
+
+      <header class="project-header">
+        <div class="project-accent"></div>
+        <h1 class="project-title" data-pagefind-meta="title">{title}</h1>
+        {description && <p class="project-description">{description}</p>}
+        {
+          (githubUrl || liveUrl) && (
+            <div class="action-buttons">
+              {githubUrl && (
+                <a href={githubUrl} target="_blank" rel="noopener noreferrer">
+                  GitHub
+                </a>
+              )}
+              {liveUrl && (
+                <a href={liveUrl} target="_blank" rel="noopener noreferrer">
+                  Live
+                </a>
+              )}
+            </div>
+          )
+        }
+        {
+          tags.length > 0 && (
+            <div class="project-tags">
+              {tags.map((tag) => (
+                <span class="project-tag">{tag}</span>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      {
+        heroImage && (
+          <div class="project-hero fade-in-on-scroll">
+            <Image
+              src={heroImage}
+              alt={`${title} hero image`}
+              widths={[800, 1200, 1600]}
+              sizes="(max-width: 600px) 100vw, (max-width: 900px) 90vw, 720px"
+              quality={90}
+              class="project-hero-img image-fade-in"
+              style={`view-transition-name: project-hero-${title.replace(/\s+/g, '-').toLowerCase()}`}
+            />
+          </div>
+        )
+      }
+
+      <div class="project-divider"></div>
+
+      {
+        (problem || whatWasBuilt || (highlights && highlights.length > 0) || challenges) && (
+          <section class="project-overview fade-in-on-scroll">
+            {problem && (
+              <div class="overview-block">
+                <p class="overview-label">The Problem</p>
+                <p class="overview-text">{problem}</p>
+              </div>
+            )}
+            {whatWasBuilt && (
+              <div class="overview-block">
+                <p class="overview-label">What Was Built</p>
+                <p class="overview-text">{whatWasBuilt}</p>
+              </div>
+            )}
+            {highlights && highlights.length > 0 && (
+              <div class="overview-block">
+                <p class="overview-label">Highlights</p>
+                <ul class="highlights-list">
+                  {highlights.map((item) => (
+                    <li class="highlights-item">{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {challenges && (
+              <div class="overview-block">
+                <p class="overview-label">Challenges & Learnings</p>
+                <p class="overview-text">{challenges}</p>
+              </div>
+            )}
+          </section>
+        )
+      }
+
+      <div class="prose" id="prose-content">
+        <slot />
+      </div>
+
+      {
+        uiImages && uiImages.length > 0 && (
+          <section class="screenshots-section fade-in-on-scroll" data-pagefind-ignore="all">
+            <p class="screenshots-label">Screenshots</p>
+            <div class="screenshots-grid">
+              {uiImages.map((img, i) => (
+                <a href={img.src} class="screenshot-item image-fade-in" data-lightbox>
+                  <Image
+                    src={img}
+                    alt={`${title} screenshot ${i + 1}`}
+                    widths={[400, 800]}
+                    sizes="(max-width: 600px) calc(50vw - 24px), 360px"
+                    quality={90}
+                    class="screenshot-img"
+                  />
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        relatedProjects.length > 0 && (
+          <section class="related-section" data-pagefind-ignore="all">
+            <div class="related-header">
+              <p class="related-label">{tr.relatedProjects}</p>
+              <a href={projectsBase} class="related-view-all">
+                {tr.allProjects}
+              </a>
+            </div>
+            <FeaturedProjectGrid projects={relatedProjects} variant="related" />
+          </section>
+        )
+      }
+    </article>
+    <Comments />
+  </main>
+  <ImageLightbox />
+
+  <script>
+    import { mountReadingRailLoader } from '../scripts/reading-rail-loader';
+
+    mountReadingRailLoader();
+  </script>
+</BaseLayout>

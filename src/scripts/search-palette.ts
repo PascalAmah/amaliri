@@ -86,7 +86,7 @@ export function mountSearchPalette(root: ParentNode = document) {
     activeIndex = Math.min(activeIndex, Math.max(renderedItems.length - 1, 0));
 
     if (renderedItems.length === 0) {
-      results.innerHTML = '<p class="search-palette-empty">No matching posts.</p>';
+      results.innerHTML = '<p class="search-palette-empty">No matching projects.</p>';
       return;
     }
 

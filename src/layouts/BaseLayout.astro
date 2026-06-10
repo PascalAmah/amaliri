@@ -67,9 +67,11 @@ const htmlLang = lang ?? config.site.lang;
       import { onReady } from '../scripts/mount';
       import { mountImageLoadingStates } from '../scripts/image-loading';
       import { mountSkipLinkFocus } from '../scripts/skip-link';
+      import { mountScrollAnimations } from '../scripts/scroll-animations';
 
       onReady(mountSkipLinkFocus);
       onReady(mountImageLoadingStates);
+      onReady(mountScrollAnimations);
     </script>
   </body>
 </html>

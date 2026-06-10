@@ -3,6 +3,7 @@ const mediaContainerSelector = '.featured-thumb-wrap, .featured-post-card-media'
 function markLoaded(img: HTMLImageElement) {
   img.classList.remove('is-image-pending');
   img.classList.add('is-image-loaded');
+  img.classList.add('loaded');
   img.closest(mediaContainerSelector)?.classList.remove('is-image-pending');
   img.closest(mediaContainerSelector)?.classList.add('is-media-loaded');
 }

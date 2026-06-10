@@ -1,0 +1,31 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: project,
+  }));
+}
+type Props = CollectionEntry<'projects'>;
+
+const project = Astro.props;
+const { Content, remarkPluginFrontmatter } = await render(project);
+
+// Calculate related projects using tags
+const allProjects = await getCollection('projects');
+const relatedProjects = allProjects
+  .filter(p => p.id !== project.id && p.data.tags?.some(tag => project.data.tags?.includes(tag)))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<ProjectLayout
+  {...project.data}
+  readingTime={remarkPluginFrontmatter.minutesRead}
+  relatedProjects={relatedProjects}
+>
+  <Content />
+</ProjectLayout>

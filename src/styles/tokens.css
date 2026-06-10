@@ -5,13 +5,7 @@
 /* ------------------------------------------------------------
    0. FONTS
    ------------------------------------------------------------ */
-@font-face {
-  font-family: 'Pretendard Variable';
-  src: url('../assets/fonts/pretendard-variable.woff2') format('woff2');
-  font-weight: 45 920;
-  font-style: normal;
-  font-display: block;
-}
+/* DM Sans, Syne, DM Mono loaded via Google Fonts in BaseHead.astro */
 
 @font-face {
   font-family: 'Tone Mono';
@@ -26,10 +20,9 @@
    ------------------------------------------------------------ */
 :root {
   /* Font Families */
-  --font-sans:
-    'Pretendard Variable', Pretendard, system-ui, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
-  --font-mono: 'Tone Mono', Menlo, Consolas, ui-monospace, monospace;
+  --font-sans: 'DM Sans', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-mono: 'DM Mono', 'Tone Mono', Menlo, Consolas, ui-monospace, monospace;
 
   /* Type Scale */
   --text-large-title: 2.125rem;
@@ -67,7 +60,7 @@
      ------------------------------------------------------------ */
 
   /* Brand and state colors */
-  --color-accent: #197ca8;
+  --color-accent: #C9A227;
   --color-success: #34c759;
   --color-warning: #ff9500;
 
@@ -92,11 +85,11 @@
   --bg-grouped-secondary: #ffffff;
   --bg-grouped-tertiary: #f7fbfd;
 
-  /* Fill Colors */
-  --fill-primary: rgba(25, 124, 168, 0.14);
-  --fill-secondary: rgba(25, 124, 168, 0.1);
-  --fill-tertiary: rgba(25, 124, 168, 0.07);
-  --fill-quaternary: rgba(25, 124, 168, 0.05);
+  /* Fill Colors — gold tint */
+  --fill-primary: rgba(201, 162, 39, 0.14);
+  --fill-secondary: rgba(201, 162, 39, 0.1);
+  --fill-tertiary: rgba(201, 162, 39, 0.07);
+  --fill-quaternary: rgba(201, 162, 39, 0.05);
 
   /* Separator */
   --separator: rgba(60, 60, 67, 0.29);
@@ -104,6 +97,12 @@
 
   /* Link */
   --color-link: var(--color-blue);
+
+  /* Surface and Border Aliases */
+  --color-surface: var(--bg-secondary);
+  --color-surface-raised: var(--bg-tertiary);
+  --color-border: var(--separator);
+  --color-text-secondary: var(--label-secondary);
 
   /* ------------------------------------------------------------
      3. SPACING — 4pt base grid
@@ -182,15 +181,15 @@
     --bg-grouped-secondary: #101416;
     --bg-grouped-tertiary: #151b1e;
 
-    --fill-primary: rgba(116, 199, 220, 0.18);
-    --fill-secondary: rgba(116, 199, 220, 0.13);
-    --fill-tertiary: rgba(116, 199, 220, 0.09);
-    --fill-quaternary: rgba(116, 199, 220, 0.06);
+    --fill-primary: rgba(201, 162, 39, 0.18);
+    --fill-secondary: rgba(201, 162, 39, 0.13);
+    --fill-tertiary: rgba(201, 162, 39, 0.09);
+    --fill-quaternary: rgba(201, 162, 39, 0.06);
 
     --separator: rgba(84, 84, 88, 0.65);
     --separator-opaque: #38383a;
 
-    --color-accent: #74c7dc;
+    --color-accent: #E6B84D;
     --color-success: #30d158;
     --color-warning: #ff9f0a;
     --color-blue: var(--color-accent);
@@ -217,13 +216,13 @@
   --bg-grouped-primary: #000000;
   --bg-grouped-secondary: #101416;
   --bg-grouped-tertiary: #151b1e;
-  --fill-primary: rgba(116, 199, 220, 0.18);
-  --fill-secondary: rgba(116, 199, 220, 0.13);
-  --fill-tertiary: rgba(116, 199, 220, 0.09);
-  --fill-quaternary: rgba(116, 199, 220, 0.06);
+  --fill-primary: rgba(201, 162, 39, 0.18);
+  --fill-secondary: rgba(201, 162, 39, 0.13);
+  --fill-tertiary: rgba(201, 162, 39, 0.09);
+  --fill-quaternary: rgba(201, 162, 39, 0.06);
   --separator: rgba(84, 84, 88, 0.65);
   --separator-opaque: #38383a;
-  --color-accent: #74c7dc;
+  --color-accent: #E6B84D;
   --color-success: #30d158;
   --color-warning: #ff9f0a;
   --color-blue: var(--color-accent);
@@ -250,7 +249,7 @@
   --bg-tertiary: #ffffff;
   --separator: rgba(60, 60, 67, 0.29);
   --separator-opaque: #c6c6c8;
-  --color-accent: #197ca8;
+  --color-accent: #C9A227;
   --color-success: #34c759;
   --color-warning: #ff9500;
   --color-blue: var(--color-accent);

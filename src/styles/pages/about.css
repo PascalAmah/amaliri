@@ -40,7 +40,6 @@
 
 .about-lead {
   max-width: 38rem;
-  margin: var(--space-8) 0 0;
   color: var(--label-secondary);
   font-size: 1.2188rem;
   font-weight: 450;
@@ -345,5 +344,70 @@
   .profile-meta div {
     grid-template-columns: 1fr;
     gap: var(--space-1);
+  }
+}
+
+/* ── Skills ──────────────────────────────── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8) var(--space-10);
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skills-category {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skills-category-label {
+  margin: 0;
+  font-size: var(--text-caption-1);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.skills-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--fill-secondary);
+  border: 1px solid var(--fill-primary);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: var(--text-caption-1);
+  font-weight: var(--weight-medium);
+  color: var(--label-secondary);
+  white-space: nowrap;
+  transition: background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.skill-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.skills-badge:hover {
+  background: var(--fill-primary);
+  color: var(--label-primary);
+}
+
+@media (max-width: 48rem) {
+  .skills-grid {
+    grid-template-columns: 1fr;
   }
 }

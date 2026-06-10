@@ -1,0 +1,107 @@
+---
+import config from '../../astro-theme-config';
+
+const socialLinks = Object.entries(config.social)
+  .filter(([_, value]) => value && typeof value === 'string' && value.length > 0)
+  .map(([key, value]) => ({
+    platform: key === 'twitter' ? 'X' : key.charAt(0).toUpperCase() + key.slice(1),
+    href: value,
+    id: key,
+  }));
+
+const icons: Record<string, string> = {
+  github: `<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>`,
+  linkedin: `<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle>`,
+  whatsapp: `<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"></path><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.898-1.42A9.955 9.955 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"></path>`,
+  instagram: `<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>`,
+  twitter: `<path d="M4 4l11.733 16H20L8.267 4zM4 20l6.768-6.768M20 4l-6.768 6.768"></path>`,
+  email: `<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>`,
+  website: `<circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>`,
+};
+---
+
+<nav class="social-island" aria-label="Social links">
+  {
+    socialLinks.map((link) => (
+      <a
+        href={link.href.startsWith('mailto:') ? link.href : link.href}
+        class="island-item"
+        target={link.id === 'email' ? undefined : '_blank'}
+        rel={link.id === 'email' ? undefined : 'noopener noreferrer'}
+      >
+        <span class="island-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            set:html={icons[link.id] || icons.website}
+          />
+        </span>
+        <span class="island-label">{link.platform}</span>
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .social-island {
+    display: flex;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    width: fit-content;
+    transition: max-width var(--duration-normal) var(--ease-out);
+  }
+
+  .island-item {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: var(--space-2);
+    color: var(--label-primary);
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    transition: all var(--duration-normal) var(--ease-out);
+    overflow: hidden;
+    max-width: 36px; /* Icon width + padding */
+  }
+
+  .island-item:hover,
+  .island-item:focus-within {
+    gap: var(--space-2);
+    padding-right: var(--space-4);
+    background: var(--color-surface-raised);
+    max-width: 200px; /* Expanded width */
+  }
+
+  .island-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .island-label {
+    font-size: var(--text-subheadline);
+    font-weight: var(--weight-medium);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+    white-space: nowrap;
+  }
+
+  .island-item:hover .island-label,
+  .island-item:focus-within .island-label {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 100ms;
+  }
+</style>

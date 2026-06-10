@@ -119,6 +119,9 @@ const websiteJsonLd =
 <link rel="shortcut icon" href={withBase('/favicon.ico')} />
 <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
 <link rel="sitemap" href={sitemapHref} />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" />
 <link rel="preload" href={pretendardFontUrl} as="font" type="font/woff2" crossorigin />
 {
   commentsEnabled && (
@@ -175,3 +178,4 @@ const websiteJsonLd =
 
 <!-- Vercel Analytics (opt-in: PUBLIC_VERCEL_ANALYTICS=true) -->
 {analyticsEnabled && <script is:inline defer src="/_vercel/insights/script.js" />}
+

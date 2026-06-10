@@ -16,7 +16,14 @@ const navItems = config.nav;
     <a href={withBase('/')} class="nav-logo">{headerTitle}</a>
     <div class="nav-right">
       <div class="nav-links">
-        {navItems.map((item) => <HeaderLink href={item.href}>{item.label}</HeaderLink>)}
+        {navItems.map((item) => (
+          <HeaderLink
+            href={item.href}
+            data-search-palette-trigger={item.href === '/search' ? 'true' : undefined}
+          >
+            {item.label}
+          </HeaderLink>
+        ))}
       </div>
       <ThemeToggle />
     </div>
