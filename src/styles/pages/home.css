@@ -440,7 +440,7 @@
     line-height: 1.04;
   }
   .hero-desc {
-    max-width: 20rem;
+    max-width: 100%;
   }
 
   .featured-card {
