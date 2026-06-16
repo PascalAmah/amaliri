@@ -73,7 +73,7 @@ const profileLinks = [
 <BaseLayout title="About" description={profileLead}>
   <main id="main-content" class="about-main">
     <section class="about-hero" aria-labelledby="about-title">
-      <div class="about-intro">
+      <div class="about-intro" data-reveal>
         <p class="about-lead">
           {profileLead}
         </p>
@@ -82,6 +82,7 @@ const profileLinks = [
       <aside
         class:list={['profile-panel', !hasProfileImage && 'profile-panel--text']}
         aria-label="Profile preview"
+        data-reveal
       >
         {
           hasProfileImage && (
@@ -132,7 +133,7 @@ const profileLinks = [
       </aside>
     </section>
 
-    <section class="about-section about-skills" aria-labelledby="about-skills">
+    <section class="about-section about-skills" aria-labelledby="about-skills" data-reveal>
       <p class="section-label">{statementLabel}</p>
       <div>
         <h2 id="about-skills" class="section-heading">
@@ -169,9 +170,9 @@ const profileLinks = [
       </div>
     </section>
 
-    <section class="about-section" aria-label={careerLabel}>
+    <section class="about-section" aria-label={careerLabel} data-reveal>
       <p class="section-label">{careerLabel}</p>
-      <div class="career-list">
+      <div class="career-list" data-reveal-group>
         {
           careerItems.map((item) => (
             <article class="career-item">
@@ -186,7 +187,7 @@ const profileLinks = [
       </div>
     </section>
 
-    <section class="about-section" aria-labelledby="about-focus">
+    <section class="about-section" aria-labelledby="about-focus" data-reveal>
       <p class="section-label">{interestsLabel}</p>
       <div>
         <h2 id="about-focus" class="section-heading">{interestsHeading}</h2>

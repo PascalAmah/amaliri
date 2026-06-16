@@ -113,7 +113,7 @@ const featuredPlaceholderStyle = featuredPlaceholder
 
     {
       featured && (
-        <section class="featured-section fade-in-on-scroll">
+        <section class="featured-section" data-reveal>
           <a href={withBase(`/projects/${featured.id}/`)} class="featured-card">
             <div class="featured-text">
               <h2 class="featured-title">{featured.data.title}</h2>
@@ -144,7 +144,7 @@ const featuredPlaceholderStyle = featuredPlaceholder
 
     {
       gridProjects.length > 0 && (
-        <section class="projects-section fade-in-on-scroll">
+        <section class="projects-section" data-reveal>
           <div class="projects-header">
             <a href={withBase('/projects')} class="view-all">
               {tr.viewAll}
@@ -155,7 +155,7 @@ const featuredPlaceholderStyle = featuredPlaceholder
       )
     }
 
-    <section class="about-teaser-section fade-in-on-scroll">
+    <section class="about-teaser-section" data-reveal>
       <div class="about-teaser-header">
         <p class="about-teaser-eyebrow">About</p>
         <a href={withBase('/about')} class="view-all">About me →</a>

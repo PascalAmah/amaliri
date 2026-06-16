@@ -114,7 +114,7 @@ const jsonLd = serializeScriptJson({
 
       {
         heroImage && (
-          <div class="project-hero fade-in-on-scroll">
+          <div class="project-hero" data-reveal>
             <Image
               src={heroImage}
               alt={`${title} hero image`}
@@ -132,23 +132,23 @@ const jsonLd = serializeScriptJson({
 
       {
         (problem || whatWasBuilt || (highlights && highlights.length > 0) || challenges) && (
-          <section class="project-overview fade-in-on-scroll">
+          <section class="project-overview">
             {problem && (
-              <div class="overview-block">
+              <div class="overview-block" data-reveal>
                 <p class="overview-label">The Problem</p>
                 <p class="overview-text">{problem}</p>
               </div>
             )}
             {whatWasBuilt && (
-              <div class="overview-block">
+              <div class="overview-block" data-reveal>
                 <p class="overview-label">What Was Built</p>
                 <p class="overview-text">{whatWasBuilt}</p>
               </div>
             )}
             {highlights && highlights.length > 0 && (
-              <div class="overview-block">
+              <div class="overview-block" data-reveal>
                 <p class="overview-label">Highlights</p>
-                <ul class="highlights-list">
+                <ul class="highlights-list" data-reveal-group>
                   {highlights.map((item) => (
                     <li class="highlights-item">{item}</li>
                   ))}
@@ -156,7 +156,7 @@ const jsonLd = serializeScriptJson({
               </div>
             )}
             {challenges && (
-              <div class="overview-block">
+              <div class="overview-block" data-reveal>
                 <p class="overview-label">Challenges & Learnings</p>
                 <p class="overview-text">{challenges}</p>
               </div>
@@ -171,9 +171,9 @@ const jsonLd = serializeScriptJson({
 
       {
         uiImages && uiImages.length > 0 && (
-          <section class="screenshots-section fade-in-on-scroll" data-pagefind-ignore="all">
-            <p class="screenshots-label">Screenshots</p>
-            <div class="screenshots-grid">
+          <section class="screenshots-section" data-pagefind-ignore="all">
+            <p class="screenshots-label" data-reveal>Screenshots</p>
+            <div class="screenshots-grid" data-reveal-group>
               {uiImages.map((img, i) => (
                 <a href={img.src} class="screenshot-item image-fade-in" data-lightbox>
                   <Image

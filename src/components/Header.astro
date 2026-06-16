@@ -13,7 +13,15 @@ const navItems = config.nav;
 <a href="#main-content" class="skip-link" tabindex="0">{skipLinkLabel}</a>
 <header class="site-header glass">
   <nav class="nav-inner" aria-label={navAriaLabel}>
-    <a href={withBase('/')} class="nav-logo">{headerTitle}</a>
+    <a href={withBase('/')} class="nav-logo" aria-label={headerTitle}>
+      <img
+        src="/pascal.png"
+        alt={headerTitle}
+        class="nav-logo-img"
+        width="120"
+        height="40"
+      />
+    </a>
     <div class="nav-right">
       <div class="nav-links">
         {navItems.map((item) => (
@@ -134,18 +142,21 @@ const navItems = config.nav;
 }
 
 .nav-logo {
-  font-size: var(--text-headline);
-  font-weight: var(--weight-semibold);
-  color: var(--label-primary);
+  display: flex;
+  align-items: center;
   text-decoration: none;
-  letter-spacing: var(--tracking-tight);
-  transition:
-    color var(--duration-fast) var(--ease-out),
-    opacity var(--duration-fast) var(--ease-out);
+  transition: opacity var(--duration-fast) var(--ease-out);
 }
 
 .nav-logo:hover {
   opacity: 0.7;
+}
+
+.nav-logo-img {
+  height: clamp(24px, 5vw, 36px);
+  width: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .nav-right {
@@ -178,6 +189,10 @@ const navItems = config.nav;
 
   .nav-links {
     gap: var(--space-3);
+  }
+
+  .nav-logo-img {
+    height: 26px;
   }
 }
 

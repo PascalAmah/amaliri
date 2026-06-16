@@ -36,7 +36,7 @@ const imagePlaceholderStyle = (src: string | undefined) =>
   src ? `--tone-image-placeholder: url("${src}");` : undefined;
 ---
 
-<div class:list={['featured-project-grid', `featured-project-grid--${variant}`]}>
+<div class:list={['featured-project-grid', `featured-project-grid--${variant}`]} data-reveal-group>
   {
     projects.map((project, index) => {
       const slides = project.data.uiImages?.length
@@ -48,7 +48,7 @@ const imagePlaceholderStyle = (src: string | undefined) =>
       return (
         <a
           href={withBase(`${basePath}/${projectSlug(project.id)}/`)}
-          class:list={['featured-project-card', `featured-project-card--slot-${index + 1}`, 'fade-in-on-scroll']}
+          class:list={['featured-project-card', `featured-project-card--slot-${index + 1}`]}
           data-slideshow={hasSlides ? 'true' : undefined}
           data-slide-interval="3000"
           style={`view-transition-name: project-${project.id}`}

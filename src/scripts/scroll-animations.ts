@@ -1,38 +1,46 @@
 /**
- * Scroll-triggered fade-in animations
- * Uses Intersection Observer for elements with fade-in-on-scroll class
- * Falls back for older browsers that don't support view-transition-timeline
+ * Scroll reveal — elements with [data-reveal] animate in as they enter the viewport.
+ * Supports staggered children via [data-reveal-group] on the parent.
  */
 
 export function mountScrollAnimations() {
-  const elements = document.querySelectorAll<HTMLElement>('.fade-in-on-scroll');
-  if (elements.length === 0) return;
-
-  // Check if browser supports CSS animation-timeline
-  const supportsAnimationTimeline = CSS.supports('animation-timeline', 'view()');
-
-  if (supportsAnimationTimeline) {
-    // Modern browsers handle animation-timeline natively
+  // Respect reduced motion
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) {
+    document.querySelectorAll<HTMLElement>('[data-reveal], [data-reveal-group] > *').forEach((el) => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
     return;
   }
 
-  // Fallback for older browsers: use Intersection Observer
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('has-animated');
-          observer.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        const el = entry.target as HTMLElement;
+        el.classList.add('is-revealed');
+        observer.unobserve(el);
       });
     },
     {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px',
+      threshold: 0.08,
+      rootMargin: '0px 0px -40px 0px',
     }
   );
 
-  elements.forEach((el) => {
+  // Direct reveal elements
+  document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
     observer.observe(el);
+  });
+
+  // Staggered group children
+  document.querySelectorAll<HTMLElement>('[data-reveal-group]').forEach((group) => {
+    const children = Array.from(group.children) as HTMLElement[];
+    children.forEach((child, i) => {
+      child.style.transitionDelay = `${i * 80}ms`;
+      child.classList.add('reveal-child');
+      observer.observe(child);
+    });
   });
 }
