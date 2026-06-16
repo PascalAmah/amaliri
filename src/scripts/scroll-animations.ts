@@ -38,7 +38,7 @@ export function mountScrollAnimations() {
   document.querySelectorAll<HTMLElement>('[data-reveal-group]').forEach((group) => {
     const children = Array.from(group.children) as HTMLElement[];
     children.forEach((child, i) => {
-      child.style.transitionDelay = `${i * 80}ms`;
+      child.style.transitionDelay = `${i * 200}ms`;
       child.classList.add('reveal-child');
       observer.observe(child);
     });
