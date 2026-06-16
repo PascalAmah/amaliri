@@ -1,46 +1,69 @@
-# Pascal Amaliri Portfolio
+# Pascal Amaliri — Portfolio
 
-Personal portfolio website for Pascal Amaliri, built with Astro 6.
+Personal portfolio site for **Pascal Amaliri**, a full-stack software engineer from Lagos, Nigeria with a strong backend focus.
 
-![Pascal Amaliri Portfolio](.github/assets/astro-tone-showcase-1600x900.png)
+Built with [Astro](https://astro.build), deployed at [amaliri.vercel.app](amaliri.vercel.app).
 
-## Features
+---
 
-- Responsive Astro 6 static site
-- Project collection in `src/content/projects`
-- Projects index with tag filters and inline list search
-- `/search` route powered by Pagefind
-- `Cmd`/`Ctrl` + `K` command palette for quick project search
-- Dynamic Island social bar (`SocialIsland.astro`)
-- Dark mode with CSS tokens
-- Custom code block theme via Expressive Code
-- Related projects, RSS, sitemap, Open Graph metadata, and JSON-LD
-- Optional giscus comments
+## About
 
-## Quick Start
+I design and build scalable APIs, real-time systems, intuitive frontends, and AI-powered applications. I can own the full stack when needed, but backend architecture and performance is where I do my best work.
 
-Requires Node.js 22.12.0 or newer.
+I've shipped production systems across hospitality, e-commerce, education, and environmental tech — collaborating with cross-functional teams and leading backend initiatives.
+
+---
+
+## Tech Stack
+
+| Layer | Technologies |
+|---|---|
+| Frontend | React.js, Next.js, TypeScript, JavaScript, Tailwind CSS, Redux |
+| Backend | Node.js, Express.js, NestJS, Python, Flask, Django, FastAPI, PHP |
+| Databases | MongoDB, MySQL, PostgreSQL, Firebase |
+| Tools | Docker, Git, GitHub, CI/CD, REST APIs, GraphQL |
+| AI / ML | pandas, scikit-learn, Transformers (Hugging Face) |
+
+---
+
+## Running Locally
 
 ```bash
+# Install dependencies
 pnpm install
-pnpm run dev
+
+# Start dev server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Preview production build
+pnpm preview
 ```
 
-The local dev server usually starts at `http://localhost:4321`.
+Requires Node.js 18+ and pnpm.
 
-## Commands
+---
 
-| Command            | Action                                         |
-| ------------------ | ---------------------------------------------- |
-| `pnpm run dev`      | Start the local dev server                     |
-| `pnpm run build`    | Build the site and generate the Pagefind index |
-| `pnpm run preview`  | Preview the production build                   |
-| `pnpm run check`    | Run Astro type checks                          |
-| `pnpm run lint`     | Run ESLint                                     |
-| `pnpm run lint:css` | Run Stylelint                                  |
-| `pnpm run format`   | Format source files with Prettier              |
-| `pnpm test`        | Run unit and property tests                    |
+## Project Structure
 
-## License
+```
+src/
+├── components/       # Reusable UI components
+├── content/
+│   └── projects/     # Project markdown files
+├── layouts/          # Page layouts
+├── pages/            # Route pages
+├── scripts/          # Client-side TypeScript
+└── styles/           # Global and page-level CSS
+```
 
-MIT licensed.
+---
+
+## Contact
+
+- Email: [pascalamaliri@gmail.com](mailto:pascalamaliri@gmail.com)
+- LinkedIn: [linkedin.com/in/pascal-amaliri](https://www.linkedin.com/in/pascal-amaliri/)
+- GitHub: [github.com/PascalAmah](https://github.com/PascalAmah)
+- Twitter/X: [@chisax_](https://x.com/chisax_)
