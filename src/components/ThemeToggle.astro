@@ -60,6 +60,8 @@
     } else {
       mountThemeToggle();
     }
+    // Re-arm after View Transitions navigations (DOMContentLoaded won't fire then).
+    document.addEventListener('astro:page-load', mountThemeToggle);
   })();
 </script>
 

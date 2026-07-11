@@ -44,7 +44,7 @@ const resumeUrl = config.site.resumeUrl;
   </nav>
 </div>
 
-<div class="mobile-menu" id="mobile-menu" hidden>
+<div class="mobile-menu" id="mobile-menu" transition:persist="mobile-menu" hidden>
   <nav class="mobile-menu-nav" aria-label="Mobile navigation">
     {navItems.map((item) => (
       <a href={withBase(item.href)} class="mobile-menu-link">{item.label}</a>
@@ -106,8 +106,7 @@ const resumeUrl = config.site.resumeUrl;
     function mountMobileMenu() {
       const toggle = document.querySelector('.nav-toggle');
       const menu = document.getElementById('mobile-menu');
-      if (!(toggle instanceof HTMLElement) || !menu || toggle.dataset.ready === 'true') return;
-      toggle.dataset.ready = 'true';
+      if (!(toggle instanceof HTMLElement) || !menu) return;
 
       const close = () => {
         menu.hidden = true;
@@ -122,10 +121,21 @@ const resumeUrl = config.site.resumeUrl;
         toggle.setAttribute('aria-label', 'Close menu');
       };
 
+      // Always reset to a clean closed state on (re)init and after each navigation,
+      // so a persisted menu never carries an "open" state onto the next page.
+      close();
+
+      // Bind listeners only once — whether this node persisted or was replaced.
+      if (toggle.dataset.ready === 'true') return;
+      toggle.dataset.ready = 'true';
+
       toggle.addEventListener('click', () => {
         menu.hidden ? open() : close();
       });
-      menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+      // Delegated so it survives even if the link set changes.
+      menu.addEventListener('click', (e) => {
+        if (e.target instanceof Element && e.target.closest('a')) close();
+      });
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !menu.hidden) close();
       });
