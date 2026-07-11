@@ -1,6 +1,6 @@
 ---
 title: "BarqPix"
-description: "Real-time event media platform with QR-based access. Guests scan a code to join an isolated event gallery, upload photos, and browse the live feed — no app download required."
+description: "Real-time event media platform with QR-based access. Guests scan a code to join an isolated gallery, upload photos, and browse the live feed — no app required."
 pubDate: "2025-01-15"
 tags: ["Next.js", "Express.js", "Firebase", "AI"]
 githubUrl: "https://github.com/PascalAmah/BarqPix"
@@ -17,6 +17,24 @@ highlights:
   - "Real-time gallery feed updates via Firebase Realtime Database listeners"
   - "Express.js backend handles custom business logic, access control, and event lifecycle management"
 challenges: "The hardest problem was handling simultaneous burst uploads from many guests without stalling the live feed. Processing images synchronously would have made the gallery feel sluggish right when the energy at an event peaks. The fix was fully decoupling upload ingestion from processing — uploads land in Firebase Storage immediately and trigger async functions for AI tagging and thumbnail generation, keeping the gallery feed responsive regardless of upload queue depth."
+metrics:
+  - value: "Async"
+    label: "Non-blocking burst upload pipeline"
+  - value: "Per-event"
+    label: "Fully isolated galleries"
+  - value: "No app"
+    label: "QR-based guest access"
+  - value: "AI"
+    label: "Auto tagging & content moderation"
+architecture:
+  - label: "QR scan"
+    detail: "Per-event access token"
+  - label: "Next.js frontend"
+    detail: "Realtime feed"
+  - label: "Express.js API"
+    detail: "Access control, event lifecycle"
+  - label: "Firebase Storage"
+    detail: "Async upload → AI tagging"
 heroImage: "./images/barqpix/barqpix-hero.png"
 uiImages:
    - "./images/barqpix/barqpix-home.png"

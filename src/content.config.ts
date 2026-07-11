@@ -29,6 +29,14 @@ const projects = defineCollection({
       whatWasBuilt: z.string().optional(),
       highlights: z.array(z.string()).optional(),
       challenges: z.string().optional(),
+      /** Outcome/scope chips shown on the case study + featured card. */
+      metrics: z
+        .array(z.object({ value: z.string(), label: z.string() }))
+        .optional(),
+      /** Linear architecture flow — each node is a tier in the request/data path. */
+      architecture: z
+        .array(z.object({ label: z.string(), detail: z.string().optional() }))
+        .optional(),
     }),
 });
 

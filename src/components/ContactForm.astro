@@ -1,0 +1,366 @@
+---
+// Web3Forms-powered contact form.
+// Set PUBLIC_WEB3FORMS_KEY in your .env file to activate.
+// Get a free key at https://web3forms.com
+
+const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY as string | undefined;
+const isActive = !!web3formsKey;
+---
+
+<section class="contact-section" id="contact" data-reveal>
+  <div class="contact-inner">
+    <div class="contact-intro">
+      <p class="section-label">Contact</p>
+      <h2 class="contact-heading">Get in touch</h2>
+      <p class="contact-desc">
+        Have a project in mind or just want to say hi? Drop a message and I'll get back to you.
+      </p>
+    </div>
+
+    {isActive ? (
+      <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value={web3formsKey} />
+        <input type="hidden" name="subject" value="New message from pascal portfolio" />
+        <input type="hidden" name="from_name" value="Pascal Portfolio Contact" />
+
+        <div class="form-field">
+          <label for="contact-name" class="form-label">Name</label>
+          <input
+            id="contact-name"
+            name="name"
+            type="text"
+            required
+            placeholder="Your name"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="contact-email" class="form-label">Email</label>
+          <input
+            id="contact-email"
+            name="email"
+            type="email"
+            required
+            placeholder="you@example.com"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="contact-message" class="form-label">Message</label>
+          <textarea
+            id="contact-message"
+            name="message"
+            required
+            rows="5"
+            placeholder="What's on your mind?"
+            class="form-input form-textarea"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Send Message</button>
+      </form>
+    ) : (
+      <div class="contact-fallback">
+        <p class="contact-fallback-text">
+          The contact form is not yet configured. Drop me an email at
+          <a href="mailto:pascalamaliri@gmail.com">pascalamaliri@gmail.com</a>
+          instead.
+        </p>
+      </div>
+    )}
+  </div>
+</section>
+
+<script>
+  (function () {
+    const form = document.querySelector<HTMLFormElement>('.contact-form');
+    if (!form) return;
+
+    const submitBtn = form.querySelector<HTMLButtonElement>('.btn-submit');
+    if (!submitBtn) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      try {
+        const data = new FormData(form);
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: data,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          form.innerHTML =
+            '<div class="form-success"><div class="form-success-icon" aria-hidden="true">✓</div><p class="form-success-text">Message sent! I\'ll get back to you soon.</p></div>';
+        } else {
+          throw new Error(result.message || 'Failed to send message');
+        }
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+
+        const errorEl =
+          form.querySelector<HTMLElement>('.form-error') ||
+          Object.assign(document.createElement('p'), {
+            className: 'form-error',
+            role: 'alert',
+          });
+
+        errorEl.textContent =
+          err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+        form.prepend(errorEl);
+      }
+    });
+  })();
+</script>
+
+<style>
+  .contact-section {
+    margin-top: var(--space-20);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--separator);
+  }
+
+  .contact-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  .contact-intro {
+    margin-bottom: 0;
+  }
+
+  .section-label {
+    font-size: var(--text-caption-1);
+    font-weight: var(--weight-accent-label);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-blue);
+    margin: 0 0 var(--space-2);
+  }
+
+  .contact-heading {
+    font-size: clamp(1.58rem, 2.85vw, 2.15rem);
+    font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+    color: var(--label-primary);
+    margin: 0 0 var(--space-3);
+  }
+
+  .contact-desc {
+    font-size: var(--text-callout);
+    color: var(--label-secondary);
+    line-height: var(--leading-normal);
+    margin: 0;
+    max-width: 38ch;
+  }
+
+  /* ── Form ── */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .form-label {
+    font-size: var(--text-footnote);
+    font-weight: var(--weight-medium);
+    color: var(--label-secondary);
+    letter-spacing: 0.01em;
+  }
+
+  .form-input {
+    font-family: var(--font-sans);
+    /* 16px (not <16px) prevents iOS Safari from auto-zooming on focus */
+    font-size: 16px;
+    color: var(--label-primary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--separator);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
+    outline: none;
+    width: 100%;
+  }
+
+  .form-input::placeholder {
+    color: var(--label-tertiary);
+  }
+
+  .form-input:focus {
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-blue) 18%, transparent);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: var(--leading-normal);
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    padding: var(--space-3) var(--space-6);
+    font-family: var(--font-sans);
+    font-size: var(--text-callout);
+    font-weight: var(--weight-semibold);
+    color: #fff;
+    background: var(--accent-strong);
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-spring);
+    line-height: 1;
+  }
+
+  .btn-submit:hover {
+    opacity: 0.85;
+  }
+
+  .btn-submit:active {
+    transform: scale(0.97);
+  }
+
+  .btn-submit:focus-visible {
+    outline: 2px solid var(--accent-strong);
+    outline-offset: 2px;
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* ── Success state ── */
+  :global(.form-success) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-12) var(--space-6);
+    text-align: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--separator);
+    border-radius: var(--radius-lg);
+  }
+
+  .form-success-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-success);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .form-success-text {
+    font-size: var(--text-callout);
+    color: var(--label-secondary);
+    margin: 0;
+    line-height: var(--leading-normal);
+  }
+
+  /* ── Error state ── */
+  :global(.form-error) {
+    font-size: var(--text-footnote);
+    color: var(--color-warning);
+    font-weight: var(--weight-medium);
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    background: color-mix(in srgb, var(--color-warning) 8%, transparent);
+    border-radius: var(--radius-sm);
+  }
+
+  /* ── Legal text ── */
+  .form-legal {
+    font-size: var(--text-caption-2);
+    color: var(--label-tertiary);
+    margin: 0;
+  }
+
+  .form-legal a {
+    color: var(--label-tertiary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .form-legal a:hover {
+    color: var(--label-secondary);
+    opacity: 1;
+  }
+
+  /* ── Fallback (no key configured) ── */
+  .contact-fallback {
+    padding: var(--space-6);
+    background: var(--bg-secondary);
+    border: 1px solid var(--separator);
+    border-radius: var(--radius-lg);
+  }
+
+  .contact-fallback-text {
+    font-size: var(--text-callout);
+    color: var(--label-secondary);
+    line-height: var(--leading-normal);
+    margin: 0;
+  }
+
+  .contact-fallback-text a {
+    color: var(--color-blue);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 780px) {
+    .contact-inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .contact-section {
+      margin-top: var(--space-12);
+      padding-top: var(--space-8);
+    }
+
+    .contact-intro {
+      margin-bottom: var(--space-2);
+    }
+
+    .btn-submit {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

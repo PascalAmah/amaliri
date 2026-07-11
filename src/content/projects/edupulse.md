@@ -1,6 +1,6 @@
 ---
 title: "EduPulse"
-description: "Smart microlearning platform with personalized bite-sized lessons and quizzes based on user behavior, mood, and goals. Revolutionizing education through adaptive learning."
+description: "Adaptive microlearning platform with personalized bite-sized lessons and quizzes based on user behavior, mood, and goals."
 pubDate: "2025-02-10"
 tags: ["React", "Node.js", "AI/ML", "MongoDB"]
 githubUrl: "https://github.com/PascalAmah/edupulse"
@@ -16,6 +16,24 @@ highlights:
   - "AI/ML model continuously refines difficulty and topic selection based on cumulative user history"
   - "React frontend optimized for low-friction daily habit formation"
 challenges: "The core ML challenge is cold-start — new users have no behavioral history, so the model has nothing to personalize on. The approach is a structured onboarding phase that collects goals, prior knowledge signals, and preferred session length, then uses collaborative filtering to bootstrap recommendations from similar user profiles until enough individual data accumulates to switch to personalized predictions."
+metrics:
+  - value: "Adaptive"
+    label: "Session-level content selection"
+  - value: "Cold-start"
+    label: "Collaborative-filtering bootstrap"
+  - value: "5–10 min"
+    label: "Bite-sized focused sessions"
+  - value: "Behavioral"
+    label: "Signals drive the recommender"
+architecture:
+  - label: "React frontend"
+    detail: "Daily-habit sessions"
+  - label: "Node.js backend"
+    detail: "Session + signal capture"
+  - label: "MongoDB"
+    detail: "Behavioral signal store"
+  - label: "AI/ML layer"
+    detail: "Adaptive lesson selection"
 # heroImage: "./images/edupulse/edupulse-hero.png"
 # uiImages:
 #   - "./images/edupulse/edupulse-home.png"

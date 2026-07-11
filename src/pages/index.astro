@@ -2,47 +2,22 @@
 import '../styles/pages/home.css';
 import { Image, getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import FeaturedProjectGrid from '../components/FeaturedProjectGrid.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Container from '../components/Container.astro';
+import FeaturedProjectGrid from '../components/FeaturedProjectGrid.astro';
+import Section from '../components/Section.astro';
 import SocialIsland from '../components/SocialIsland.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import TerminalCard from '../components/TerminalCard.astro';
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_AUTHOR } from '../consts';
 import { getUiText } from '../ui';
 import { withBase } from '../utils/paths';
+import { serializeScriptJson } from '../utils/serialize-script-json';
 import config from '../../astro-theme-config';
-const tr = getUiText();
 
-const slugMap: Record<string, string> = {
-  'React.js': 'react',
-  'Next.js': 'nextdotjs',
-  'Node.js': 'nodedotjs',
-  'Express.js': 'express',
-  NestJS: 'nestjs',
-  'Tailwind CSS': 'tailwindcss',
-  JavaScript: 'javascript',
-  TypeScript: 'typescript',
-  Python: 'python',
-  Flask: 'flask',
-  Django: 'django',
-  PHP: 'php',
-  FastAPI: 'fastapi',
-  MongoDB: 'mongodb',
-  MySQL: 'mysql',
-  Firebase: 'firebase',
-  PostgresSQL: 'postgresql',
-  Docker: 'docker',
-  Git: 'git',
-  GitHub: 'github',
-  HTML: 'html5',
-  CSS: 'css3',
-  Redux: 'redux',
-  pandas: 'pandas',
-  'scikit-learn': 'scikitlearn',
-  Transformers: 'huggingface',
-  Graphql: 'graphql',
-  'CI/CD': 'githubactions',
-  'REST APIs': 'openai',
-  Agile: 'jira',
-};
+const tr = getUiText();
+const { hero, metrics, proof, coreSkills, familiarSkills, testimonials } = config.home;
 
 const projects = (await getCollection('projects'))
   .filter((p) => !p.data.draft)
@@ -60,6 +35,8 @@ const pinnedGridProjects = gridCandidates
 const fallbackGridProjects = gridCandidates.filter((project) => !project.data.homeOrder);
 const gridProjects = [...pinnedGridProjects, ...fallbackGridProjects].slice(0, 3);
 
+const career = config.about.career;
+
 const featuredPlaceholder = featured?.data.heroImage
   ? await getImage({
       src: featured.data.heroImage,
@@ -71,54 +48,140 @@ const featuredPlaceholder = featured?.data.heroImage
 const featuredPlaceholderStyle = featuredPlaceholder
   ? `--tone-image-placeholder: url("${featuredPlaceholder.src}");`
   : undefined;
+
+// Person JSON-LD for the homepage — richer entity for search/recruiters.
+const personJsonLd = serializeScriptJson({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE_AUTHOR,
+  jobTitle: 'Backend Software Engineer',
+  description: SITE_DESCRIPTION,
+  url: config.site.url,
+  address: { '@type': 'PostalAddress', addressLocality: config.about.location },
+  sameAs: [config.social.github, config.social.linkedin, config.social.twitter].filter(Boolean),
+  knowsAbout: coreSkills,
+});
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <main id="main-content" class="home-main">
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} bodyClass="home-layout">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={personJsonLd} />
+  </Fragment>
+
+  <Container variant="showcase">
+    {/* ── Hero ─────────────────────────────── */}
     <section class="hero">
-      {
-        config.about.profileImage && (
-          <Image
-            src={config.about.profileImage}
-            alt={config.about.name}
-            width={100}
-            height={100}
-            class="hero-avatar"
-            loading="eager"
-          />
-        )
-      }
-      <h1 class="hero-title">
-        <span class="hero-title-line hero-name">{tr.heroTitle}</span>
+      <div class="hero-ambient" aria-hidden="true"></div>
+
+      <div class="hero-grid">
+        <div class="hero-text">
+          <div class="hero-status">
+            <span class="hero-status-dot" aria-hidden="true"></span>
+            {hero.status}
+          </div>
+
+          <h1 class="hero-title">{hero.headline}</h1>
+          <p class="hero-desc">{hero.subhead}</p>
+
+          <div class="hero-cta-row">
+            <Button href={withBase(hero.primaryCta.href)} variant="primary" size="lg">
+              {hero.primaryCta.label}
+            </Button>
+            <Button
+              href={withBase(hero.secondaryCta.href)}
+              variant="secondary"
+              size="lg"
+              target="_blank"
+              rel="noopener"
+            >
+              {hero.secondaryCta.label}
+              <span aria-hidden="true" class="hero-cta-icon">↓</span>
+            </Button>
+          </div>
+
+          <div class="hero-social">
+            <SocialIsland />
+          </div>
+        </div>
+
         {
-          tr.heroTitleLine2 && (
-            <span class="hero-title-line hero-title-line--accent hero-role">{tr.heroTitleLine2}</span>
+          hero.visual === 'terminal' ? (
+            <div class="hero-visual" aria-hidden="false">
+              <TerminalCard lines={hero.terminal} />
+            </div>
+          ) : (
+            config.about.profileImage && (
+              <div class="hero-portrait-wrap" aria-hidden="true">
+                <Image
+                  src={config.about.profileImage}
+                  alt={config.about.name}
+                  width={440}
+                  height={440}
+                  class="hero-portrait"
+                  loading="eager"
+                />
+              </div>
+            )
           )
         }
-      </h1>
-
-      <div class="hero-status">
-        <span class="hero-status-dot" aria-hidden="true"></span>
-        Open to work
       </div>
 
-      <p class="hero-desc">{SITE_DESCRIPTION}</p>
+      {
+        proof.length > 0 && (
+          <div class="hero-proof">
+            <span class="hero-proof-label">Trusted with production at</span>
+            <ul class="hero-proof-list">
+              {proof.map((name) => (
+                <li class="hero-proof-item">{name}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
 
-      <div class="hero-divider" aria-hidden="true"></div>
-
-      <div class="hero-social">
-        <SocialIsland />
-      </div>
+      <a href="#featured" class="scroll-cue" aria-label="Scroll to work">
+        <span class="scroll-cue-line" aria-hidden="true"></span>
+      </a>
     </section>
 
+    {/* ── Metrics strip ────────────────────── */}
+    {
+      metrics.length > 0 && (
+        <section class="metrics" data-reveal aria-label="At a glance">
+          <ul class="metrics-list" data-reveal-group>
+            {metrics.map((m) => (
+              <li class="metric">
+                <span class="metric-value">{m.value}</span>
+                <span class="metric-label">{m.label}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {/* ── Featured Work ────────────────────── */}
     {
       featured && (
-        <section class="featured-section" data-reveal>
+        <Section
+          id="featured"
+          label="Selected work"
+          heading="Featured project"
+          variant="showcase"
+          class="section--featured"
+        >
           <a href={withBase(`/projects/${featured.id}/`)} class="featured-card">
             <div class="featured-text">
-              <h2 class="featured-title">{featured.data.title}</h2>
+              <h3 class="featured-title">{featured.data.title}</h3>
               {featured.data.description && (
                 <p class="featured-desc">{featured.data.description}</p>
+              )}
+              {featured.data.tags && featured.data.tags.length > 0 && (
+                <div class="featured-tags">
+                  {featured.data.tags.slice(0, 4).map((tag) => (
+                    <span class="featured-tag">{tag}</span>
+                  ))}
+                </div>
               )}
               <span class="featured-cta">{tr.readLink}</span>
             </div>
@@ -129,7 +192,7 @@ const featuredPlaceholderStyle = featuredPlaceholder
                   alt={featured.data.title}
                   class="featured-thumb"
                   widths={[400, 720, 960, 1280]}
-                  sizes="(max-width: 600px) calc(100vw - 32px), 360px"
+                  sizes="(max-width: 600px) calc(100vw - 32px), 460px"
                   quality={88}
                   loading="lazy"
                 />
@@ -138,76 +201,83 @@ const featuredPlaceholderStyle = featuredPlaceholder
               )}
             </div>
           </a>
-        </section>
+        </Section>
       )
     }
 
     {
       gridProjects.length > 0 && (
-        <section class="projects-section" data-reveal>
-          <div class="projects-header">
-            <a href={withBase('/projects')} class="view-all">
-              {tr.viewAll}
-            </a>
-          </div>
+        <Section heading="More work" variant="showcase" class="section--grid" data-reveal>
+          <Fragment slot="actions">
+            <a href={withBase('/projects')} class="view-all">{tr.viewAll}</a>
+          </Fragment>
           <FeaturedProjectGrid projects={gridProjects} />
-        </section>
+        </Section>
       )
     }
 
-    <section class="about-teaser-section" data-reveal>
-      <div class="about-teaser-header">
-        <p class="about-teaser-eyebrow">About</p>
-        <a href={withBase('/about')} class="view-all">About me →</a>
+    {/* ── Experience timeline ──────────────── */}
+    {
+      career.length > 0 && (
+        <Section label="Experience" heading="Where I've worked" variant="showcase" class="section--timeline" data-reveal>
+          <ol class="timeline" data-reveal-group>
+            {career.map((item) => (
+              <li class="timeline-item">
+                <div class="timeline-marker" aria-hidden="true"></div>
+                <p class="timeline-period">{item.period}</p>
+                <div class="timeline-details">
+                  <h3 class="timeline-title">{item.title}</h3>
+                  <p class="timeline-company">{item.description}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </Section>
+      )
+    }
+
+    {/* ── Skills (curated) ─────────────────── */}
+    <Section label="Stack" heading="What I build with" variant="showcase" class="section--skills" data-reveal>
+      <div class="skills-split">
+        <div class="skills-col">
+          <p class="skills-col-label">Core — day to day</p>
+          <ul class="skills-tags">
+            {coreSkills.map((name) => (
+              <li class="skill-chip skill-chip--core">{name}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="skills-col">
+          <p class="skills-col-label">Also work with</p>
+          <ul class="skills-tags">
+            {familiarSkills.map((name) => (
+              <li class="skill-chip">{name}</li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <div class="about-teaser-body">
-        <p class="about-teaser-lead">{config.about.shortBio}</p>
-        <ul class="about-skills-grid">
-          {config.skills.map((category) => (
-            <li class="about-skills-category">
-              <p class="about-skills-label">{category.label}</p>
-              <div class="about-skills-tags">
-                {category.names.slice(0, 5).map((name) => {
-                  const slug = slugMap[name];
-                  return (
-                    <span class="skill-badge">
-                      {slug && (
-                        <img
-                          src={`https://cdn.simpleicons.org/${slug}/888888`}
-                          alt=""
-                          width="13"
-                          height="13"
-                          class="skill-icon"
-                          loading="lazy"
-                          onerror="this.style.display='none'"
-                        />
-                      )}
-                      {name}
-                    </span>
-                  );
-                })}
-                {category.names.length > 5 && (
-                  <span class="skill-badge skill-badge--more">+{category.names.length - 5}</span>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  </main>
+    </Section>
+
+    {/* ── Testimonials (auto-hides when empty) ── */}
+    {
+      testimonials.length > 0 && (
+        <Section label="Words" heading="What people say" variant="showcase" class="section--testimonials" data-reveal>
+          <div class="testimonials-grid" data-reveal-group>
+            {testimonials.map((t) => (
+              <figure class="testimonial">
+                <blockquote class="testimonial-quote">“{t.quote}”</blockquote>
+                <figcaption class="testimonial-attr">
+                  <span class="testimonial-name">{t.name}</span>
+                  <span class="testimonial-role">{t.role}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </Section>
+      )
+    }
+
+    {/* ── Contact ──────────────────────────── */}
+    <ContactForm />
+  </Container>
 </BaseLayout>
-
-<style>
-  .hero-avatar {
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: var(--space-4);
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-  }
-
-  .hero-social {
-    margin-top: var(--space-2);
-  }
-</style>

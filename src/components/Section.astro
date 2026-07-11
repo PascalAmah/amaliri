@@ -1,0 +1,106 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4';
+type Variant = 'default' | 'prose' | 'showcase';
+
+type Props = HTMLAttributes<'section'> & {
+  label?: string;
+  heading?: string;
+  headingLevel?: HeadingLevel;
+  variant?: Variant;
+};
+
+const {
+  label,
+  heading,
+  headingLevel: HeadingTag = 'h2',
+  variant = 'default',
+  class: className,
+  ...htmlAttrs
+} = Astro.props;
+---
+
+<section class:list={['section', `section--${variant}`, className]} {...htmlAttrs}>
+  {(label || heading) && (
+    <header class="section__header">
+      <div class="section__heading-group">
+        {label && <span class="section__label">{label}</span>}
+        {heading && (
+          <HeadingTag class="section__heading">{heading}</HeadingTag>
+        )}
+      </div>
+      <slot name="actions" />
+    </header>
+  )}
+  <div class="section__content">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    width: 100%;
+  }
+
+  /* ── Variant max-widths ── */
+  .section--default {
+    max-width: var(--max-width-content);
+  }
+
+  .section--prose {
+    max-width: var(--max-width-prose);
+  }
+
+  .section--showcase {
+    max-width: var(--max-width-showcase);
+  }
+
+  /* ── Header ── */
+  .section__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .section__heading-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .section__label {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: var(--text-caption-1);
+    font-weight: var(--weight-semibold);
+    color: var(--accent-strong);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .section__heading {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-title-1);
+    font-weight: var(--weight-bold);
+    color: var(--label-primary);
+    line-height: var(--leading-tight);
+  }
+
+  .section__content {
+    width: 100%;
+  }
+
+  @media (max-width: 600px) {
+    .section__header {
+      margin-bottom: var(--space-4);
+    }
+
+    .section__heading {
+      font-size: var(--text-title-2);
+    }
+  }
+</style>

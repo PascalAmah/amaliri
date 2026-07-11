@@ -8,8 +8,8 @@ const ui = {
   projectsTitle: 'All Projects',
   heroTitle: 'Pascal Amaliri',
   heroTitleLine2: 'Software Engineer.',
-  viewAll: 'All Projects →',
-  readLink: 'View Project →',
+  viewAll: 'All projects →',
+  readLink: 'Read the case study →',
   projectFeed: {
     all: 'All',
     filterLabel: 'Filter projects by tag',

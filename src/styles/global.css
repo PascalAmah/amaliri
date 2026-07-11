@@ -8,11 +8,28 @@
 /* ── View Transitions ────────────────────────────────────────── */
 @supports (view-transition-name: auto) {
   ::view-transition-old(root) {
-    animation: fade-out 800ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    animation: fade-out 400ms cubic-bezier(0.4, 0, 1, 1) forwards;
   }
 
   ::view-transition-new(root) {
-    animation: fade-in 800ms cubic-bezier(0, 0, 0.2, 1) forwards;
+    animation: fade-in 500ms cubic-bezier(0, 0, 0.2, 1) forwards;
+  }
+
+  /* Smooth hero image transitions between project pages */
+  ::view-transition-old(project-hero),
+  ::view-transition-old(project-featured) {
+    animation: fade-out 300ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
+  ::view-transition-new(project-hero),
+  ::view-transition-new(project-featured) {
+    animation: fade-in 400ms cubic-bezier(0, 0, 0.2, 1) forwards;
+  }
+
+  /* Smooth feed card transitions */
+  ::view-transition-old[class*='project-feed-'],
+  ::view-transition-new[class*='project-feed-'] {
+    animation-duration: 350ms;
   }
 }
 
@@ -35,19 +52,33 @@
 }
 
 /* ── Scroll reveal ───────────────────────────────────────────── */
+/* ── Scroll reveal ───────────────────────────────────────────── */
 [data-reveal],
 .reveal-child {
   opacity: 0;
   transform: translateY(20px);
+  filter: blur(6px);
   transition:
-    opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 [data-reveal].is-revealed,
 .reveal-child.is-revealed {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .reveal-child {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
 }
 
 /* ── Image fade-in on load ──────────────────────────────────── */

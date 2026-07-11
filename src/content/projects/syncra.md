@@ -1,6 +1,6 @@
 ---
 title: "Syncra SDK"
-description: "An npm package for offline-first sync logic. Handles data synchronization, conflict resolution, and offline state management. Ships with a landing page and developer dashboard."
+description: "npm package for offline-first data sync — operation queuing, ordered replay, conflict resolution, and a developer dashboard for monitoring."
 pubDate: "2025-03-01"
 tags: ["Node.js", "TypeScript", "npm", "Offline-first", "NestJS", "Redis"]
 githubUrl: "https://github.com/PascalAmah/syncra"
@@ -19,6 +19,24 @@ highlights:
   - "Developer dashboard with real-time visibility into queue depth, sync sessions, conflicts, and errors"
   - "Published on npm — installable in any Node.js or browser-based project"
 challenges: "Conflict resolution is genuinely hard to get right generically. Last-write-wins works for most cases but silently discards changes in ways that surprise developers. The challenge was designing an API that made the default safe and predictable, while still giving teams full control when they need it — without forcing them to understand the internals. The solution was a layered resolver system: a sensible default that handles 90% of cases, a simple override hook for domain-specific rules, and detailed conflict events surfaced to the dashboard so nothing gets dropped silently."
+metrics:
+  - value: "npm"
+    label: "Drop-in offline-first sync layer"
+  - value: "Ordered replay"
+    label: "Deduplicated on reconnect"
+  - value: "Redis-backed"
+    label: "Durable operation queue"
+  - value: "Configurable"
+    label: "Custom conflict resolvers"
+architecture:
+  - label: "Client SDK"
+    detail: "Queues ops offline"
+  - label: "Local store"
+    detail: "Persists across reloads"
+  - label: "NestJS API"
+    detail: "Brokers sync sessions"
+  - label: "Redis queue"
+    detail: "Ordered replay + dedup"
 heroImage: "./images/syncra/syncra-hero.png"
 # uiImages:
 #   - "./images/syncra/syncra-landing.png"

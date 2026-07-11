@@ -1,6 +1,6 @@
 ---
 title: "AfroGoods"
-description: "B2C e-commerce platform for African food products with a built-in ad hub where registered buyers can post their own adverts."
+description: "B2C marketplace for African food products with a built-in ad hub where buyers can post their own adverts."
 pubDate: "2024-12-01"
 tags: ["Node.js", "React", "NestJS", "MongoDB", "Stripe", "REST APIs"]
 liveUrl: "https://afrogoods-web.onrender.com"
@@ -16,6 +16,24 @@ highlights:
   - "Role-based access for buyers and admins"
   - "Deployed on Render with NestJS API and MongoDB Atlas"
 challenges: "Stripe webhook reliability was the trickiest part — handling duplicate events and ensuring idempotent order confirmation without double-processing required careful deduplication logic. The ad approval flow also needed to be lightweight enough that admin overhead stayed manageable, while still giving full control over what goes live on the platform."
+metrics:
+  - value: "Idempotent"
+    label: "Stripe webhook order settlement"
+  - value: "RBAC"
+    label: "Buyer & admin access control"
+  - value: "2 apps"
+    label: "Storefront + admin panel"
+  - value: "Full stack"
+    label: "NestJS API + MongoDB Atlas"
+architecture:
+  - label: "React client"
+    detail: "Storefront + admin"
+  - label: "NestJS API"
+    detail: "Catalogue, cart, orders, ad hub"
+  - label: "Stripe webhooks"
+    detail: "Idempotent settlement"
+  - label: "MongoDB Atlas"
+    detail: "Products, orders, inventory"
 heroImage: "./images/afrogoods/afrogoods-hero.png"
 uiImages:
    - "./images/afrogoods/afrogoods-home.png"

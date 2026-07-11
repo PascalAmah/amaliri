@@ -1,16 +1,12 @@
-.not-found-main {
-  max-width: var(--max-width-content);
-  margin: 0 auto;
-  padding: var(--space-10) var(--space-6) var(--space-24);
-  min-height: calc(100dvh - var(--nav-height) - 120px);
-  display: flex;
-  align-items: center;
-}
-
 .not-found-inner {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+  min-height: calc(100dvh - var(--nav-height) - 120px);
+  justify-content: center;
+  padding-inline: var(--space-5);
+  max-width: var(--max-width-wide);
+  margin-inline: auto;
 }
 
 .not-found-code {

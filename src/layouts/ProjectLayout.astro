@@ -1,14 +1,15 @@
 ---
-import 'toc-rail/style.css';
 import '../styles/layouts/project.css';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { CollectionEntry } from 'astro:content';
-import Comments from '../components/Comments.astro';
+
+import Container from '../components/Container.astro';
+import ArchitectureDiagram from '../components/ArchitectureDiagram.astro';
 import FeaturedProjectGrid from '../components/FeaturedProjectGrid.astro';
-import FormattedDate from '../components/FormattedDate.astro';
 import ImageLightbox from '../components/ImageLightbox.astro';
 import ScrollFocus from '../components/ScrollFocus.astro';
+import Section from '../components/Section.astro';
 import BaseLayout from './BaseLayout.astro';
 import { SITE_AUTHOR, SITE_LANG, SITE_TITLE } from '../consts';
 import { getUiText } from '../ui';
@@ -16,6 +17,7 @@ import { withBase } from '../utils/paths';
 import { serializeScriptJson } from '../utils/serialize-script-json';
 
 type Props = CollectionEntry<'projects'>['data'] & {
+  projectId?: string;
   readingTime?: number;
   relatedProjects?: CollectionEntry<'projects'>[];
   uiImages?: ImageMetadata[];
@@ -27,7 +29,7 @@ const {
   pubDate,
   updatedDate,
   heroImage,
-  readingTime,
+  projectId,
   focusEffect,
   githubUrl,
   liveUrl,
@@ -38,6 +40,8 @@ const {
   whatWasBuilt,
   highlights,
   challenges,
+  metrics,
+  architecture,
 } = Astro.props;
 
 const tr = getUiText();
@@ -77,13 +81,14 @@ const jsonLd = serializeScriptJson({
 
   {focusEffect && <ScrollFocus variant={focusEffect} />}
 
-  <main id="main-content" class="project-main">
-    <article data-pagefind-body>
-      <a href={projectsBase} class="back-link">{tr.backLink}</a>
+  <Container variant="showcase" transition:animate="slide">
+    <article>
+      <div class="project-content">
+        <a href={projectsBase} class="back-link">{tr.backLink}</a>
 
       <header class="project-header">
         <div class="project-accent"></div>
-        <h1 class="project-title" data-pagefind-meta="title">{title}</h1>
+        <h1 class="project-title">{title}</h1>
         {description && <p class="project-description">{description}</p>}
         {
           (githubUrl || liveUrl) && (
@@ -122,13 +127,26 @@ const jsonLd = serializeScriptJson({
               sizes="(max-width: 600px) 100vw, (max-width: 900px) 90vw, 720px"
               quality={90}
               class="project-hero-img image-fade-in"
-              style={`view-transition-name: project-hero-${title.replace(/\s+/g, '-').toLowerCase()}`}
+              transition:name={`project-hero-${projectId}`}
             />
           </div>
         )
       }
 
       <div class="project-divider"></div>
+
+      {
+        metrics && metrics.length > 0 && (
+          <ul class="project-metrics" data-reveal-group>
+            {metrics.map((m) => (
+              <li class="project-metric">
+                <span class="project-metric-value">{m.value}</span>
+                <span class="project-metric-label">{m.label}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
 
       {
         (problem || whatWasBuilt || (highlights && highlights.length > 0) || challenges) && (
@@ -156,8 +174,8 @@ const jsonLd = serializeScriptJson({
               </div>
             )}
             {challenges && (
-              <div class="overview-block" data-reveal>
-                <p class="overview-label">Challenges & Learnings</p>
+              <div class="overview-block engineering-callout" data-reveal>
+                <p class="overview-label">Engineering Decisions</p>
                 <p class="overview-text">{challenges}</p>
               </div>
             )}
@@ -165,14 +183,23 @@ const jsonLd = serializeScriptJson({
         )
       }
 
+      {
+        architecture && architecture.length > 0 && (
+          <div class="overview-block" data-reveal>
+            <p class="overview-label">Architecture</p>
+            <ArchitectureDiagram nodes={architecture} />
+          </div>
+        )
+      }
+
       <div class="prose" id="prose-content">
         <slot />
+      </div>
       </div>
 
       {
         uiImages && uiImages.length > 0 && (
-          <section class="screenshots-section" data-pagefind-ignore="all">
-            <p class="screenshots-label" data-reveal>Screenshots</p>
+          <Section label="Screenshots" data-reveal>
             <div class="screenshots-grid" data-reveal-group>
               {uiImages.map((img, i) => (
                 <a href={img.src} class="screenshot-item image-fade-in" data-lightbox>
@@ -187,31 +214,24 @@ const jsonLd = serializeScriptJson({
                 </a>
               ))}
             </div>
-          </section>
+          </Section>
         )
       }
 
       {
         relatedProjects.length > 0 && (
-          <section class="related-section" data-pagefind-ignore="all">
-            <div class="related-header">
-              <p class="related-label">{tr.relatedProjects}</p>
+          <Section label={tr.relatedProjects} variant="default">
+            <FeaturedProjectGrid projects={relatedProjects} variant="related" />
+            <Fragment slot="actions">
               <a href={projectsBase} class="related-view-all">
                 {tr.allProjects}
               </a>
-            </div>
-            <FeaturedProjectGrid projects={relatedProjects} variant="related" />
-          </section>
+            </Fragment>
+          </Section>
         )
       }
     </article>
-    <Comments />
-  </main>
+  </Container>
   <ImageLightbox />
 
-  <script>
-    import { mountReadingRailLoader } from '../scripts/reading-rail-loader';
-
-    mountReadingRailLoader();
-  </script>
 </BaseLayout>

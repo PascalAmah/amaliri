@@ -1,0 +1,47 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Variant = 'content' | 'prose' | 'showcase' | 'wide';
+type As = 'div' | 'section' | 'article' | 'header' | 'footer' | 'main' | 'aside' | 'nav';
+
+type Props = HTMLAttributes<'div'> & {
+  variant?: Variant;
+  as?: As;
+};
+
+const { variant = 'wide', as: Tag = 'div', class: className, ...htmlAttrs } = Astro.props;
+---
+
+<Tag class:list={['container', `container--${variant}`, className]} {...htmlAttrs}>
+  <slot />
+</Tag>
+
+<style>
+  .container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+  }
+
+  @media (max-width: 600px) {
+    .container {
+      padding-inline: var(--space-4);
+    }
+  }
+
+  .container--content {
+    max-width: var(--max-width-content);
+  }
+
+  .container--prose {
+    max-width: var(--max-width-prose);
+  }
+
+  .container--showcase {
+    max-width: var(--max-width-showcase);
+  }
+
+  .container--wide {
+    max-width: var(--max-width-wide);
+  }
+</style>

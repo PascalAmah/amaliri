@@ -1,6 +1,6 @@
 ---
 title: "FoodNeural"
-description: "AI-Powered Food Impact Analyzer that analyzes the environmental impact of food products using machine learning. Assesses greenhouse gas emissions, water usage, and land impact to help users make sustainable dietary choices."
+description: "AI-powered environmental impact analyzer for food products. Assesses greenhouse gas emissions, water usage, and land impact using machine learning."
 pubDate: "2024-11-20"
 tags: ["Flask", "React", "pandas", "scikit-learn", "Transformers"]
 githubUrl: "https://github.com/PascalAmah/FoodNeural"
@@ -17,6 +17,24 @@ highlights:
   - "Flask API backend with clean separation between data processing pipeline and serving layer"
   - "Responsive React frontend with visual impact breakdowns and sustainability score"
 challenges: "Training data coverage was uneven — processed and packaged food products had rich lifecycle data while regional and artisanal products were sparsely represented. Sparse coverage would have made the model confidently wrong for less common inputs. The solution was a confidence scoring layer that flags low-coverage predictions and falls back to category-level estimates with explicit uncertainty communication in the UI, so users aren't misled by extrapolated outputs."
+metrics:
+  - value: "3 metrics"
+    label: "GHG, water & land impact per product"
+  - value: "NLP"
+    label: "Free-text queries via Transformers"
+  - value: "Confidence-scored"
+    label: "Flags low-coverage predictions"
+  - value: "Full stack"
+    label: "Flask ML API + React frontend"
+architecture:
+  - label: "React frontend"
+    detail: "Free-text product query"
+  - label: "Flask API"
+    detail: "Serving layer"
+  - label: "Transformers NLP"
+    detail: "Query → product match"
+  - label: "scikit-learn model"
+    detail: "3-metric impact + confidence"
 heroImage: "./images/foodneural/foodneural-hero.png"
 uiImages:
    - "./images/foodneural/foodneural-home.png"

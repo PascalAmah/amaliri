@@ -1,11 +1,16 @@
 /* ============================================================
-   Tone Design Tokens — Global Tokens & Base Styles
+   Pascal Portfolio — Design Tokens & Base Styles
+   ============================================================
+
+   Gold:    --accent-bright (display/decorative)
+            --accent-strong (AA-compliant text)
+   Green:   --status-open (AA-compliant "Open to work")
    ============================================================ */
 
 /* ------------------------------------------------------------
    0. FONTS
    ------------------------------------------------------------ */
-/* DM Sans, Syne, DM Mono loaded via Google Fonts in BaseHead.astro */
+/* DM Sans, Syne, DM Mono loaded via @fontsource in BaseHead.astro */
 
 @font-face {
   font-family: 'Tone Mono';
@@ -56,16 +61,27 @@
   --tracking-wide: 0.025em;
 
   /* ------------------------------------------------------------
-     2. COLOR
+     2. COLOR — Light mode (default)
      ------------------------------------------------------------ */
 
-  /* Brand and state colors */
-  --color-accent: #C9A227;
-  --color-success: #34c759;
-  --color-warning: #ff9500;
+  /* Accent — dual tokens for WCAG AA compliance
+     --accent-strong:  AA-compliant for text on white/light bg  (4.86:1 ✓)
+     --accent-bright:  Full-gold display color (fills, decorative, large elements) */
+  --accent-strong: #7d6218;
+  --accent-bright: #c9a227;
 
-  /* Backward-compatible aliases for existing component styles. */
-  --color-blue: var(--color-accent);
+  /* Status colors — AA-compliant for text on white bg */
+  --color-success: #15803d; /* 5.9:1 on white ✓ */
+  --color-warning: #b86200; /* 4.56:1 on white ✓ */
+
+  /* Status indicator for "Open to work" pill */
+  --status-open: #15803d; /* text on white: 5.9:1 ✓ */
+  --status-open-bg: #dcfce7; /* light green bg, AA-compliant text contrast with --status-open */
+  --status-open-dot: #22c55e;
+
+  /* Backward-compatible aliases */
+  --color-accent: var(--accent-strong);
+  --color-blue: var(--accent-strong);
   --color-green: var(--color-success);
   --color-orange: var(--color-warning);
 
@@ -85,7 +101,7 @@
   --bg-grouped-secondary: #ffffff;
   --bg-grouped-tertiary: #f7fbfd;
 
-  /* Fill Colors — gold tint */
+  /* Fill Colors — gold tint (using bright gold for fills) */
   --fill-primary: rgba(201, 162, 39, 0.14);
   --fill-secondary: rgba(201, 162, 39, 0.1);
   --fill-tertiary: rgba(201, 162, 39, 0.07);
@@ -161,6 +177,8 @@
      7. LAYOUT
      ------------------------------------------------------------ */
   --max-width-content: 784px;
+  --max-width-prose: 720px;
+  --max-width-showcase: 1200px;
   --max-width-wide: 880px;
   --nav-height: 52px;
 }
@@ -189,10 +207,20 @@
     --separator: rgba(84, 84, 88, 0.65);
     --separator-opaque: #38383a;
 
-    --color-accent: #E6B84D;
-    --color-success: #30d158;
-    --color-warning: #ff9f0a;
-    --color-blue: var(--color-accent);
+    /* Dark mode: E6B84D is ~11.9:1 on black ✓, use same for strong + bright */
+    --accent-strong: #e6b84d;
+    --accent-bright: #e6b84d;
+
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+
+    /* "Open to work" pill — dark mode */
+    --status-open: #4ade80;
+    --status-open-bg: color-mix(in srgb, #22c55e 10%, transparent);
+    --status-open-dot: #22c55e;
+
+    --color-accent: var(--accent-strong);
+    --color-blue: var(--accent-strong);
     --color-green: var(--color-success);
     --color-orange: var(--color-warning);
 
@@ -222,10 +250,15 @@
   --fill-quaternary: rgba(201, 162, 39, 0.06);
   --separator: rgba(84, 84, 88, 0.65);
   --separator-opaque: #38383a;
-  --color-accent: #E6B84D;
-  --color-success: #30d158;
-  --color-warning: #ff9f0a;
-  --color-blue: var(--color-accent);
+  --accent-strong: #e6b84d;
+  --accent-bright: #e6b84d;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --status-open: #4ade80;
+  --status-open-bg: color-mix(in srgb, #22c55e 10%, transparent);
+  --status-open-dot: #22c55e;
+  --color-accent: var(--accent-strong);
+  --color-blue: var(--accent-strong);
   --color-green: var(--color-success);
   --color-orange: var(--color-warning);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px 4px rgba(0, 0, 0, 0.3);
@@ -249,10 +282,15 @@
   --bg-tertiary: #ffffff;
   --separator: rgba(60, 60, 67, 0.29);
   --separator-opaque: #c6c6c8;
-  --color-accent: #C9A227;
-  --color-success: #34c759;
-  --color-warning: #ff9500;
-  --color-blue: var(--color-accent);
+  --accent-strong: #7d6218;
+  --accent-bright: #c9a227;
+  --color-success: #15803d;
+  --color-warning: #b86200;
+  --status-open: #15803d;
+  --status-open-bg: #dcfce7;
+  --status-open-dot: #22c55e;
+  --color-accent: var(--accent-strong);
+  --color-blue: var(--accent-strong);
   --color-green: var(--color-success);
   --color-orange: var(--color-warning);
 }

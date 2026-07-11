@@ -11,11 +11,11 @@ import config from './astro-theme-config.ts';
 import { toneExpressiveCodeOptions } from './src/config/expressive-code.ts';
 
 // https://astro.build/config
-const sitemapExcludedPaths = new Set(['/search/']);
+/** @type {Set<string>} */
+const sitemapExcludedPaths = new Set();
 const configuredSite = process.env.ASTRO_SITE_URL || config.site.url;
 const configuredBaseValue = process.env.ASTRO_SITE_BASE ?? config.site.base;
-const configuredBase =
-  configuredBaseValue === '/' ? '' : configuredBaseValue.replace(/\/$/, '');
+const configuredBase = configuredBaseValue === '/' ? '' : configuredBaseValue.replace(/\/$/, '');
 
 /** @param {string} pathname */
 function withoutConfiguredBase(pathname) {

@@ -13,6 +13,12 @@ type Props = {
 
 const { projects, basePath = '/projects', variant = 'home' } = Astro.props;
 const projectSlug = (id: string) => id;
+
+/** Generate descriptive alt text for each slide in a project's UI image set. */
+function slideAlt(title: string, index: number, total: number): string {
+  const descriptor = total === 1 ? '' : ` — slide ${index + 1} of ${total}`;
+  return `${title}${descriptor}`;
+}
 const placeholderEntries = await Promise.all(
   projects.map(
     async (project) =>
@@ -51,7 +57,7 @@ const imagePlaceholderStyle = (src: string | undefined) =>
           class:list={['featured-project-card', `featured-project-card--slot-${index + 1}`]}
           data-slideshow={hasSlides ? 'true' : undefined}
           data-slide-interval="3000"
-          style={`view-transition-name: project-${project.id}`}
+          transition:name={`project-featured-${project.id}`}
         >
           <div
             class="featured-project-card-media"
@@ -61,7 +67,7 @@ const imagePlaceholderStyle = (src: string | undefined) =>
               slides.map((img, i) => (
                 <Image
                   src={img}
-                  alt={`${project.data.title} screenshot ${i + 1}`}
+                  alt={slideAlt(project.data.title, i, slides.length)}
                   class:list={['featured-project-card-img', 'slide-img', i === 0 && 'is-active']}
                   widths={[320, 480, 700, 960, 1280, 1600]}
                   sizes={
@@ -102,6 +108,32 @@ const imagePlaceholderStyle = (src: string | undefined) =>
                 )}
               </div>
             )}
+            {(project.data.liveUrl || project.data.githubUrl) && (
+              <div class="featured-project-card-actions">
+                {project.data.liveUrl && (
+                  <span
+                    class="card-action"
+                    data-href={project.data.liveUrl}
+                    role="link"
+                    tabindex="0"
+                    aria-label={`${project.data.title} — live demo`}
+                  >
+                    Live ↗
+                  </span>
+                )}
+                {project.data.githubUrl && (
+                  <span
+                    class="card-action"
+                    data-href={project.data.githubUrl}
+                    role="link"
+                    tabindex="0"
+                    aria-label={`${project.data.title} — source on GitHub`}
+                  >
+                    Source
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </a>
       );
@@ -110,6 +142,23 @@ const imagePlaceholderStyle = (src: string | undefined) =>
 </div>
 
 <script>
+  function mountCardActions() {
+    document.querySelectorAll<HTMLElement>('.card-action').forEach((el) => {
+      if (el.dataset.ready === 'true') return;
+      el.dataset.ready = 'true';
+      const go = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const href = el.dataset.href;
+        if (href) window.open(href, '_blank', 'noopener');
+      };
+      el.addEventListener('click', go);
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') go(e);
+      });
+    });
+  }
+
   function mountSlideshows() {
     document.querySelectorAll<HTMLElement>('[data-slideshow="true"]').forEach((card) => {
       const imgs = card.querySelectorAll<HTMLElement>('.slide-img');
@@ -140,10 +189,18 @@ const imagePlaceholderStyle = (src: string | undefined) =>
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mountSlideshows);
+    document.addEventListener('DOMContentLoaded', () => {
+      mountSlideshows();
+      mountCardActions();
+    });
   } else {
     mountSlideshows();
+    mountCardActions();
   }
+  document.addEventListener('astro:page-load', () => {
+    mountSlideshows();
+    mountCardActions();
+  });
 </script>
 
 <style>
@@ -387,14 +444,53 @@ const imagePlaceholderStyle = (src: string | undefined) =>
     flex-wrap: wrap;
   }
 
+  .featured-project-card-actions {
+    margin-top: var(--space-3);
+    display: flex;
+    gap: var(--space-2);
+    pointer-events: auto;
+  }
+
+  .card-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #fff;
+    background: color-mix(in srgb, var(--accent-bright) 26%, rgba(0, 0, 0, 0.32));
+    border: 1px solid color-mix(in srgb, var(--accent-bright) 55%, transparent);
+    border-radius: var(--radius-full);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    cursor: pointer;
+    transition:
+      background var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-spring);
+  }
+
+  .card-action:hover {
+    background: color-mix(in srgb, var(--accent-bright) 42%, rgba(0, 0, 0, 0.28));
+    transform: translateY(-1px);
+  }
+
+  .card-action:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
   .tag-badge {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: color-mix(in srgb, var(--accent-bright) 26%, rgba(0, 0, 0, 0.32));
+    border: 1px solid color-mix(in srgb, var(--accent-bright) 55%, transparent);
     border-radius: 4px;
-    padding: 2px 6px;
+    padding: 2px 7px;
     font-size: 0.7rem;
+    font-weight: 500;
     color: #fff;
     white-space: nowrap;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
   .featured-project-card--slot-2 .featured-project-card-title,

@@ -1,8 +1,9 @@
 ---
-import '../../styles/pages/projects-index.css';
 import { getCollection } from 'astro:content';
 import ProjectFeed from '../../components/ProjectFeed.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
 import { SITE_DESCRIPTION } from '../../consts';
 import { getUiText } from '../../ui';
 
@@ -13,15 +14,10 @@ const projects = (await getCollection('projects'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<BaseLayout title={tr.projectsTitle} description={SITE_DESCRIPTION}>
-  <main id="main-content" class="projects-main">
-    <div class="projects-header" data-reveal>
-      <div>
-        <p class="projects-label eyebrow-accent">{tr.projectsEyebrow}</p>
-        <h1 class="projects-title">{tr.projectsTitle}</h1>
-      </div>
-    </div>
-
-    <ProjectFeed projects={projects} basePath="/projects" initialVisible={8} />
-  </main>
+<BaseLayout title={tr.projectsTitle} description={SITE_DESCRIPTION} bodyClass="projects-layout">
+  <Container variant="showcase">
+    <Section label={tr.projectsEyebrow} heading={tr.projectsTitle} variant="showcase" data-reveal>
+      <ProjectFeed projects={projects} basePath="/projects" initialVisible={8} />
+    </Section>
+  </Container>
 </BaseLayout>

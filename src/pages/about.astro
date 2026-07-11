@@ -3,39 +3,6 @@ import '../styles/pages/about.css';
 import config from '../../astro-theme-config';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const slugMap: Record<string, string> = {
-  'React.js': 'react',
-  'Next.js': 'nextdotjs',
-  'Node.js': 'nodedotjs',
-  'Express.js': 'express',
-  NestJS: 'nestjs',
-  'Tailwind CSS': 'tailwindcss',
-  JavaScript: 'javascript',
-  TypeScript: 'typescript',
-  Python: 'python',
-  Flask: 'flask',
-  Django: 'django',
-  PHP: 'php',
-  FastAPI: 'fastapi',
-  MongoDB: 'mongodb',
-  MySQL: 'mysql',
-  Firebase: 'firebase',
-  PostgresSQL: 'postgresql',
-  Docker: 'docker',
-  Git: 'git',
-  GitHub: 'github',
-  HTML: 'html5',
-  CSS: 'css3',
-  Redux: 'redux',
-  pandas: 'pandas',
-  'scikit-learn': 'scikitlearn',
-  Transformers: 'huggingface',
-  Graphql: 'graphql',
-  'CI/CD': 'githubactions',
-  'REST APIs': 'openai',
-  Agile: 'jira',
-};
-
 const profileImageUrl = config.about.profileImage.trim();
 const hasProfileImage = profileImageUrl.length > 0;
 const profileName = config.about.name || config.site.author;
@@ -70,8 +37,8 @@ const profileLinks = [
 ].filter((link) => link.href);
 ---
 
-<BaseLayout title="About" description={profileLead}>
-  <main id="main-content" class="about-main">
+<BaseLayout title="About" description={profileLead} bodyClass="about-layout">
+  <div class="about-main">
     <section class="about-hero" aria-labelledby="about-title">
       <div class="about-intro" data-reveal>
         <p class="about-lead">
@@ -144,25 +111,9 @@ const profileLinks = [
             <li class="skills-category">
               <p class="skills-category-label">{category.label}</p>
               <div class="skills-tags">
-                {category.names.map((name) => {
-                  const slug = slugMap[name];
-                  return (
-                    <span class="skills-badge">
-                      {slug && (
-                        <img
-                          src={`https://cdn.simpleicons.org/${slug}/888888`}
-                          alt=""
-                          width="14"
-                          height="14"
-                          class="skill-icon"
-                          loading="lazy"
-                          onerror="this.style.display='none'"
-                        />
-                      )}
-                      {name}
-                    </span>
-                  );
-                })}
+                {category.names.map((name) => (
+                  <span class="skills-badge">{name}</span>
+                ))}
               </div>
             </li>
           ))}
@@ -196,5 +147,5 @@ const profileLinks = [
         </ul>
       </div>
     </section>
-  </main>
+  </div>
 </BaseLayout>

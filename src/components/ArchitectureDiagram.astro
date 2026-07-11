@@ -1,0 +1,118 @@
+---
+/**
+ * ArchitectureDiagram — renders a project's request/data path as a
+ * responsive flow of connected tier nodes. Data comes from the project's
+ * own `architecture` frontmatter; nothing is inferred beyond what's given.
+ */
+type Node = { label: string; detail?: string };
+
+type Props = {
+  nodes: Node[];
+  class?: string;
+};
+
+const { nodes, class: className } = Astro.props;
+---
+
+{
+  nodes.length > 0 && (
+    <figure class:list={['arch', className]} role="img" aria-label={`Architecture: ${nodes.map((n) => n.label).join(' to ')}`}>
+      <ol class="arch-flow">
+        {nodes.map((node, i) => (
+          <li class="arch-node-wrap">
+            <div class="arch-node">
+              <span class="arch-node-label">{node.label}</span>
+              {node.detail && <span class="arch-node-detail">{node.detail}</span>}
+            </div>
+            {i < nodes.length - 1 && (
+              <span class="arch-arrow" aria-hidden="true">→</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </figure>
+  )
+}
+
+<style>
+  .arch {
+    margin: 0 0 var(--space-10);
+  }
+
+  .arch-flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .arch-node-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .arch-node {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1 1 auto;
+    min-width: 8.5rem;
+    padding: var(--space-3) var(--space-4);
+    background: var(--fill-tertiary);
+    border: 1px solid var(--fill-primary);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      background var(--duration-fast) var(--ease-out);
+  }
+
+  .arch-node:hover {
+    background: var(--fill-secondary);
+    border-color: var(--accent-strong);
+  }
+
+  .arch-node-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-footnote);
+    font-weight: var(--weight-semibold);
+    color: var(--label-primary);
+    letter-spacing: 0.01em;
+  }
+
+  .arch-node-detail {
+    font-size: var(--text-caption-1);
+    color: var(--label-tertiary);
+    line-height: var(--leading-snug);
+  }
+
+  .arch-arrow {
+    flex: 0 0 auto;
+    color: var(--accent-strong);
+    font-size: var(--text-callout);
+    font-weight: var(--weight-bold);
+  }
+
+  @media (max-width: 640px) {
+    .arch-flow {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .arch-node-wrap {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .arch-arrow {
+      align-self: center;
+      transform: rotate(90deg);
+      margin: 2px 0;
+    }
+  }
+</style>

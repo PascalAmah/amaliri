@@ -22,10 +22,12 @@ const config = {
     title: 'Pascal Amaliri',
     logoLabel: 'Pascal',
     description:
-      'Fullstack engineer with a strong backend focus — I design and build scalable APIs, real-time systems, intuitive frontends, and AI-powered applications. I can own the full stack when needed, but backend architecture and performance is where I do my best work.',
-      author: 'Pascal Amaliri',
+      'Full-stack engineer building scalable APIs, real-time systems, intuitive frontends, and AI-powered applications. I own the full stack when needed, but backend architecture is where I do my best work.',
+    author: 'Pascal Amaliri',
     /** Optional absolute or root-relative image URL for homepage/search/about social previews. */
     defaultOgImage: '/og.png',
+    /** Résumé PDF served from /public. */
+    resumeUrl: '/pascal-amaliri-resume.pdf',
   },
 
   // The logo already links to `/`. Add items here if you want visible header links.
@@ -33,14 +35,12 @@ const config = {
   nav: [
     { label: 'Projects', href: '/projects' },
     { label: 'About', href: '/about' },
-    { label: 'Search', href: '/search' },
   ] as NavItem[],
 
   // Footer links stay visible by default so readers have a stable way to move around.
   footerNav: [
     { label: 'Projects', href: '/projects' },
     { label: 'About', href: '/about' },
-    { label: 'Search', href: '/search' },
   ] as NavItem[],
 
   content: {
@@ -63,23 +63,6 @@ const config = {
 
   comments: {
     mode: 'off',
-    provider: 'giscus',
-    giscus: {
-      repo: '',
-      repoId: '',
-      category: '',
-      categoryId: '',
-      mapping: 'pathname',
-      strict: '0',
-      reactionsEnabled: '0',
-      emitMetadata: '0',
-      inputPosition: 'bottom',
-      theme: 'preferred_color_scheme',
-      customLightTheme: '/giscus-light.css',
-      customDarkTheme: '/giscus-dark.css',
-      lang: 'en',
-      loading: 'eager',
-    },
   },
 
   social: {
@@ -90,7 +73,10 @@ const config = {
     whatsapp: 'https://wa.me/+2347062940343',
     instagram: 'https://instagram.com/chisax_',
     twitter: 'https://x.com/chisax_',
-  } as Record<'website' | 'email' | 'linkedin' | 'github' | 'whatsapp' | 'instagram' | 'twitter', string>,
+  } as Record<
+    'website' | 'email' | 'linkedin' | 'github' | 'whatsapp' | 'instagram' | 'twitter',
+    string
+  >,
 
   skills: [
     {
@@ -112,7 +98,7 @@ const config = {
     },
     {
       label: 'Databases',
-      names: ['MongoDB', 'MySQL', 'Firebase', 'PostgresSQL'],
+      names: ['MongoDB', 'MySQL', 'Firebase', 'PostgreSQL'],
     },
     {
       label: 'Tools & AI/ML',
@@ -126,10 +112,86 @@ const config = {
         'scikit-learn',
         'Transformers',
         'REST APIs',
-        'Graphql',
+        'GraphQL',
       ],
     },
   ],
+
+  home: {
+    /** Hero — outcome-led, not a job title. */
+    hero: {
+      status: 'Available for backend & full-stack roles',
+      headline: 'Software engineer who ships systems that stay up.',
+      subhead:
+        'I design scalable APIs, real-time platforms, and AI-powered apps. Backend architecture and performance is where I do my best work — and I can own the full stack when it counts.',
+      primaryCta: { label: 'View work', href: '/projects' },
+      secondaryCta: { label: 'Résumé', href: '/pascal-amaliri-resume.pdf' },
+      /** Hero visual: 'terminal' (signature) or 'portrait' (uses about.profileImage). */
+      visual: 'terminal' as 'terminal' | 'portrait',
+      /** Lines rendered in the terminal card. `cmd` lines get a prompt + typing. */
+      terminal: [
+        { cmd: 'whoami' },
+        { out: 'pascal — fullstack software engineer' },
+        { cmd: 'cat stack.txt' },
+        { out: 'Node · NestJS · Python · FastAPI · Postgres · Docker' },
+        { cmd: './ship --status' },
+        { out: '✓ 6 systems in production' },
+      ] as { cmd?: string; out?: string }[],
+    },
+    /** Honest, factual proof chips — scope shipped, not invented traffic numbers. */
+    metrics: [
+      { value: '6', label: 'Production systems shipped' },
+      { value: '5', label: 'Industries: fintech, e-commerce, edu, hospitality, Web3' },
+      { value: '3+', label: 'Years building for the web' },
+      { value: 'Full-stack', label: 'Backend-focused, ships end to end' },
+    ],
+    /** Companies/contexts, surfaced as a trust row under the hero. */
+    proof: ['Outside Hospitality', 'AfroGoods', 'Skil Connect', 'TripHoppa'],
+    /** Curated skills for the homepage — depth signal, not a 30-item dump. */
+    coreSkills: [
+      'Node.js',
+      'NestJS',
+      'Python',
+      'FastAPI',
+      'PostgreSQL',
+      'MongoDB',
+      'TypeScript',
+      'Docker',
+    ],
+    familiarSkills: [
+      'React.js',
+      'Next.js',
+      'Express.js',
+      'Django',
+      'Redux',
+      'GraphQL',
+      'Redis',
+      'CI/CD',
+    ],
+    /**
+     * Testimonials — REPLACE these placeholders with real, attributable quotes.
+     * The entries below are obvious templates so nothing fake ships by accident.
+     * Delete any you can't fill; set to [] to hide the section entirely.
+     * Shape: { quote: string, name: string, role: string }
+     */
+    testimonials: [
+      // {
+      //   quote: 'Placeholder — replace with a real quote about working with you (impact, reliability, ownership).',
+      //   name: 'Full Name',
+      //   role: 'Role · Company',
+      // },
+      // {
+      //   quote: 'Placeholder — a teammate or lead describing a specific strength (e.g. owned backend reliability end to end).',
+      //   name: 'Full Name',
+      //   role: 'Role · Company',
+      // },
+      // {
+      //   quote: 'Placeholder — a client or manager on outcomes you delivered. Keep it short and specific.',
+      //   name: 'Full Name',
+      //   role: 'Role · Company',
+      // },
+    ] as { quote: string; name: string; role: string }[],
+  },
 
   about: {
     /** Profile image URL. Leave empty to use the text-only About layout. */
@@ -139,27 +201,26 @@ const config = {
     location: 'Lagos, Nigeria',
     focus: 'Software Engineering, Backend Development, and AI/ML.',
     /** Short bio used on the homepage about teaser. */
-    shortBio: "I'm a full-stack software engineer from Nigeria with a passion for building robust, scalable systems that solve real problems.",
-    lead: "I'm a full-stack software engineer from Nigeria with a passion for building robust, scalable systems that solve real problems. My work spans backend APIs, cloud-connected platforms, and AI-powered tools. Always with a focus on performance, clean architecture, and developer experience. I've shipped production systems across hospitality, e-commerce, education, and environmental tech, collaborating with cross-functional teams and leading backend initiatives. When I'm not writing code, I'm exploring new machine learning techniques or contributing to open-source projects.",
+    shortBio:
+      'Full-stack software engineer from Nigeria building robust, scalable systems — APIs, real-time platforms, and AI tools — that solve real problems.',
+    lead: 'I’m a full-stack software engineer from Nigeria building robust, scalable systems — APIs, real-time platforms, intuitive frontends, and AI-powered tools. I’ve shipped production systems across hospitality, e-commerce, education, and environmental tech. I’ve led backend initiatives, collaborated with cross-functional teams, and built everything from Stripe-integrated checkout flows to on-chain smart contracts. When I’m not writing code, I’m exploring machine learning or contributing to open-source projects.',
     headline: ['Building', 'scalable systems.'],
     statementLabel: 'Skills',
     statementTitle: 'What I work with.',
-    statement:
-      'This page is intentionally spare: a short bio, a few links, and enough context for readers who want to know who is writing.',
     careerLabel: 'Career',
     career: [
       {
-        period: 'Nov 2025 - Present',
+        period: 'Nov 2024 - Present',
         title: 'Software Engineer | Backend',
-        description: 'Outside Hospitaity',
+        description: 'Outside Hospitality',
       },
       {
-        period: 'Dec 2025 - Feb 2025',
+        period: 'Dec 2024 - Feb 2025',
         title: 'Software Developer | Backend',
         description: 'AfroGoods',
       },
       {
-        period: 'Sept 2025 - Present',
+        period: 'Sept 2024 - Present',
         title: 'Software Developer | Backend',
         description: 'Skil Connect',
       },
@@ -174,7 +235,12 @@ const config = {
         description: 'ALX',
       },
     ],
-    interests: ['Backend Systems', 'AI & Machine Learning', 'Web Development', 'Mobile App Development'],
+    interests: [
+      'Backend Systems',
+      'AI & Machine Learning',
+      'Web Development',
+      'Mobile App Development',
+    ],
     interestsLabel: 'Interests',
     interestsHeading: 'What I enjoy working on',
   },
