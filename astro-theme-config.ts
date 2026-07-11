@@ -25,7 +25,7 @@ const config = {
       'Full-stack engineer building scalable APIs, real-time systems, intuitive frontends, and AI-powered applications. I own the full stack when needed, but backend architecture is where I do my best work.',
     author: 'Pascal Amaliri',
     /** Optional absolute or root-relative image URL for homepage/search/about social previews. */
-    defaultOgImage: '/og.png',
+    defaultOgImage: '/amaliri.png',
     /** Résumé PDF served from /public. */
     resumeUrl: '/pascal-amaliri-resume.pdf',
   },
