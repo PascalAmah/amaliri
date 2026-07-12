@@ -204,7 +204,7 @@ const config = {
     /** Short bio used on the homepage about teaser. */
     shortBio:
       'Full-stack software engineer from Nigeria. I build robust, scalable systems, APIs, real-time platforms, and AI tools that solve real problems.',
-    lead: 'I’m a full-stack software engineer from Nigeria.  build robust, scalable systems, APIs, real-time platforms, intuitive frontends, and AI-powered tools. I’ve shipped production systems across hospitality, e-commerce, education, and environmental tech. I’ve led backend initiatives, collaborated with cross-functional teams, and built everything from Stripe-integrated checkout flows to on-chain smart contracts. When I’m not writing code, I’m exploring machine learning or contributing to open-source projects.',
+    lead: 'I’m a full-stack software engineer from Nigeria. I build robust, scalable systems, APIs, real-time platforms, intuitive frontends, and AI-powered tools. I’ve shipped production systems across hospitality, e-commerce, education, and environmental tech. I’ve led backend initiatives, collaborated with cross-functional teams, and built everything from Stripe-integrated checkout flows to on-chain smart contracts. When I’m not writing code, I’m exploring machine learning or contributing to open-source projects.',
     headline: ['Building', 'scalable systems.'],
     statementLabel: 'Skills',
     statementTitle: 'What I work with.',
