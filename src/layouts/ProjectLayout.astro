@@ -33,6 +33,7 @@ const {
   focusEffect,
   githubUrl,
   liveUrl,
+  status,
   relatedProjects = [],
   uiImages,
   tags = [],
@@ -88,6 +89,12 @@ const jsonLd = serializeScriptJson({
 
       <header class="project-header">
         <div class="project-accent"></div>
+        {status === 'in-progress' && (
+          <span class="project-status">
+            <span class="project-status-dot" aria-hidden="true" />
+            In Development
+          </span>
+        )}
         <h1 class="project-title">{title}</h1>
         {description && <p class="project-description">{description}</p>}
         {

@@ -89,6 +89,12 @@ const imagePlaceholderStyle = (src: string | undefined) =>
               </div>
             )}
             <div class="featured-project-card-veil" />
+            {project.data.status === 'in-progress' && (
+              <span class="status-pill">
+                <span class="status-pill-dot" aria-hidden="true" />
+                In Development
+              </span>
+            )}
             <div class="featured-project-card-hover">
               <span class="featured-project-card-arrow" aria-hidden="true">↗</span>
             </div>
@@ -404,6 +410,54 @@ const imagePlaceholderStyle = (src: string | undefined) =>
   .featured-project-card-arrow {
     font-size: 1.1rem;
     font-weight: 600;
+  }
+
+  /* ── In-development status pill ── */
+  .status-pill {
+    position: absolute;
+    top: var(--space-4);
+    left: var(--space-4);
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: #fff;
+    background: color-mix(in srgb, var(--accent-bright) 30%, rgba(0, 0, 0, 0.4));
+    border: 1px solid color-mix(in srgb, var(--accent-bright) 60%, transparent);
+    border-radius: var(--radius-full);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .status-pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-bright);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-bright) 70%, transparent);
+    animation: status-pill-pulse 2.2s ease-out infinite;
+  }
+
+  @keyframes status-pill-pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-bright) 70%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent-bright) 0%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-bright) 0%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .status-pill-dot {
+      animation: none;
+    }
   }
 
   .featured-project-card-body {

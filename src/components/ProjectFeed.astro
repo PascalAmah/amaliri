@@ -159,7 +159,15 @@ const Heading = headingLevel;
               )}
             </div>
             <div class="feed-body">
-              <Heading class="feed-title">{project.data.title}</Heading>
+              <Heading class="feed-title">
+                {project.data.title}
+                {project.data.status === 'in-progress' && (
+                  <span class="status-tag">
+                    <span class="status-tag-dot" aria-hidden="true" />
+                    In Development
+                  </span>
+                )}
+              </Heading>
               {project.data.description && <p class="feed-desc">{project.data.description}</p>}
               {project.data.tags && project.data.tags.length > 0 && (
                 <div class="feed-meta">
@@ -593,6 +601,31 @@ const Heading = headingLevel;
 
   .feed-link:hover .feed-title {
     color: var(--color-blue);
+  }
+
+  /* ── In-development inline tag ── */
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: var(--space-2);
+    padding: 2px 8px;
+    font-size: 0.68rem;
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.01em;
+    color: var(--accent-strong);
+    background: var(--fill-secondary);
+    border: 1px solid color-mix(in srgb, var(--accent-strong) 32%, transparent);
+    border-radius: var(--radius-full);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .status-tag-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-strong);
   }
 
   .feed-desc {
