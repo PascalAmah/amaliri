@@ -1,44 +1,45 @@
 ---
-title: "BarqPix"
-description: "Real-time event media platform with QR-based access. Guests scan a code to join an isolated gallery, upload photos, and browse the live feed — no app required."
-pubDate: "2025-01-15"
-tags: ["Next.js", "Express.js", "Firebase", "AI"]
-githubUrl: "https://github.com/PascalAmah/BarqPix"
-liveUrl: "https://barq-pix.vercel.app"
-status: "completed"
+title: 'BarqPix'
+description: 'Real-time event photo sharing platform with QR-based access. Guests scan a QR code to instantly join a private event gallery, upload photos, and view live updates no app installation required.'
+pubDate: '2025-01-15'
+tags: ['Next.js', 'Express.js', 'Firebase', 'AI']
+githubUrl: 'https://github.com/PascalAmah/BarqPix'
+liveUrl: 'https://barq-pix.vercel.app'
+status: 'completed'
 homeOrder: 3
-problem: "At events, photos end up scattered across personal camera rolls and random group chats — there's no shared, real-time feed that everyone at the event can contribute to and browse. Existing solutions either require app downloads, create privacy risks by mixing events, or can't handle the burst upload traffic that comes with a room full of guests shooting at the same time."
-whatWasBuilt: "Led the backend architecture on Express.js, designing the event isolation model so every event gets its own scoped content environment — no cross-event data leakage. Built the media upload pipeline on Firebase Storage with asynchronous processing to handle concurrent uploads without blocking the user experience. Integrated an AI layer for automatic image tagging and content moderation. QR codes are generated per event and act as the access token; scanning one puts guests directly into the right gallery. The Next.js frontend delivers the live feed in real time using Firebase Realtime listeners."
+problem: "Event photos are often scattered across personal camera rolls, messaging apps, and social media, making it difficult for attendees to access and share memories in one place. Existing solutions typically require app downloads, mix content across different events, or aren't designed to handle the burst of simultaneous uploads that occur during live events."
+whatWasBuilt: 'Built a QR-powered event media platform where each event has its own isolated gallery. Led the backend architecture using Express.js, designing secure event isolation, access control, and media upload workflows. Implemented a scalable upload pipeline using Firebase Storage to support concurrent uploads while keeping the gallery responsive. Integrated the foundation for AI-powered image tagging and content moderation, allowing the platform to support automated media organization in future iterations. Also built real-time gallery updates using Firebase Realtime Database and collaborated on the Next.js frontend experience.'
 highlights:
-  - "QR-based event access — scan to join, no account or app install required"
-  - "Per-event content isolation — galleries are fully scoped, no cross-contamination between events"
-  - "Asynchronous Firebase Storage pipeline handles burst uploads without degrading the live feed"
-  - "AI-powered image tagging and automatic content moderation"
-  - "Real-time gallery feed updates via Firebase Realtime Database listeners"
-  - "Express.js backend handles custom business logic, access control, and event lifecycle management"
-challenges: "The hardest problem was handling simultaneous burst uploads from many guests without stalling the live feed. Processing images synchronously would have made the gallery feel sluggish right when the energy at an event peaks. The fix was fully decoupling upload ingestion from processing — uploads land in Firebase Storage immediately and trigger async functions for AI tagging and thumbnail generation, keeping the gallery feed responsive regardless of upload queue depth."
+  - 'QR-based event access—scan to join instantly with no account or app installation'
+  - 'Per-event gallery isolation ensuring complete separation between events'
+  - 'Asynchronous Firebase Storage upload pipeline for high-concurrency uploads'
+  - 'Foundation for AI-powered image tagging and content moderation'
+  - 'Real-time gallery updates using Firebase Realtime Database'
+  - 'Express.js backend powering event lifecycle, access control, and business logic'
+  - 'Responsive Next.js frontend for seamless event participation'
+challenges: 'The biggest challenge was supporting dozens of guests uploading photos simultaneously without affecting the live gallery experience. To solve this, uploads were decoupled from processing using an asynchronous pipeline, allowing images to be stored immediately while additional processing could occur independently. The platform was also designed with AI integration points for future automated tagging and moderation without disrupting the existing architecture.'
 metrics:
-  - value: "Async"
-    label: "Non-blocking burst upload pipeline"
-  - value: "Per-event"
-    label: "Fully isolated galleries"
-  - value: "No app"
-    label: "QR-based guest access"
-  - value: "AI"
-    label: "Auto tagging & content moderation"
+  - value: 'Async'
+    label: 'Non-blocking upload pipeline'
+  - value: 'Per-event'
+    label: 'Fully isolated galleries'
+  - value: 'QR Access'
+    label: 'No app installation'
+  - value: 'AI'
+    label: 'Auto tagging & content moderation'
 architecture:
-  - label: "QR scan"
-    detail: "Per-event access token"
-  - label: "Next.js frontend"
-    detail: "Realtime feed"
-  - label: "Express.js API"
-    detail: "Access control, event lifecycle"
-  - label: "Firebase Storage"
-    detail: "Async upload → AI tagging"
-heroImage: "./images/barqpix/barqpix-hero.png"
+  - label: 'QR Access'
+    detail: 'Per-event secure gallery entry'
+  - label: 'Next.js frontend'
+    detail: 'Realtime event gallery'
+  - label: 'Express.js API'
+    detail: 'Authentication, event lifecycle & business logic'
+  - label: 'Firebase Storage'
+    detail: 'Media uploads & asynchronous processing'
+heroImage: './images/barqpix/barqpix-hero.png'
 uiImages:
-   - "./images/barqpix/barqpix-home.png"
-   - "./images/barqpix/barqpix-gallery.png"
-   - "./images/barqpix/barqpix-upload.png"
-   - "./images/barqpix/barqpix-qr.png"
+  - './images/barqpix/barqpix-home.png'
+  - './images/barqpix/barqpix-gallery.png'
+  - './images/barqpix/barqpix-upload.png'
+  - './images/barqpix/barqpix-qr.png'
 ---

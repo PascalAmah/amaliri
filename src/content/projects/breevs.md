@@ -1,44 +1,45 @@
 ---
-title: "Breevs"
-description: "On-chain elimination game on Stacks Blockchain where players compete for a prize pool. Smart contracts in Clarity handle entry fees, rounds, and payouts — fully transparent and tamper-proof."
-pubDate: "2025-02-20"
-tags: ["Next.js", "Node.js", "Stacks Blockchain", "Clarity", "Web3"]
-githubUrl: "https://github.com/PascalAmah/Breevs"
-liveUrl: "https://breevs.pxxl.click"
-status: "completed"
+title: 'Breevs'
+description: 'Hackathon project built on the Stacks Blockchain; an on-chain elimination game where players compete for a shared prize pool through transparent smart contract interactions.'
+pubDate: '2025-02-20'
+tags: ['Next.js', 'Node.js', 'Stacks Blockchain', 'Clarity', 'Web3']
+githubUrl: 'https://github.com/PascalAmah/Breevs'
+liveUrl: 'https://breevs.pxxl.click'
+status: 'completed'
 homeOrder: 5
-problem: "Online games with real money stakes require trust — but trust in a centralized server is fragile. The house can change the rules, manipulate outcomes, or withhold winnings without any recourse for players. There was no elimination game where the rules, entry fees, and prize payouts were fully transparent, immutable, and enforced by code rather than a company."
-whatWasBuilt: "Built Breevs as a fully on-chain elimination game on the Stacks Blockchain. All core game mechanics — player entry, round progression, elimination logic, and prize pool distribution — are encoded in Clarity smart contracts, making every rule publicly verifiable and tamper-proof. The Next.js frontend connects directly to the Stacks network via the Stacks.js SDK, so players interact with contracts from their browser wallet without any intermediary. A Node.js backend handles off-chain coordination tasks — game lobby management, notification triggers, and state caching — while keeping financial settlement entirely on-chain."
+problem: 'Traditional online games with monetary rewards rely on centralized systems to manage player entry, game progression, and prize distribution. This creates trust concerns since players cannot independently verify how funds are handled or whether game rules are enforced fairly. The goal of Breevs was to demonstrate how blockchain technology can provide transparent, verifiable gameplay where financial transactions are executed directly by smart contracts.'
+whatWasBuilt: 'Built as a hackathon project on the Stacks Blockchain, Breevs combines a Next.js frontend with Clarity smart contracts to deliver a transparent on-chain gaming experience. I led the frontend development, building the complete user interface and integrating it with the deployed Clarity smart contracts using the Stacks.js SDK. This allowed players to connect their wallets, join games, submit transactions, track game progress, and receive on-chain updates directly from the blockchain. A lightweight Node.js backend supported off-chain coordination while keeping all financial settlement and game logic on-chain.'
 highlights:
-  - "Core game logic fully encoded in Clarity smart contracts — entry, rounds, eliminations, and payouts all on-chain"
-  - "Transparent and tamper-proof rules — any player can read the contract and verify the mechanics"
-  - "Browser wallet integration via Stacks.js SDK — no custodial accounts, players hold their own keys"
-  - "Prize pool accumulates from entry fees and distributes automatically to the winner on contract execution"
-  - "Node.js backend manages off-chain coordination (lobby state, notifications) without touching financial logic"
-  - "Next.js frontend with real-time round and elimination status updates"
-challenges: "The toughest part was designing the contract so that prize distribution is safe even in edge cases — partial round completion, a player disconnecting mid-game, or a transaction failing at the wrong moment. Clarity's decidability constraint (no recursion, bounded execution) forced a disciplined approach to game state transitions. I had to model every state explicitly and ensure the contract could always reach a terminal state without getting stuck or locking funds."
+  - 'Built the complete frontend experience using Next.js'
+  - 'Integrated browser wallet connectivity using the Stacks.js SDK'
+  - 'Connected frontend workflows to Clarity smart contracts'
+  - 'Real-time game status and player progression'
+  - 'Transparent on-chain entry fees and prize distribution'
+  - 'Node.js backend supporting off-chain coordination'
+  - 'Developed as a blockchain hackathon project'
+challenges: 'One of the biggest challenges was designing a smooth user experience around blockchain transactions. Wallet approvals, transaction confirmations, and network latency needed to be handled gracefully so players always understood what was happening during gameplay. Integrating the frontend with Clarity smart contracts also required careful handling of contract calls, transaction states, and user feedback throughout the game lifecycle.'
 metrics:
-  - value: "On-chain"
-    label: "Entry, rounds & payouts in Clarity"
-  - value: "Non-custodial"
-    label: "Players hold their own keys"
-  - value: "Terminal-safe"
-    label: "No stuck states or locked funds"
-  - value: "Web3"
-    label: "Stacks.js browser wallet integration"
+  - value: 'Hackathon'
+    label: 'Stacks Blockchain project'
+  - value: 'Web3'
+    label: 'Wallet & contract integration'
+  - value: 'Next.js'
+    label: 'Frontend application'
+  - value: 'On-chain'
+    label: 'Blockchain-powered gameplay'
 architecture:
-  - label: "Browser wallet"
-    detail: "Player holds keys"
-  - label: "Next.js frontend"
-    detail: "Stacks.js SDK"
-  - label: "Clarity contracts"
-    detail: "Entry, rounds, payouts"
-  - label: "Node.js backend"
-    detail: "Off-chain coordination"
-heroImage: "./images/breevs/breevs-hero.png"
+  - label: 'Browser wallet'
+    detail: 'Secure player authentication'
+  - label: 'Next.js frontend'
+    detail: 'Game interface & smart contract integration'
+  - label: 'Clarity Smart contracts'
+    detail: 'Game rules, entry fees & prize payouts'
+  - label: 'Node.js backend'
+    detail: 'Off-chain coordination'
+heroImage: './images/breevs/breevs-hero.png'
 uiImages:
-   - "./images/breevs/breevs-home.png"
-   - "./images/breevs/breevs-game.png"
-   - "./images/breevs/breevs-rankings.png"
-   - "./images/breevs/breevs-wallet.png"
+  - './images/breevs/breevs-home.png'
+  - './images/breevs/breevs-game.png'
+  - './images/breevs/breevs-rankings.png'
+  - './images/breevs/breevs-wallet.png'
 ---

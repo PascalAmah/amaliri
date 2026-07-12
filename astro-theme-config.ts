@@ -13,7 +13,7 @@ type NavItem = {
 const config = {
   site: {
     /** Production origin, used for canonical links, sitemap, and Open Graph metadata. */
-    url: 'https://pascalamaliri.com',
+    url: 'https://amaliri.com.ng',
     /** Subpath such as '/repo-name'. Keep empty when deploying at a domain root. */
     base: '',
     lang: 'en',
@@ -90,6 +90,7 @@ const config = {
         'CSS',
         'Tailwind CSS',
         'Redux',
+        'Astro',
       ],
     },
     {
@@ -123,7 +124,7 @@ const config = {
       status: 'Available for backend & full-stack roles',
       headline: 'Software engineer who ships systems that stay up.',
       subhead:
-        'I design scalable APIs, real-time platforms, and AI-powered apps. Backend architecture and performance is where I do my best work — and I can own the full stack when it counts.',
+        'I design scalable APIs, real-time platforms, and AI-powered apps. Backend architecture and performance is where I do my best work and I can own the full stack when it counts.',
       primaryCta: { label: 'View work', href: '/projects' },
       secondaryCta: { label: 'Résumé', href: '/pascal-amaliri-resume.pdf' },
       /** Hero visual: 'terminal' (signature) or 'portrait' (uses about.profileImage). */
@@ -202,30 +203,30 @@ const config = {
     focus: 'Software Engineering, Backend Development, and AI/ML.',
     /** Short bio used on the homepage about teaser. */
     shortBio:
-      'Full-stack software engineer from Nigeria building robust, scalable systems — APIs, real-time platforms, and AI tools — that solve real problems.',
-    lead: 'I’m a full-stack software engineer from Nigeria building robust, scalable systems — APIs, real-time platforms, intuitive frontends, and AI-powered tools. I’ve shipped production systems across hospitality, e-commerce, education, and environmental tech. I’ve led backend initiatives, collaborated with cross-functional teams, and built everything from Stripe-integrated checkout flows to on-chain smart contracts. When I’m not writing code, I’m exploring machine learning or contributing to open-source projects.',
+      'Full-stack software engineer from Nigeria. I build robust, scalable systems, APIs, real-time platforms, and AI tools that solve real problems.',
+    lead: 'I’m a full-stack software engineer from Nigeria.  build robust, scalable systems, APIs, real-time platforms, intuitive frontends, and AI-powered tools. I’ve shipped production systems across hospitality, e-commerce, education, and environmental tech. I’ve led backend initiatives, collaborated with cross-functional teams, and built everything from Stripe-integrated checkout flows to on-chain smart contracts. When I’m not writing code, I’m exploring machine learning or contributing to open-source projects.',
     headline: ['Building', 'scalable systems.'],
     statementLabel: 'Skills',
     statementTitle: 'What I work with.',
     careerLabel: 'Career',
     career: [
       {
-        period: 'Nov 2024 - Present',
+        period: 'Nov 2025 - Present',
         title: 'Software Engineer | Backend',
         description: 'Outside Hospitality',
       },
       {
-        period: 'Dec 2024 - Feb 2025',
+        period: 'Dec 2025 - Feb 2026',
         title: 'Software Developer | Backend',
         description: 'AfroGoods',
       },
       {
-        period: 'Sept 2024 - Present',
+        period: 'Sept 2025 - Nov 2025',
         title: 'Software Developer | Backend',
         description: 'Skil Connect',
       },
       {
-        period: 'Sept 2024 - Feb 2025',
+        period: 'Sept 2024 - Mar 2025',
         title: 'Frontend Developer | React.js',
         description: 'Encounter Inc. - TripHoppa',
       },

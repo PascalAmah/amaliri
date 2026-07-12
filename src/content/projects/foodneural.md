@@ -1,44 +1,45 @@
 ---
-title: "FoodNeural"
-description: "AI-powered environmental impact analyzer for food products. Assesses greenhouse gas emissions, water usage, and land impact using machine learning."
-pubDate: "2024-11-20"
-tags: ["Flask", "React", "pandas", "scikit-learn", "Transformers"]
-githubUrl: "https://github.com/PascalAmah/FoodNeural"
-liveUrl: "https://foodneuralapp.vercel.app"
-status: "completed"
+title: 'FoodNeural'
+description: 'AI-powered sustainability platform that analyzes the environmental impact of food products and recommends eco-friendly alternatives using machine learning and natural language processing.'
+pubDate: '2024-11-20'
+tags: ['Flask', 'React', 'pandas', 'scikit-learn', 'Transformers', 'Machine Learning', 'NLP']
+githubUrl: 'https://github.com/PascalAmah/FoodNeural'
+liveUrl: 'https://foodneuralapp.vercel.app'
+status: 'completed'
 homeOrder: 2
-problem: "Most people have no intuition for the environmental cost of what they eat. The data exists — lifecycle analyses, emissions databases, water footprint studies — but it's buried in research papers and agricultural reports that aren't built for consumers. There was no accessible tool where someone could look up a food product and get an immediate, comparable picture of its environmental impact across multiple dimensions."
-whatWasBuilt: "Built FoodNeural as a full-stack ML application that takes a food product as input and returns a breakdown of its environmental footprint across three metrics: greenhouse gas emissions (kg CO₂ equivalent), water usage (litres), and land use (m²). The Flask backend serves a scikit-learn model trained on a large food product dataset processed with pandas, covering thousands of products across all major food categories. A Transformers-based NLP component handles natural language product queries — users can type a product name in plain text rather than needing exact database matches. The React frontend presents results visually with comparative context so users can see how a product ranks against category averages."
+problem: 'Most consumers have little visibility into the environmental impact of the foods they eat. While sustainability data exists across environmental studies and agricultural research, it is often difficult for everyday users to interpret or apply when making purchasing decisions. FoodNeural bridges this gap by combining machine learning, natural language processing, and environmental impact data into an accessible platform that helps users make more sustainable food choices.'
+whatWasBuilt: "Built FoodNeural as a full-stack AI application using Flask and React to help users evaluate the environmental impact of food products and discover more sustainable alternatives. The backend processes environmental datasets with Pandas, powers a scikit-learn recommendation engine, and integrates a Transformers-based NLP model that enables semantic search across the food database, allowing users to find relevant food products even when their search terms don't exactly match the stored product names. The platform analyzes products across greenhouse gas emissions, water consumption, and land use, exposing these insights through REST APIs consumed by a responsive React frontend with interactive visualizations and sustainability recommendations."
 highlights:
-  - "ML model assesses three impact dimensions per product: greenhouse gas emissions, water usage, and land use"
-  - "Transformers-based NLP handles free-text product queries — no exact name matching required"
-  - "scikit-learn model trained on a large multi-category food dataset processed with pandas"
-  - "Comparative output — results shown against category averages, not just in absolute values"
-  - "Flask API backend with clean separation between data processing pipeline and serving layer"
-  - "Responsive React frontend with visual impact breakdowns and sustainability score"
-challenges: "Training data coverage was uneven — processed and packaged food products had rich lifecycle data while regional and artisanal products were sparsely represented. Sparse coverage would have made the model confidently wrong for less common inputs. The solution was a confidence scoring layer that flags low-coverage predictions and falls back to category-level estimates with explicit uncertainty communication in the UI, so users aren't misled by extrapolated outputs."
+  - "AI-powered sustainable food recommendation engine"
+  - "Environmental impact analysis across greenhouse gas emissions, water usage, and land use"
+  - "Transformers-based NLP enables natural language food search"
+  - "scikit-learn recommendation engine for sustainable food alternatives"
+  - "Pandas-powered data preprocessing and environmental dataset analysis"
+  - "RESTful Flask API serving search, analysis, and recommendation endpoints"
+  - "Responsive React frontend with interactive sustainability visualizations"
+challenges: "One of the biggest challenges was accurately mapping natural language food queries to structured environmental datasets while maintaining fast response times. Integrating a Transformers-based NLP model with traditional machine learning required careful preprocessing and feature engineering to ensure users could search naturally while still receiving accurate environmental impact analyses and recommendations. Another challenge was presenting complex sustainability metrics in a way that remained intuitive and actionable for non-technical users."
 metrics:
-  - value: "3 metrics"
-    label: "GHG, water & land impact per product"
-  - value: "NLP"
-    label: "Free-text queries via Transformers"
-  - value: "Confidence-scored"
-    label: "Flags low-coverage predictions"
-  - value: "Full stack"
-    label: "Flask ML API + React frontend"
+  - value: "3 Metrics"
+    label: "Emissions, water & land impact"
+  - value: "Transformer"
+    label: "Natural language search"
+  - value: "ML"
+    label: "Recommendation engine"
+  - value: "Full Stack"
+    label: "Flask API + React"
 architecture:
-  - label: "React frontend"
-    detail: "Free-text product query"
+  - label: "React Frontend"
+    detail: "Search, recommendations & impact visualization"
   - label: "Flask API"
-    detail: "Serving layer"
+    detail: "REST endpoints & business logic"
   - label: "Transformers NLP"
-    detail: "Query → product match"
-  - label: "scikit-learn model"
-    detail: "3-metric impact + confidence"
-heroImage: "./images/foodneural/foodneural-hero.png"
+    detail: "Natural language query understanding"
+  - label: "scikit-learn"
+    detail: "Recommendation engine"
+heroImage: './images/foodneural/foodneural-hero.png'
 uiImages:
-   - "./images/foodneural/foodneural-home.png"
-   - "./images/foodneural/foodneural-results.png"
-   - "./images/foodneural/foodneural-compare.png"
+  - './images/foodneural/foodneural-home.png'
+  - './images/foodneural/foodneural-results.png'
+  - './images/foodneural/foodneural-compare.png'
 #   - "./images/foodneural/foodneural-breakdown.png"
 ---
