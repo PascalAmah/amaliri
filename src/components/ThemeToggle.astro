@@ -12,8 +12,8 @@
   <svg
     class="theme-icon"
     xmlns="http://www.w3.org/2000/svg"
-    width="19"
-    height="19"
+    width="23"
+    height="23"
     viewBox="0 0 20 20"
     aria-hidden="true"
   >
@@ -45,13 +45,24 @@
 
       btn.addEventListener('click', () => {
         const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', next);
-        try {
-          localStorage.setItem('theme', next);
-        } catch {
-          // Keep the visible toggle working when storage is unavailable.
+        const toDark = next === 'dark';
+
+        const applyTheme = () => {
+          root.setAttribute('data-theme', next);
+          try {
+            localStorage.setItem('theme', next);
+          } catch {
+            // Keep the visible toggle working when storage is unavailable.
+          }
+          syncAriaPressed(toDark);
+        };
+
+        // Run the curtain sweep if available; it calls applyTheme mid-cover.
+        if (typeof window.__themeCurtain === 'function') {
+          window.__themeCurtain(applyTheme, toDark);
+        } else {
+          applyTheme();
         }
-        syncAriaPressed(next === 'dark');
       });
     }
 
@@ -70,8 +81,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border: none;
   background: transparent;
   cursor: pointer;

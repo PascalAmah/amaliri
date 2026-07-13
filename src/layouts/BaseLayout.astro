@@ -5,6 +5,7 @@ import config from '../../astro-theme-config';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import ThemeCurtain from '../components/ThemeCurtain.astro';
 
 interface Props {
   title: string;
@@ -60,6 +61,7 @@ const htmlLang = lang ?? config.site.lang;
     <slot name="head" />
   </head>
   <body class={bodyClass}>
+    <ThemeCurtain />
     <Header />
     <main id="main-content">
       <slot />

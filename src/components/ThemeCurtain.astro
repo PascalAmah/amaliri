@@ -1,0 +1,182 @@
+---
+/**
+ * ThemeCurtain — animated fabric curtain for light/dark transitions.
+ *
+ * Two dark pleated panels slide in from the left/right edges.
+ *   Going dark  → curtains CLOSE (edges → center), theme swaps while covered.
+ *   Going light → curtains start closed (invisible on the dark page), theme
+ *                 swaps, then OPEN (center → edges) revealing the light page.
+ *
+ * The panels are ALWAYS dark, so the covered frames never flash: dark panels
+ * over a dark page. Driven by transform only (GPU) + transitionend sequencing.
+ *
+ * The orchestration lives in ThemeToggle.astro's click handler; this component
+ * only renders the panels + a global helper the toggle calls.
+ */
+---
+
+<div class="theme-curtain" aria-hidden="true" data-theme-curtain>
+  <div class="curtain-panel curtain-panel--left"></div>
+  <div class="curtain-panel curtain-panel--right"></div>
+</div>
+
+<style is:global>
+  .theme-curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    /* Hidden until a transition runs, so it never blocks anything at rest. */
+    visibility: hidden;
+  }
+
+  .theme-curtain.is-active {
+    visibility: visible;
+  }
+
+  .curtain-panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    /* 51% overlap avoids a 1px seam where the panels meet. */
+    width: 51%;
+    background-color: #0a0c0d;
+    /*
+     * Layer 1: rounded fabric FOLDS — each ~54px band shaded like a lit tube
+     *          (deep crease → soft midtone → bright ridge → midtone → crease).
+     * Layer 2: vertical drape lighting + hem shadow at the bottom.
+     */
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.62) 0px,
+        rgba(0, 0, 0, 0.28) 10px,
+        rgba(201, 162, 39, 0.05) 27px,
+        rgba(0, 0, 0, 0.28) 44px,
+        rgba(0, 0, 0, 0.62) 54px
+      ),
+      linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.35) 0%,
+        rgba(201, 162, 39, 0.025) 14%,
+        transparent 42%,
+        rgba(0, 0, 0, 0.22) 88%,
+        rgba(201, 162, 39, 0.035) 100%
+      ),
+      linear-gradient(180deg, #14181a 0%, #0b0e0f 55%, #06080a 100%);
+    /* Folds start GATHERED (compressed) when the curtain is parked open. */
+    background-size: 30px 100%, 100% 100%, 100% 100%;
+    background-repeat: repeat, no-repeat, no-repeat;
+    will-change: transform, background-size;
+    transition:
+      transform 1200ms cubic-bezier(0.62, 0.01, 0.2, 1),
+      background-size 1200ms cubic-bezier(0.62, 0.01, 0.2, 1);
+  }
+
+  .curtain-panel--left {
+    left: 0;
+    /* Deep shadow on the inner (leading) edge with a faint gold catch. */
+    box-shadow:
+      inset -26px 0 40px -10px rgba(0, 0, 0, 0.85),
+      inset -2px 0 18px -6px rgba(201, 162, 39, 0.14);
+    transform: translateX(-100%); /* parked off-screen (open) */
+  }
+
+  .curtain-panel--right {
+    right: 0;
+    box-shadow:
+      inset 26px 0 40px -10px rgba(0, 0, 0, 0.85),
+      inset 2px 0 18px -6px rgba(201, 162, 39, 0.14);
+    transform: translateX(100%); /* parked off-screen (open) */
+  }
+
+  /* Closed: panels meet at center AND the folds relax/spread wide (drawn shut). */
+  .theme-curtain.is-closed .curtain-panel--left,
+  .theme-curtain.is-closed .curtain-panel--right {
+    transform: translateX(0);
+    background-size: 54px 100%, 100% 100%, 100% 100%;
+  }
+
+  /* Instant placement (no animation) — used to pre-close before "open". */
+  .theme-curtain.is-instant .curtain-panel {
+    transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .curtain-panel {
+      transition: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    /**
+     * window.__themeCurtain(applyTheme, toDark)
+     *   applyTheme: () => void  — flips data-theme + persists (called mid-cover)
+     *   toDark: boolean         — true = closing (→dark), false = opening (→light)
+     */
+    window.__themeCurtain = function (applyTheme, toDark) {
+      const curtain = document.querySelector('[data-theme-curtain]');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Reduced motion or no curtain: just swap instantly.
+      if (!curtain || reduce) {
+        applyTheme();
+        return;
+      }
+
+      const panels = curtain.querySelectorAll('.curtain-panel');
+      const left = panels[0];
+      let settled = false;
+
+      const onEnd = (cb) => {
+        settled = false;
+        const handler = (e) => {
+          if (e.target !== left || e.propertyName !== 'transform') return;
+          settled = true;
+          left.removeEventListener('transitionend', handler);
+          cb();
+        };
+        left.addEventListener('transitionend', handler);
+        // Safety fallback if transitionend is missed.
+        setTimeout(() => {
+          if (!settled) {
+            left.removeEventListener('transitionend', handler);
+            cb();
+          }
+        }, 1500);
+      };
+
+      const forceReflow = () => curtain.offsetWidth;
+
+      curtain.classList.add('is-active');
+
+      if (toDark) {
+        // CLOSE: edges → center, swap theme when covered, then retract.
+        forceReflow();
+        curtain.classList.add('is-closed');
+        onEnd(() => {
+          applyTheme(); // swap behind the fully-closed curtain
+          // Retract instantly downward: hide panels (page is now dark → no flash).
+          curtain.classList.remove('is-active');
+          curtain.classList.add('is-instant');
+          curtain.classList.remove('is-closed');
+          forceReflow();
+          curtain.classList.remove('is-instant');
+        });
+      } else {
+        // OPEN: pre-close instantly (invisible on dark page), swap, then part.
+        curtain.classList.add('is-instant', 'is-closed');
+        forceReflow();
+        applyTheme(); // page becomes light behind the closed curtain
+        curtain.classList.remove('is-instant');
+        forceReflow();
+        curtain.classList.remove('is-closed'); // animate open → reveal light
+        onEnd(() => {
+          curtain.classList.remove('is-active');
+        });
+      }
+    };
+  })();
+</script>
