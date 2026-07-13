@@ -121,6 +121,21 @@
   --color-text-secondary: var(--label-secondary);
 
   /* ------------------------------------------------------------
+     Image-card overlay — flips per theme.
+     Light: white veil + dark text. Dark: dark veil + light text.
+     Veil kept thick in both modes for legibility over any screenshot.
+     ------------------------------------------------------------ */
+  --card-veil-strong: rgba(255, 255, 255, 0.94);
+  --card-veil-soft: rgba(255, 255, 255, 0.55);
+  --card-ink: #16130c;
+  --card-ink-soft: rgba(22, 19, 12, 0.74);
+  --card-text-shadow: 0 1px 2px rgba(255, 255, 255, 0.55);
+  --card-chip-bg: rgba(0, 0, 0, 0.06);
+  --card-chip-border: rgba(0, 0, 0, 0.14);
+  --card-glass-bg: color-mix(in srgb, var(--accent-bright) 18%, rgba(255, 255, 255, 0.5));
+  --card-glass-border: color-mix(in srgb, var(--accent-strong) 45%, transparent);
+
+  /* ------------------------------------------------------------
      3. SPACING — 4pt base grid
      ------------------------------------------------------------ */
   --space-1: 0.25rem; /* 4pt */
@@ -207,6 +222,17 @@
     --separator: rgba(84, 84, 88, 0.65);
     --separator-opaque: #38383a;
 
+    /* Image-card overlay — dark veil + light text */
+    --card-veil-strong: rgba(0, 0, 0, 0.9);
+    --card-veil-soft: rgba(0, 0, 0, 0.45);
+    --card-ink: #ffffff;
+    --card-ink-soft: rgba(255, 255, 255, 0.82);
+    --card-text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    --card-chip-bg: rgba(255, 255, 255, 0.14);
+    --card-chip-border: rgba(255, 255, 255, 0.24);
+    --card-glass-bg: color-mix(in srgb, var(--accent-bright) 26%, rgba(0, 0, 0, 0.4));
+    --card-glass-border: color-mix(in srgb, var(--accent-bright) 55%, transparent);
+
     /* Dark mode: E6B84D is ~11.9:1 on black ✓, use same for strong + bright */
     --accent-strong: #e6b84d;
     --accent-bright: #e6b84d;
@@ -250,6 +276,15 @@
   --fill-quaternary: rgba(201, 162, 39, 0.06);
   --separator: rgba(84, 84, 88, 0.65);
   --separator-opaque: #38383a;
+  --card-veil-strong: rgba(0, 0, 0, 0.9);
+  --card-veil-soft: rgba(0, 0, 0, 0.45);
+  --card-ink: #ffffff;
+  --card-ink-soft: rgba(255, 255, 255, 0.82);
+  --card-text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  --card-chip-bg: rgba(255, 255, 255, 0.14);
+  --card-chip-border: rgba(255, 255, 255, 0.24);
+  --card-glass-bg: color-mix(in srgb, var(--accent-bright) 26%, rgba(0, 0, 0, 0.4));
+  --card-glass-border: color-mix(in srgb, var(--accent-bright) 55%, transparent);
   --accent-strong: #e6b84d;
   --accent-bright: #e6b84d;
   --color-success: #22c55e;

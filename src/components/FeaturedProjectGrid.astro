@@ -245,12 +245,12 @@ const imagePlaceholderStyle = (src: string | undefined) =>
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4);
+    background: color-mix(in srgb, var(--card-ink) 40%, transparent);
     transition: background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   }
 
   .slide-dot.is-active {
-    background: #fff;
+    background: var(--card-ink);
     transform: scale(1.3);
   }
 
@@ -289,7 +289,9 @@ const imagePlaceholderStyle = (src: string | undefined) =>
     border-radius: var(--radius-xl);
     overflow: hidden;
     background: transparent;
-    box-shadow: none;
+    outline: 1px solid var(--separator);
+    outline-offset: -1px;
+    box-shadow: var(--shadow-md);
     transition:
       box-shadow var(--duration-normal) var(--ease-out),
       transform var(--duration-normal) var(--ease-spring);
@@ -311,7 +313,7 @@ const imagePlaceholderStyle = (src: string | undefined) =>
   }
 
   .featured-project-card:hover {
-    box-shadow: none;
+    box-shadow: var(--shadow-xl);
     transform: translateY(-3px);
     opacity: 1;
   }
@@ -368,16 +370,16 @@ const imagePlaceholderStyle = (src: string | undefined) =>
     z-index: 4;
     background: linear-gradient(
       to top,
-      rgba(0, 0, 0, 0.8) 0%,
-      rgba(0, 0, 0, 0.3) 40%,
+      var(--card-veil-strong) 0%,
+      var(--card-veil-soft) 46%,
       transparent 100%
     );
-    opacity: 0.72;
+    opacity: 0.94;
     transition: opacity var(--duration-normal) var(--ease-out);
   }
 
   .featured-project-card:hover .featured-project-card-veil {
-    opacity: 0.88;
+    opacity: 1;
   }
 
   .featured-project-card-hover {
@@ -391,10 +393,10 @@ const imagePlaceholderStyle = (src: string | undefined) =>
     width: 2.5rem;
     height: 2.5rem;
     border-radius: var(--radius-full);
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--card-chip-bg);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
+    border: 1px solid var(--card-chip-border);
+    color: var(--card-ink);
     opacity: 0;
     transform: translate(8px, -8px);
     transition:
@@ -425,9 +427,9 @@ const imagePlaceholderStyle = (src: string | undefined) =>
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.01em;
-    color: #fff;
-    background: color-mix(in srgb, var(--accent-bright) 30%, rgba(0, 0, 0, 0.4));
-    border: 1px solid color-mix(in srgb, var(--accent-bright) 60%, transparent);
+    color: var(--card-ink);
+    background: var(--card-glass-bg);
+    border: 1px solid var(--card-glass-border);
     border-radius: var(--radius-full);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
@@ -467,7 +469,7 @@ const imagePlaceholderStyle = (src: string | undefined) =>
     right: 0;
     z-index: 6;
     padding: var(--space-5) var(--space-6);
-    color: #fff;
+    color: var(--card-ink);
     pointer-events: none;
   }
 
@@ -477,14 +479,16 @@ const imagePlaceholderStyle = (src: string | undefined) =>
     font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.015em;
-    color: #fff;
+    color: var(--card-ink);
+    text-shadow: var(--card-text-shadow);
   }
 
   .featured-project-card-desc {
     margin: var(--space-3) 0 0;
     font-size: var(--text-callout);
     line-height: 1.4;
-    opacity: 0.85;
+    color: var(--card-ink-soft);
+    text-shadow: var(--card-text-shadow);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -512,9 +516,9 @@ const imagePlaceholderStyle = (src: string | undefined) =>
     padding: 4px 10px;
     font-size: 0.72rem;
     font-weight: 600;
-    color: #fff;
-    background: color-mix(in srgb, var(--accent-bright) 26%, rgba(0, 0, 0, 0.32));
-    border: 1px solid color-mix(in srgb, var(--accent-bright) 55%, transparent);
+    color: var(--card-ink);
+    background: var(--card-glass-bg);
+    border: 1px solid var(--card-glass-border);
     border-radius: var(--radius-full);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
@@ -525,23 +529,23 @@ const imagePlaceholderStyle = (src: string | undefined) =>
   }
 
   .card-action:hover {
-    background: color-mix(in srgb, var(--accent-bright) 42%, rgba(0, 0, 0, 0.28));
+    background: color-mix(in srgb, var(--accent-bright) 45%, var(--card-glass-bg));
     transform: translateY(-1px);
   }
 
   .card-action:focus-visible {
-    outline: 2px solid #fff;
+    outline: 2px solid var(--card-ink);
     outline-offset: 2px;
   }
 
   .tag-badge {
-    background: color-mix(in srgb, var(--accent-bright) 26%, rgba(0, 0, 0, 0.32));
-    border: 1px solid color-mix(in srgb, var(--accent-bright) 55%, transparent);
+    background: var(--card-glass-bg);
+    border: 1px solid var(--card-glass-border);
     border-radius: 4px;
     padding: 2px 7px;
     font-size: 0.7rem;
     font-weight: 500;
-    color: #fff;
+    color: var(--card-ink);
     white-space: nowrap;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
