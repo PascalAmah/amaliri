@@ -206,7 +206,7 @@ const jsonLd = serializeScriptJson({
 
       {
         uiImages && uiImages.length > 0 && (
-          <Section label="Screenshots" data-reveal>
+          <Section label="Screenshots" variant="showcase" data-reveal>
             <div class="screenshots-grid" data-reveal-group>
               {uiImages.map((img, i) => (
                 <a href={img.src} class="screenshot-item image-fade-in" data-lightbox>
@@ -227,7 +227,7 @@ const jsonLd = serializeScriptJson({
 
       {
         relatedProjects.length > 0 && (
-          <Section label={tr.relatedProjects} variant="default">
+          <Section label={tr.relatedProjects} variant="showcase">
             <FeaturedProjectGrid projects={relatedProjects} variant="related" />
             <Fragment slot="actions">
               <a href={projectsBase} class="related-view-all">
