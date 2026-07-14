@@ -98,6 +98,28 @@
   max-width: 18ch;
 }
 
+/* ── Hero title word reveal (rises out of a clip mask on load) ── */
+.hero-word-mask {
+  display: inline-flex;
+  overflow: hidden;
+  /* Padding lets descenders (g, y, p) show without being clipped; the
+     negative margin keeps line height unchanged. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  vertical-align: top;
+}
+
+.hero-word {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 850ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.hero-title.is-revealed .hero-word {
+  transform: translateY(0);
+}
+
 .hero-desc {
   margin: 0;
   font-size: var(--text-title-3);
@@ -689,5 +711,10 @@
   .hero-status-dot,
   .scroll-cue-line {
     animation: none;
+  }
+
+  .hero-word {
+    transform: none;
+    transition: none;
   }
 }
