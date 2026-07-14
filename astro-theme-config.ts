@@ -244,6 +244,50 @@ const config = {
     ],
     interestsLabel: 'Interests',
     interestsHeading: 'What I enjoy working on',
+
+    /**
+     * Journey — the story behind the timeline. Each string is its own paragraph.
+     * Edit freely; these are drawn from your real path (ALX, the frontend → backend shift).
+     */
+    journeyLabel: 'Journey',
+    journeyHeading: 'How I got into tech',
+    journey: [
+      'My journey into software engineering started with curiosity about how the products I used every day actually worked. That curiosity led me to the ALX Software Engineering program, where I spent two years learning how to build reliable, scalable software—not just write code.',
+      'I began on the frontend, building React interfaces at TripHoppa and shipping polished UIs. But I kept following the thread behind the screen: the APIs, the data models, the parts that decide whether a system stays up under load. The deeper I went, the clearer it became that backend architecture was where I did my best work.',
+      "Since then I've led backend initiatives across hospitality, e-commerce, and Web3—designing scalable APIs, real-time platforms, and AI-powered tools. I still own the full stack when a project calls for it, but reliable, well-architected systems are what I care about most. When I'm not building, I'm usually exploring machine learning or contributing to open source.",
+    ],
+
+    /**
+     * Certifications — add real, earned credentials only.
+     * `logo` (optional): path to an issuer logo in /public, e.g. '/alx-logo.png'.
+     * `credentialUrl` (optional): omit to render a non-linked entry.
+     * Shape: { title, issuer, year, logo?, credentialUrl? }
+     */
+    certificationsLabel: 'Credentials',
+    certificationsHeading: 'Certifications earned',
+    certifications: [
+      {
+        title: 'Software Engineering — Certificate Program',
+        issuer: 'ALX Africa',
+        year: '2025',
+        logo: '/alx-logo.png',
+        credentialUrl: '',
+      },
+      // Add more as you earn them, e.g.:
+      // {
+      //   title: 'Backend Web Development',
+      //   issuer: 'Provider',
+      //   year: '2025',
+      //   logo: '/provider-logo.png',
+      //   credentialUrl: 'https://…',
+      // },
+    ] as {
+      title: string;
+      issuer: string;
+      year: string;
+      logo?: string;
+      credentialUrl?: string;
+    }[],
   },
 };
 

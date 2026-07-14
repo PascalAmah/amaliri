@@ -17,6 +17,12 @@ const careerItems = config.about.career;
 const focusItems = config.about.interests;
 const interestsLabel = config.about.interestsLabel;
 const interestsHeading = config.about.interestsHeading;
+const journeyLabel = config.about.journeyLabel;
+const journeyHeading = config.about.journeyHeading;
+const journeyParagraphs = config.about.journey ?? [];
+const certificationsLabel = config.about.certificationsLabel;
+const certificationsHeading = config.about.certificationsHeading;
+const certifications = config.about.certifications ?? [];
 const profileLinks = [
   {
     label: 'GitHub',
@@ -100,6 +106,22 @@ const profileLinks = [
       </aside>
     </section>
 
+    {
+      journeyParagraphs.length > 0 && (
+        <section class="about-section about-journey" aria-labelledby="about-journey" data-reveal>
+          <p class="section-label">{journeyLabel}</p>
+          <div>
+            <h2 id="about-journey" class="section-heading">{journeyHeading}</h2>
+            <div class="journey-prose">
+              {journeyParagraphs.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
     <section class="about-section about-skills" aria-labelledby="about-skills" data-reveal>
       <p class="section-label">{statementLabel}</p>
       <div>
@@ -137,6 +159,50 @@ const profileLinks = [
         }
       </div>
     </section>
+
+    {
+      certifications.length > 0 && (
+        <section class="about-section about-certs" aria-labelledby="about-certs" data-reveal>
+          <p class="section-label">{certificationsLabel}</p>
+          <div>
+            <h2 id="about-certs" class="section-heading">{certificationsHeading}</h2>
+            <ul class="certs-list" data-reveal-group>
+              {certifications.map((cert) => {
+                const CardTag = cert.credentialUrl ? 'a' : 'div';
+                return (
+                  <li class="cert-item">
+                    <CardTag
+                      class:list={['cert-card', cert.credentialUrl && 'cert-card--link']}
+                      {...(cert.credentialUrl
+                        ? { href: cert.credentialUrl, target: '_blank', rel: 'noopener' }
+                        : {})}
+                    >
+                      {cert.logo && (
+                        <span class="cert-logo" aria-hidden="true">
+                          <img src={cert.logo} alt="" loading="lazy" width="48" height="48" />
+                        </span>
+                      )}
+                      <div class="cert-body">
+                        <h3 class="cert-title">{cert.title}</h3>
+                        <p class="cert-issuer">{cert.issuer}</p>
+                      </div>
+                      <div class="cert-meta">
+                        <span class="cert-year">{cert.year}</span>
+                        {cert.credentialUrl && (
+                          <span class="cert-verify" aria-hidden="true">
+                            View credential →
+                          </span>
+                        )}
+                      </div>
+                    </CardTag>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </section>
+      )
+    }
 
     <section class="about-section" aria-labelledby="about-focus" data-reveal>
       <p class="section-label">{interestsLabel}</p>
