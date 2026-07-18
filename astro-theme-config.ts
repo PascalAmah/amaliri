@@ -15,7 +15,7 @@ const config = {
     /** Production origin, used for canonical links, sitemap, and Open Graph metadata. */
     url: 'https://amaliri.com.ng',
     /** Subpath such as '/repo-name'. Keep empty when deploying at a domain root. */
-    base: '',
+    base: '/',
     lang: 'en',
     locale: 'en_US',
     dateLocale: 'en-US',

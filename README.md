@@ -2,7 +2,7 @@
 
 Personal portfolio site for **Pascal Amaliri**, a full-stack software engineer from Lagos, Nigeria with a strong backend focus.
 
-Built with [Astro](https://astro.build), deployed at [pascalamaliri.com](https://pascalamaliri.com).
+Built with [Astro](https://astro.build), deployed at [amaliri.com.ng](https://amaliri.com.ng).
 
 ---
 

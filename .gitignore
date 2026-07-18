@@ -36,6 +36,7 @@ local-docs/
 
 # kiro workspace
 .kiro/
+.claude/
 
 # zip archives and old version folders
 public/Portfolio-Website-V2-portfolio_v2.1.zip

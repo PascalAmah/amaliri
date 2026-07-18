@@ -54,7 +54,7 @@ const personJsonLd = serializeScriptJson({
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: SITE_AUTHOR,
-  jobTitle: 'Backend Software Engineer',
+  jobTitle: 'Fullstack Software Engineer',
   description: SITE_DESCRIPTION,
   url: config.site.url,
   address: { '@type': 'PostalAddress', addressLocality: config.about.location },
@@ -209,7 +209,9 @@ const personJsonLd = serializeScriptJson({
       gridProjects.length > 0 && (
         <Section heading="More work" variant="showcase" class="section--grid" data-reveal>
           <Fragment slot="actions">
-            <a href={withBase('/projects')} class="view-all">{tr.viewAll}</a>
+            <a href={withBase('/projects')} class="view-all">
+              {tr.viewAll}
+            </a>
           </Fragment>
           <FeaturedProjectGrid projects={gridProjects} />
         </Section>
@@ -219,11 +221,17 @@ const personJsonLd = serializeScriptJson({
     {/* ── Experience timeline ──────────────── */}
     {
       career.length > 0 && (
-        <Section label="Experience" heading="Where I've worked" variant="showcase" class="section--timeline" data-reveal>
+        <Section
+          label="Experience"
+          heading="Where I've worked"
+          variant="showcase"
+          class="section--timeline"
+          data-reveal
+        >
           <ol class="timeline" data-reveal-group>
             {career.map((item) => (
               <li class="timeline-item">
-                <div class="timeline-marker" aria-hidden="true"></div>
+                <div class="timeline-marker" aria-hidden="true" />
                 <p class="timeline-period">{item.period}</p>
                 <div class="timeline-details">
                   <h3 class="timeline-title">{item.title}</h3>
@@ -237,22 +245,24 @@ const personJsonLd = serializeScriptJson({
     }
 
     {/* ── Skills (curated) ─────────────────── */}
-    <Section label="Stack" heading="What I build with" variant="showcase" class="section--skills" data-reveal>
+    <Section
+      label="Stack"
+      heading="What I build with"
+      variant="showcase"
+      class="section--skills"
+      data-reveal
+    >
       <div class="skills-split">
         <div class="skills-col">
           <p class="skills-col-label">Core — day to day</p>
           <ul class="skills-tags">
-            {coreSkills.map((name) => (
-              <li class="skill-chip skill-chip--core">{name}</li>
-            ))}
+            {coreSkills.map((name) => <li class="skill-chip skill-chip--core">{name}</li>)}
           </ul>
         </div>
         <div class="skills-col">
           <p class="skills-col-label">Also work with</p>
           <ul class="skills-tags">
-            {familiarSkills.map((name) => (
-              <li class="skill-chip">{name}</li>
-            ))}
+            {familiarSkills.map((name) => <li class="skill-chip">{name}</li>)}
           </ul>
         </div>
       </div>
@@ -261,7 +271,13 @@ const personJsonLd = serializeScriptJson({
     {/* ── Testimonials (auto-hides when empty) ── */}
     {
       testimonials.length > 0 && (
-        <Section label="Words" heading="What people say" variant="showcase" class="section--testimonials" data-reveal>
+        <Section
+          label="Words"
+          heading="What people say"
+          variant="showcase"
+          class="section--testimonials"
+          data-reveal
+        >
           <div class="testimonials-grid" data-reveal-group>
             {testimonials.map((t) => (
               <figure class="testimonial">

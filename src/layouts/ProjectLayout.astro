@@ -52,8 +52,31 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const pubDateISO = pubDate.toISOString();
 const updatedDateISO = updatedDate?.toISOString();
 
-const jsonLd = serializeScriptJson({
-  '@context': 'https://schema.org',
+// Map framework tags to programming languages for SoftwareSourceCode schema.
+const FRAMEWORK_TO_LANG: Record<string, string> = {
+  TypeScript: 'TypeScript',
+  JavaScript: 'JavaScript',
+  React: 'JavaScript',
+  'Next.js': 'JavaScript',
+  'Node.js': 'JavaScript',
+  'Express.js': 'JavaScript',
+  NestJS: 'TypeScript',
+  Python: 'Python',
+  Flask: 'Python',
+  Django: 'Python',
+  FastAPI: 'Python',
+  pandas: 'Python',
+  'scikit-learn': 'Python',
+  Transformers: 'Python',
+  PHP: 'PHP',
+  Clarity: 'Clarity',
+};
+
+const programmingLanguages = [
+  ...new Set(tags.map((t) => FRAMEWORK_TO_LANG[t]).filter(Boolean)),
+] as string[];
+
+const articleJsonLd = {
   '@type': 'Article',
   headline: title,
   description,
@@ -64,6 +87,25 @@ const jsonLd = serializeScriptJson({
   author: { '@type': 'Person', name: SITE_AUTHOR },
   publisher: { '@type': 'Organization', name: SITE_TITLE },
   inLanguage: SITE_LANG,
+};
+
+const codeJsonLd = githubUrl
+  ? {
+      '@type': 'SoftwareSourceCode',
+      name: title,
+      description,
+      codeRepository: githubUrl,
+      programmingLanguage: programmingLanguages.length ? programmingLanguages : undefined,
+      author: { '@type': 'Person', name: SITE_AUTHOR },
+      dateCreated: pubDateISO,
+      ...(updatedDateISO && { dateModified: updatedDateISO }),
+    }
+  : null;
+
+const schemas = [articleJsonLd, codeJsonLd].filter(Boolean);
+const jsonLd = serializeScriptJson({
+  '@context': 'https://schema.org',
+  ...(schemas.length === 1 ? schemas[0] : { '@graph': schemas }),
 });
 ---
 
@@ -87,121 +129,123 @@ const jsonLd = serializeScriptJson({
       <div class="project-content">
         <a href={projectsBase} class="back-link">{tr.backLink}</a>
 
-      <header class="project-header">
-        <div class="project-accent"></div>
-        {status === 'in-progress' && (
-          <span class="project-status">
-            <span class="project-status-dot" aria-hidden="true" />
-            In Development
-          </span>
-        )}
-        <h1 class="project-title">{title}</h1>
-        {description && <p class="project-description">{description}</p>}
+        <header class="project-header">
+          <div class="project-accent"></div>
+          {
+            status === 'in-progress' && (
+              <span class="project-status">
+                <span class="project-status-dot" aria-hidden="true" />
+                In Development
+              </span>
+            )
+          }
+          <h1 class="project-title">{title}</h1>
+          {description && <p class="project-description">{description}</p>}
+          {
+            (githubUrl || liveUrl) && (
+              <div class="action-buttons">
+                {githubUrl && (
+                  <a href={githubUrl} target="_blank" rel="noopener noreferrer">
+                    GitHub
+                  </a>
+                )}
+                {liveUrl && (
+                  <a href={liveUrl} target="_blank" rel="noopener noreferrer">
+                    Live
+                  </a>
+                )}
+              </div>
+            )
+          }
+          {
+            tags.length > 0 && (
+              <div class="project-tags">
+                {tags.map((tag) => (
+                  <span class="project-tag">{tag}</span>
+                ))}
+              </div>
+            )
+          }
+        </header>
+
         {
-          (githubUrl || liveUrl) && (
-            <div class="action-buttons">
-              {githubUrl && (
-                <a href={githubUrl} target="_blank" rel="noopener noreferrer">
-                  GitHub
-                </a>
-              )}
-              {liveUrl && (
-                <a href={liveUrl} target="_blank" rel="noopener noreferrer">
-                  Live
-                </a>
-              )}
+          heroImage && (
+            <div class="project-hero" data-reveal>
+              <Image
+                src={heroImage}
+                alt={`${title} hero image`}
+                widths={[800, 1200, 1600]}
+                sizes="(max-width: 600px) 100vw, (max-width: 900px) 90vw, 720px"
+                quality={90}
+                class="project-hero-img image-fade-in"
+                transition:name={`project-hero-${projectId}`}
+              />
             </div>
           )
         }
+
+        <div class="project-divider"></div>
+
         {
-          tags.length > 0 && (
-            <div class="project-tags">
-              {tags.map((tag) => (
-                <span class="project-tag">{tag}</span>
+          metrics && metrics.length > 0 && (
+            <ul class="project-metrics" data-reveal-group>
+              {metrics.map((m) => (
+                <li class="project-metric">
+                  <span class="project-metric-value">{m.value}</span>
+                  <span class="project-metric-label">{m.label}</span>
+                </li>
               ))}
+            </ul>
+          )
+        }
+
+        {
+          (problem || whatWasBuilt || (highlights && highlights.length > 0) || challenges) && (
+            <section class="project-overview">
+              {problem && (
+                <div class="overview-block" data-reveal>
+                  <p class="overview-label">The Problem</p>
+                  <p class="overview-text">{problem}</p>
+                </div>
+              )}
+              {whatWasBuilt && (
+                <div class="overview-block" data-reveal>
+                  <p class="overview-label">What Was Built</p>
+                  <p class="overview-text">{whatWasBuilt}</p>
+                </div>
+              )}
+              {highlights && highlights.length > 0 && (
+                <div class="overview-block" data-reveal>
+                  <p class="overview-label">Highlights</p>
+                  <ul class="highlights-list" data-reveal-group>
+                    {highlights.map((item) => (
+                      <li class="highlights-item">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {challenges && (
+                <div class="overview-block engineering-callout" data-reveal>
+                  <p class="overview-label">Engineering Decisions</p>
+                  <p class="overview-text">{challenges}</p>
+                </div>
+              )}
+            </section>
+          )
+        }
+
+        {
+          architecture && architecture.length > 0 && (
+            <div class="overview-block" data-reveal>
+              <p class="overview-label">Architecture</p>
+              <ArchitectureDiagram nodes={architecture} />
             </div>
           )
         }
-      </header>
 
-      {
-        heroImage && (
-          <div class="project-hero" data-reveal>
-            <Image
-              src={heroImage}
-              alt={`${title} hero image`}
-              widths={[800, 1200, 1600]}
-              sizes="(max-width: 600px) 100vw, (max-width: 900px) 90vw, 720px"
-              quality={90}
-              class="project-hero-img image-fade-in"
-              transition:name={`project-hero-${projectId}`}
-            />
-          </div>
-        )
-      }
-
-      <div class="project-divider"></div>
-
-      {
-        metrics && metrics.length > 0 && (
-          <ul class="project-metrics" data-reveal-group>
-            {metrics.map((m) => (
-              <li class="project-metric">
-                <span class="project-metric-value">{m.value}</span>
-                <span class="project-metric-label">{m.label}</span>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-
-      {
-        (problem || whatWasBuilt || (highlights && highlights.length > 0) || challenges) && (
-          <section class="project-overview">
-            {problem && (
-              <div class="overview-block" data-reveal>
-                <p class="overview-label">The Problem</p>
-                <p class="overview-text">{problem}</p>
-              </div>
-            )}
-            {whatWasBuilt && (
-              <div class="overview-block" data-reveal>
-                <p class="overview-label">What Was Built</p>
-                <p class="overview-text">{whatWasBuilt}</p>
-              </div>
-            )}
-            {highlights && highlights.length > 0 && (
-              <div class="overview-block" data-reveal>
-                <p class="overview-label">Highlights</p>
-                <ul class="highlights-list" data-reveal-group>
-                  {highlights.map((item) => (
-                    <li class="highlights-item">{item}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {challenges && (
-              <div class="overview-block engineering-callout" data-reveal>
-                <p class="overview-label">Engineering Decisions</p>
-                <p class="overview-text">{challenges}</p>
-              </div>
-            )}
-          </section>
-        )
-      }
-
-      {
-        architecture && architecture.length > 0 && (
-          <div class="overview-block" data-reveal>
-            <p class="overview-label">Architecture</p>
-            <ArchitectureDiagram nodes={architecture} />
-          </div>
-        )
-      }
-
-      <div class="prose" id="prose-content">
-        <slot />
-      </div>
+        <div class="prose" id="prose-content">
+          <slot />
+        </div>
       </div>
 
       {
@@ -240,5 +284,4 @@ const jsonLd = serializeScriptJson({
     </article>
   </Container>
   <ImageLightbox />
-
 </BaseLayout>
