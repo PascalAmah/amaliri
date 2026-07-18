@@ -24,11 +24,20 @@ const resumeUrl = config.site.resumeUrl;
     </div>
 
     <div class="nav-right">
-      {resumeUrl && (
-        <Button href={withBase(resumeUrl)} variant="outline" size="sm" class="nav-resume" target="_blank" rel="noopener">
-          Résumé
-        </Button>
-      )}
+      {
+        resumeUrl && (
+          <Button
+            href={withBase(resumeUrl)}
+            variant="outline"
+            size="sm"
+            class="nav-resume"
+            target="_blank"
+            rel="noopener"
+          >
+            Résumé
+          </Button>
+        )
+      }
       <ThemeToggle />
       <button
         type="button"
@@ -44,16 +53,30 @@ const resumeUrl = config.site.resumeUrl;
   </nav>
 </div>
 
-<div class="mobile-menu" id="mobile-menu" transition:persist="mobile-menu" hidden>
+<!-- Backdrop — fades in behind the menu on mobile -->
+<div class="mobile-backdrop" aria-hidden="true"></div>
+
+<div class="mobile-menu" id="mobile-menu" transition:persist="mobile-menu">
   <nav class="mobile-menu-nav" aria-label="Mobile navigation">
-    {navItems.map((item) => (
-      <a href={withBase(item.href)} class="mobile-menu-link">{item.label}</a>
-    ))}
-    {resumeUrl && (
-      <a href={withBase(resumeUrl)} class="mobile-menu-link mobile-menu-link--cta" target="_blank" rel="noopener">
-        Résumé ↓
-      </a>
-    )}
+    {
+      navItems.map((item) => (
+        <a href={withBase(item.href)} class="mobile-menu-link">
+          {item.label}
+        </a>
+      ))
+    }
+    {
+      resumeUrl && (
+        <a
+          href={withBase(resumeUrl)}
+          class="mobile-menu-link mobile-menu-link--cta"
+          target="_blank"
+          rel="noopener"
+        >
+          Résumé ↓
+        </a>
+      )
+    }
   </nav>
 </div>
 
@@ -106,38 +129,41 @@ const resumeUrl = config.site.resumeUrl;
     function mountMobileMenu() {
       const toggle = document.querySelector('.nav-toggle');
       const menu = document.getElementById('mobile-menu');
+      const backdrop = document.querySelector('.mobile-backdrop');
       if (!(toggle instanceof HTMLElement) || !menu) return;
 
       const close = () => {
-        menu.hidden = true;
         document.body.classList.remove('menu-open');
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-label', 'Open menu');
       };
       const open = () => {
-        menu.hidden = false;
         document.body.classList.add('menu-open');
         toggle.setAttribute('aria-expanded', 'true');
         toggle.setAttribute('aria-label', 'Close menu');
       };
 
-      // Always reset to a clean closed state on (re)init and after each navigation,
-      // so a persisted menu never carries an "open" state onto the next page.
+      // Always reset to a clean closed state on (re)init and after each navigation.
       close();
 
-      // Bind listeners only once — whether this node persisted or was replaced.
       if (toggle.dataset.ready === 'true') return;
       toggle.dataset.ready = 'true';
 
       toggle.addEventListener('click', () => {
-        menu.hidden ? open() : close();
+        document.body.classList.contains('menu-open') ? close() : open();
       });
+
+      // Close on backdrop click.
+      if (backdrop) {
+        backdrop.addEventListener('click', close);
+      }
+
       // Delegated so it survives even if the link set changes.
       menu.addEventListener('click', (e) => {
         if (e.target instanceof Element && e.target.closest('a')) close();
       });
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !menu.hidden) close();
+        if (e.key === 'Escape' && document.body.classList.contains('menu-open')) close();
       });
     }
 
@@ -250,11 +276,12 @@ const resumeUrl = config.site.resumeUrl;
     gap: var(--space-3);
   }
 
-  /* Mobile toggle */
+  /* ── Hamburger toggle ── */
   .nav-toggle {
     display: none;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 5px;
     width: 40px;
     height: 40px;
@@ -267,12 +294,42 @@ const resumeUrl = config.site.resumeUrl;
   .nav-toggle-bar {
     width: 20px;
     height: 2px;
-    margin-inline: auto;
     background: var(--label-primary);
     border-radius: 2px;
+    transition:
+      transform var(--duration-normal) var(--ease-out),
+      opacity var(--duration-fast) var(--ease-out);
+    transform-origin: center;
   }
 
-  /* ── Mobile menu sheet ── */
+  /* Hamburger → X animation */
+  :global(.menu-open) .nav-toggle-bar:nth-child(1) {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+
+  :global(.menu-open) .nav-toggle-bar:nth-child(2) {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+
+  /* ── Backdrop ── */
+  .mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 98;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-normal) var(--ease-out);
+  }
+
+  :global(.menu-open) .mobile-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Mobile menu panel ── */
   .mobile-menu {
     position: fixed;
     inset: calc(var(--nav-height) + var(--space-5)) var(--space-4) auto var(--space-4);
@@ -284,6 +341,20 @@ const resumeUrl = config.site.resumeUrl;
     border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-lg);
     overflow: hidden;
+
+    /* Closed state */
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+    pointer-events: none;
+    transition:
+      opacity var(--duration-normal) var(--ease-out),
+      transform var(--duration-normal) var(--ease-spring);
+  }
+
+  :global(.menu-open) .mobile-menu {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
   }
 
   .mobile-menu-nav {
@@ -299,6 +370,31 @@ const resumeUrl = config.site.resumeUrl;
     color: var(--label-primary);
     text-decoration: none;
     border-bottom: 1px solid var(--separator);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      transform var(--duration-slow) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  /* Staggered link reveal */
+  :global(.menu-open) .mobile-menu-link {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  :global(.menu-open) .mobile-menu-link:nth-child(1) {
+    transition-delay: 60ms;
+  }
+  :global(.menu-open) .mobile-menu-link:nth-child(2) {
+    transition-delay: 120ms;
+  }
+  :global(.menu-open) .mobile-menu-link:nth-child(3) {
+    transition-delay: 180ms;
+  }
+  :global(.menu-open) .mobile-menu-link:nth-child(4) {
+    transition-delay: 240ms;
   }
 
   .mobile-menu-link:last-child {
@@ -310,6 +406,7 @@ const resumeUrl = config.site.resumeUrl;
     font-weight: var(--weight-semibold);
   }
 
+  /* ── Responsive visibility ── */
   @media (max-width: 640px) {
     .nav-links,
     .nav-resume {
@@ -326,13 +423,25 @@ const resumeUrl = config.site.resumeUrl;
   }
 
   @media (min-width: 641px) {
-    .mobile-menu {
+    .mobile-menu,
+    .mobile-backdrop {
       display: none;
     }
   }
 
+  /* ── Reduced motion ── */
   @media (prefers-reduced-motion: reduce) {
     .site-header {
+      transition: none;
+    }
+
+    .nav-toggle-bar {
+      transition: none;
+    }
+
+    .mobile-backdrop,
+    .mobile-menu,
+    .mobile-menu-link {
       transition: none;
     }
   }
