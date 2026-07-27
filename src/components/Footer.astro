@@ -30,7 +30,7 @@ const socialLinks = [
           <nav class="footer-col" aria-label="Footer navigation">
             <p class="footer-col-label">Navigate</p>
             {footerLinks.map((item) => (
-              <a href={withBase(item.href)} class="footer-link">
+              <a href={withBase(item.href)} class="footer-link footer-nav-link">
                 {item.label}
               </a>
             ))}
@@ -62,6 +62,20 @@ const socialLinks = [
       <a href="#main-content" class="footer-top">Back to top ↑</a>
     </div>
   </Container>
+
+  <script>
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('.footer-nav-link');
+      if (!link) return;
+      document.addEventListener(
+        'astro:after-swap',
+        () => {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        },
+        { once: true }
+      );
+    });
+  </script>
 </footer>
 
 <style>
