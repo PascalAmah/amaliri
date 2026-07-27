@@ -4,7 +4,6 @@ import { Image } from 'astro:assets';
 import { getUiText } from '../ui';
 import { withBase } from '../utils/paths';
 
-
 type ProjectEntry = CollectionEntry<'projects'>;
 
 type Props = {
@@ -145,18 +144,21 @@ const Heading = headingLevel;
             transition:name={`project-feed-${project.id}`}
           >
             <div class="feed-thumb">
-              {project.data.heroImage ? (
-                <Image
-                  src={project.data.heroImage}
-                  alt={project.data.title}
-                  width={80}
-                  height={60}
-                  class="feed-thumb-img"
-                  quality={80}
-                />
-              ) : (
-                <div class="feed-thumb-placeholder" />
-              )}
+              {(() => {
+                const thumbSrc = project.data.logo ?? project.data.heroImage;
+                return thumbSrc ? (
+                  <Image
+                    src={thumbSrc}
+                    alt={project.data.title}
+                    width={80}
+                    height={60}
+                    class="feed-thumb-img"
+                    quality={80}
+                  />
+                ) : (
+                  <div class="feed-thumb-placeholder" />
+                );
+              })()}
             </div>
             <div class="feed-body">
               <Heading class="feed-title">

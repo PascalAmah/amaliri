@@ -132,6 +132,10 @@
 }
 
 /* ── Related view-all link ─────────────────── */
+.project-related {
+  margin-top: var(--space-8);
+}
+
 .related-view-all {
   font-size: var(--text-footnote);
   font-weight: var(--weight-accent-label);

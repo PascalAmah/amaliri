@@ -14,6 +14,7 @@ const projects = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       heroImage: z.optional(image()),
+      logo: z.optional(image()),
       uiImages: z.array(image()).max(4).optional(),
       focusEffect: z.literal('scroll-dark').optional(),
       category: z.string().optional(),

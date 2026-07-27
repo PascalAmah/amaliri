@@ -271,7 +271,7 @@ const jsonLd = serializeScriptJson({
 
       {
         relatedProjects.length > 0 && (
-          <Section label={tr.relatedProjects} variant="showcase">
+          <Section label={tr.relatedProjects} variant="showcase" class="project-related">
             <FeaturedProjectGrid projects={relatedProjects} variant="related" />
             <Fragment slot="actions">
               <a href={projectsBase} class="related-view-all">
