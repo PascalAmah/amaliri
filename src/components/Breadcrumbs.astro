@@ -1,0 +1,107 @@
+---
+import config from '../../astro-theme-config';
+import { withBase } from '../utils/paths';
+import { serializeScriptJson } from '../utils/serialize-script-json';
+
+export interface BreadcrumbItem {
+  label: string;
+  path: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const site = Astro.site ?? new URL(config.site.url);
+const breadcrumbJsonLd = serializeScriptJson({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.label,
+    item: new URL(withBase(item.path), site).href,
+  })),
+});
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol class="breadcrumbs-list">
+    {items.map((item, index) => {
+      const isCurrent = index === items.length - 1;
+      return (
+        <li class="breadcrumbs-item">
+          {isCurrent ? (
+            <span class="breadcrumbs-current" aria-current="page">
+              {item.label}
+            </span>
+          ) : (
+            <a href={withBase(item.path)} class="breadcrumbs-link">
+              {item.label}
+            </a>
+          )}
+          {!isCurrent && (
+            <span class="breadcrumbs-sep" aria-hidden="true">
+              ›
+            </span>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<script is:inline type="application/ld+json" set:html={breadcrumbJsonLd} />
+
+<style>
+  .breadcrumbs {
+    margin-bottom: var(--space-10);
+  }
+
+  .breadcrumbs-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumbs-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-footnote);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .breadcrumbs-link {
+    color: var(--label-tertiary);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .breadcrumbs-link:hover {
+    color: var(--color-blue);
+    opacity: 1;
+  }
+
+  .breadcrumbs-current {
+    color: var(--label-secondary);
+  }
+
+  .breadcrumbs-sep {
+    color: var(--label-quaternary);
+    font-size: var(--text-caption-2);
+  }
+
+  @media (max-width: 600px) {
+    .breadcrumbs {
+      margin-bottom: var(--space-6);
+    }
+  }
+</style>

@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Container from '../components/Container.astro';
 import ArchitectureDiagram from '../components/ArchitectureDiagram.astro';
 import FeaturedProjectGrid from '../components/FeaturedProjectGrid.astro';
@@ -107,6 +108,8 @@ const jsonLd = serializeScriptJson({
   '@context': 'https://schema.org',
   ...(schemas.length === 1 ? schemas[0] : { '@graph': schemas }),
 });
+
+const breadcrumbPath = projectId ? `/projects/${projectId}/` : '/projects';
 ---
 
 <BaseLayout
@@ -127,7 +130,13 @@ const jsonLd = serializeScriptJson({
   <Container variant="showcase" transition:animate="slide">
     <article>
       <div class="project-content">
-        <a href={projectsBase} class="back-link">{tr.backLink}</a>
+        <Breadcrumbs
+          items={[
+            { label: 'Home', path: '/' },
+            { label: 'Projects', path: '/projects' },
+            { label: title, path: breadcrumbPath },
+          ]}
+        />
 
         <header class="project-header">
           <div class="project-accent"></div>

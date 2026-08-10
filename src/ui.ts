@@ -1,5 +1,4 @@
 const ui = {
-  backLink: '← All Projects',
   readingTime: (n: number) => `${n} min read`,
   updated: 'Updated',
   relatedProjects: 'Related',

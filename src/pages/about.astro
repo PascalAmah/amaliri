@@ -1,6 +1,7 @@
 ---
 import '../styles/pages/about.css';
 import config from '../../astro-theme-config';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const profileImageUrl = config.about.profileImage.trim();
@@ -45,6 +46,12 @@ const profileLinks = [
 
 <BaseLayout title="About" description={profileLead} bodyClass="about-layout">
   <div class="about-main">
+    <Breadcrumbs
+      items={[
+        { label: 'Home', path: '/' },
+        { label: 'About', path: '/about' },
+      ]}
+    />
     <section class="about-hero" aria-labelledby="about-title">
       <div class="about-intro" data-reveal>
         <p class="about-lead">

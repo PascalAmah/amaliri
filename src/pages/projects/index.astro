@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ProjectFeed from '../../components/ProjectFeed.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../../components/Container.astro';
@@ -16,6 +17,12 @@ const projects = (await getCollection('projects'))
 
 <BaseLayout title={tr.projectsTitle} description={SITE_DESCRIPTION} bodyClass="projects-layout">
   <Container variant="showcase">
+    <Breadcrumbs
+      items={[
+        { label: 'Home', path: '/' },
+        { label: 'Projects', path: '/projects' },
+      ]}
+    />
     <Section label={tr.projectsEyebrow} heading={tr.projectsTitle} variant="showcase" data-reveal>
       <ProjectFeed projects={projects} basePath="/projects" initialVisible={8} />
     </Section>

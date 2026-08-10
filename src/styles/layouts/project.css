@@ -7,24 +7,6 @@
   max-width: 100%;
 }
 
-/* ── Back link ───────────────────────────── */
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  font-size: var(--text-footnote);
-  font-weight: 500;
-  color: var(--label-tertiary);
-  text-decoration: none;
-  margin-bottom: var(--space-10);
-  transition: color var(--duration-fast) var(--ease-out);
-  letter-spacing: 0.01em;
-}
-
-.back-link:hover {
-  color: var(--color-blue);
-  opacity: 1;
-}
-
 /* ── Project header ────────────────────────── */
 .project-header {
   padding-bottom: var(--space-8);
@@ -339,10 +321,6 @@
   .project-title {
     font-size: clamp(1.6rem, 6vw, 2rem);
     letter-spacing: -0.015em;
-  }
-
-  .back-link {
-    margin-bottom: var(--space-6);
   }
 
   .project-header {
