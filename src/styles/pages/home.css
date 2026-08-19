@@ -508,6 +508,46 @@
   margin: 0;
 }
 
+.timeline-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-footnote);
+  color: var(--label-tertiary);
+}
+
+.timeline-type,
+.timeline-remote {
+  line-height: 1;
+}
+
+.timeline-bullets {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.timeline-bullets li {
+  position: relative;
+  padding-left: var(--space-5);
+  color: var(--label-secondary);
+  font-size: var(--text-callout);
+  font-weight: 450;
+  line-height: var(--leading-relaxed);
+  max-width: 52rem;
+}
+
+.timeline-bullets li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
 /* ── Skills (curated) ─────────────────────── */
 .skills-split {
   display: grid;

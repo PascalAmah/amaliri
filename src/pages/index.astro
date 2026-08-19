@@ -236,6 +236,17 @@ const personJsonLd = serializeScriptJson({
                 <div class="timeline-details">
                   <h3 class="timeline-title">{item.title}</h3>
                   <p class="timeline-company">{item.description}</p>
+                  <p class="timeline-meta">
+                    <span class="timeline-type">{item.type}</span>
+                    {item.remote && <span class="timeline-remote">· Remote</span>}
+                  </p>
+                  {item.bullets && item.bullets.length > 0 && (
+                    <ul class="timeline-bullets">
+                      {item.bullets.map((bullet) => (
+                        <li>{bullet}</li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </li>
             ))}

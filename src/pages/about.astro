@@ -157,9 +157,20 @@ const profileLinks = [
           careerItems.map((item) => (
             <article class="career-item">
               <time>{item.period}</time>
-              <div>
+              <div class="career-body">
                 <h3>{item.title}</h3>
-                <p>{item.description}</p>
+                <p class="career-company">{item.description}</p>
+                <p class="career-meta">
+                  <span class="career-type">{item.type}</span>
+                  {item.remote && <span class="career-remote">· Remote</span>}
+                </p>
+                {item.bullets && item.bullets.length > 0 && (
+                  <ul class="career-bullets">
+                    {item.bullets.map((bullet) => (
+                      <li>{bullet}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </article>
           ))

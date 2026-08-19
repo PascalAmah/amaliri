@@ -211,31 +211,73 @@ const config = {
     careerLabel: 'Career',
     career: [
       {
-        period: 'Nov 2025 - Present',
-        title: 'Software Engineer | Backend',
+        period: 'Nov 2025 – Present',
+        title: 'Software Engineer',
         description: 'Outside Hospitality',
+        type: 'Full-time',
+        remote: true,
+        bullets: [
+          'Built and maintained backend services powering hospitality operations and booking workflows',
+          'Designed RESTful APIs consumed by web and mobile clients with a focus on reliability and low latency',
+          'Improved system observability by adding structured logging and error tracking across services',
+        ],
       },
       {
-        period: 'Dec 2025 - Feb 2026',
-        title: 'Software Developer | Backend',
+        period: 'Dec 2025 – Feb 2026',
+        title: 'Software Developer',
         description: 'AfroGoods',
+        type: 'Contract',
+        remote: true,
+        bullets: [
+          'Developed backend features for an e-commerce platform serving African merchants and buyers',
+          'Integrated payment and logistics APIs to streamline order fulfilment across regions',
+          'Collaborated with frontend team to define API contracts and accelerate feature delivery',
+        ],
       },
       {
-        period: 'Sept 2025 - Nov 2025',
-        title: 'Software Developer | Backend',
+        period: 'Sept 2025 – Nov 2025',
+        title: 'Software Developer',
         description: 'Skil Connect',
+        type: 'Contract',
+        remote: true,
+        bullets: [
+          'Built API endpoints for a skills-matching platform connecting professionals with opportunities',
+          'Implemented user profile and matching logic backed by PostgreSQL and Node.js',
+          'Participated in sprint planning and code reviews to maintain quality across the codebase',
+        ],
       },
       {
-        period: 'Sept 2024 - Mar 2025',
-        title: 'Frontend Developer | React.js',
-        description: 'Encounter Inc. - TripHoppa',
+        period: 'Sept 2024 – Mar 2025',
+        title: 'Frontend Developer',
+        description: 'Encounter Inc. – TripHoppa',
+        type: 'Full-time',
+        remote: true,
+        bullets: [
+          'Built interactive React.js interfaces for a travel discovery and booking product',
+          'Translated Figma designs into pixel-accurate, responsive components with strong attention to accessibility',
+          'Coordinated with backend engineers to integrate APIs for real-time trip data and user itineraries',
+        ],
       },
       {
-        period: '2023 - 2025',
-        title: 'Software Engineering Student | Certificate Program',
-        description: 'ALX',
+        period: '2023 – 2025',
+        title: 'Software Engineering Student',
+        description: 'ALX Africa',
+        type: 'Certificate Program',
+        remote: false,
+        bullets: [
+          'Completed an intensive two-year software engineering program covering systems programming, backend development, and web technologies',
+          'Built projects in C, Python, JavaScript, and shell scripting with emphasis on performance and low-level understanding',
+          'Collaborated with a global cohort on team projects, code reviews, and peer-learning sessions',
+        ],
       },
-    ],
+    ] as {
+      period: string;
+      title: string;
+      description: string;
+      type: string;
+      remote: boolean;
+      bullets: string[];
+    }[],
     interests: [
       'Backend Systems',
       'AI & Machine Learning',
