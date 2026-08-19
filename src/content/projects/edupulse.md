@@ -2,6 +2,7 @@
 title: 'EduPulse'
 description: 'Adaptive microlearning platform with personalized bite-sized lessons and quizzes based on user behavior, mood, and personal goals.'
 pubDate: '2025-02-10'
+category: 'Backend'
 tags: ['Python', 'Django', 'Django REST Framework', 'MySQL', 'REST APIs']
 githubUrl: 'https://github.com/PascalAmah/edupulse'
 status: 'completed'

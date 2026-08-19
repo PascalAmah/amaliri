@@ -2,6 +2,7 @@
 title: 'Wildcard'
 description: 'A real-time browser-based multiplayer card game for 2–10 players, built around color/number matching, action cards, and wild cards. Create or join a table with a room code — no installs, no accounts required.'
 pubDate: '2026-07-25'
+category: 'Full-stack'
 tags:
   [
     'React',

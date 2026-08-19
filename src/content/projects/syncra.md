@@ -2,6 +2,7 @@
 title: 'Syncra SDK'
 description: 'Production-grade offline-first synchronization engine with operation queuing, delta sync, conflict resolution, idempotency guarantees, and automatic retry handling.'
 pubDate: '2025-03-01'
+category: 'Backend'
 tags:
   [
     'Node.js',
@@ -51,9 +52,9 @@ architecture:
   - label: 'PostgreSQL'
     detail: 'Records, versions & event history'
 heroImage: './images/syncra/syncra-hero.png'
-# uiImages:
+uiImages:
 #   - "./images/syncra/syncra-landing.png"
-#   - "./images/syncra/syncra-dashboard.png"
-#   - "./images/syncra/syncra-queue.png"
+   - "./images/syncra/syncra-dashboard.png"
+   - "./images/syncra/syncra-demo.png"
 #   - "./images/syncra/syncra-conflicts.png"
 ---

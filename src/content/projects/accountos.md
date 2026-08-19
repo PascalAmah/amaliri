@@ -2,6 +2,7 @@
 title: 'AccountOS'
 description: 'Programmable virtual account infrastructure built on Nomba, enabling rule-driven automation, immutable ledgers, treasury management, and auditability for fintech products.'
 pubDate: '2026-06-15'
+category: 'FinTech'
 tags: ['NestJS', 'TypeScript', 'PostgreSQL', 'Prisma', 'Redis', 'BullMQ', 'Nomba APIs', 'FinTech']
 githubUrl: 'https://github.com/PascalAmah/accountos'
 status: 'in-progress'

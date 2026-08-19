@@ -2,6 +2,7 @@
 title: 'Breevs'
 description: 'Hackathon project built on the Stacks Blockchain; an on-chain elimination game where players compete for a shared prize pool through transparent smart contract interactions.'
 pubDate: '2025-02-20'
+category: 'Web3'
 tags: ['Next.js', 'Node.js', 'Stacks Blockchain', 'Clarity', 'Web3']
 githubUrl: 'https://github.com/PascalAmah/Breevs'
 liveUrl: 'https://breevs.pxxl.click'

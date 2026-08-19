@@ -118,7 +118,9 @@ const profileLinks = [
         <section class="about-section about-journey" aria-labelledby="about-journey" data-reveal>
           <p class="section-label">{journeyLabel}</p>
           <div>
-            <h2 id="about-journey" class="section-heading">{journeyHeading}</h2>
+            <h2 id="about-journey" class="section-heading">
+              {journeyHeading}
+            </h2>
             <div class="journey-prose">
               {journeyParagraphs.map((paragraph) => (
                 <p>{paragraph}</p>
@@ -136,16 +138,18 @@ const profileLinks = [
           {statementTitle}
         </h2>
         <ul class="skills-grid">
-          {config.skills.map((category) => (
-            <li class="skills-category">
-              <p class="skills-category-label">{category.label}</p>
-              <div class="skills-tags">
-                {category.names.map((name) => (
-                  <span class="skills-badge">{name}</span>
-                ))}
-              </div>
-            </li>
-          ))}
+          {
+            config.skills.map((category) => (
+              <li class="skills-category">
+                <p class="skills-category-label">{category.label}</p>
+                <div class="skills-tags">
+                  {category.names.map((name) => (
+                    <span class="skills-badge">{name}</span>
+                  ))}
+                </div>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </section>
@@ -158,7 +162,10 @@ const profileLinks = [
             <article class="career-item">
               <time>{item.period}</time>
               <div class="career-body">
-                <h3>{item.title}</h3>
+                <h3>
+                  {item.title}
+                  {item.role && <span class="career-role"> - {item.role}</span>}
+                </h3>
                 <p class="career-company">{item.description}</p>
                 <p class="career-meta">
                   <span class="career-type">{item.type}</span>
@@ -183,7 +190,9 @@ const profileLinks = [
         <section class="about-section about-certs" aria-labelledby="about-certs" data-reveal>
           <p class="section-label">{certificationsLabel}</p>
           <div>
-            <h2 id="about-certs" class="section-heading">{certificationsHeading}</h2>
+            <h2 id="about-certs" class="section-heading">
+              {certificationsHeading}
+            </h2>
             <ul class="certs-list" data-reveal-group>
               {certifications.map((cert) => {
                 const CardTag = cert.credentialUrl ? 'a' : 'div';

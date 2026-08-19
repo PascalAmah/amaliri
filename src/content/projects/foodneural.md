@@ -2,6 +2,7 @@
 title: 'FoodNeural'
 description: 'AI-powered sustainability platform that analyzes the environmental impact of food products and recommends eco-friendly alternatives using machine learning and natural language processing.'
 pubDate: '2024-11-20'
+category: 'AI/ML'
 tags: ['Flask', 'React', 'pandas', 'scikit-learn', 'Transformers', 'Machine Learning', 'NLP']
 githubUrl: 'https://github.com/PascalAmah/FoodNeural'
 liveUrl: 'https://foodneuralapp.vercel.app'

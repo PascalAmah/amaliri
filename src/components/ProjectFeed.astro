@@ -27,12 +27,14 @@ const {
 const labels = getUiText().projectFeed;
 
 const projectSlug = (id: string) => id;
-const allTags = [...new Set(projects.flatMap((post) => post.data.tags ?? []))].sort();
+const allCategories = [
+  ...new Set(projects.flatMap((post) => (post.data.category ? [post.data.category] : []))),
+].sort();
 
-const filters = allTags.map((tag) => ({
-  key: `tag:${tag}`,
-  label: tag,
-  count: projects.filter((post) => (post.data.tags ?? []).includes(tag)).length,
+const filters = allCategories.map((category) => ({
+  key: `category:${category}`,
+  label: category,
+  count: projects.filter((post) => post.data.category === category).length,
 }));
 const Heading = headingLevel;
 ---
@@ -134,6 +136,7 @@ const Heading = headingLevel;
         <li
           class="feed-item"
           data-feed-item
+          data-category={project.data.category ?? ''}
           data-tags={project.data.tags?.join(',') ?? ''}
           data-search={`${project.data.title} ${project.data.description} ${project.data.tags?.join(' ') ?? ''}`.toLocaleLowerCase()}
           data-index={index}

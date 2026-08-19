@@ -22,10 +22,9 @@ function initProjectFeeds(root: ParentNode = document) {
 
     const matchesFilter = (item: HTMLElement) => {
       if (active === 'all') return true;
-      if (active.startsWith('tag:')) {
-        const tag = active.slice('tag:'.length);
-        const tags = (item.dataset.tags || '').split(',');
-        return tags.includes(tag);
+      if (active.startsWith('category:')) {
+        const category = active.slice('category:'.length);
+        return item.dataset.category === category;
       }
       return false;
     };

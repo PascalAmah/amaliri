@@ -2,6 +2,7 @@
 title: 'AfroGoods'
 description: 'B2C marketplace built for a Canadian client, enabling customers across the diaspora to shop African food products online, with a built-in advert hub for community listings.'
 pubDate: '2026-03-01'
+category: 'Full-stack'
 tags: ['Node.js', 'React', 'NestJS', 'MongoDB', 'Stripe', 'REST APIs']
 liveUrl: 'https://afrogoods-web.onrender.com'
 status: 'completed'

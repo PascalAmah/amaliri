@@ -234,6 +234,11 @@
   line-height: var(--leading-tight);
 }
 
+.career-role {
+  color: var(--label-secondary);
+  font-weight: var(--weight-medium);
+}
+
 .career-company {
   margin: var(--space-1) 0 0;
   color: var(--label-secondary);

@@ -72,6 +72,7 @@ const htmlLang = lang ?? config.site.lang;
       import { mountSkipLinkFocus } from '../scripts/skip-link';
       import { mountScrollAnimations } from '../scripts/scroll-animations';
       import { mountHeroReveal } from '../scripts/hero-reveal';
+      import { mountMoreWork } from '../scripts/more-work';
 
       function onNav(fn: () => void) {
         fn();
@@ -82,6 +83,7 @@ const htmlLang = lang ?? config.site.lang;
       onNav(mountImageLoadingStates);
       onNav(mountScrollAnimations);
       onNav(mountHeroReveal);
+      onNav(mountMoreWork);
     </script>
   </body>
 </html>

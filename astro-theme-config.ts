@@ -213,8 +213,9 @@ const config = {
       {
         period: 'Nov 2025 – Present',
         title: 'Software Engineer',
+        role: 'Backend',
         description: 'Outside Hospitality',
-        type: 'Full-time',
+        type: 'Contract',
         remote: true,
         bullets: [
           'Built and maintained backend services powering hospitality operations and booking workflows',
@@ -225,6 +226,7 @@ const config = {
       {
         period: 'Dec 2025 – Feb 2026',
         title: 'Software Developer',
+        role: 'Backend',
         description: 'AfroGoods',
         type: 'Contract',
         remote: true,
@@ -237,6 +239,7 @@ const config = {
       {
         period: 'Sept 2025 – Nov 2025',
         title: 'Software Developer',
+        role: 'Backend',
         description: 'Skil Connect',
         type: 'Contract',
         remote: true,
@@ -250,7 +253,7 @@ const config = {
         period: 'Sept 2024 – Mar 2025',
         title: 'Frontend Developer',
         description: 'Encounter Inc. – TripHoppa',
-        type: 'Full-time',
+        type: 'Freelance',
         remote: true,
         bullets: [
           'Built interactive React.js interfaces for a travel discovery and booking product',
@@ -273,6 +276,7 @@ const config = {
     ] as {
       period: string;
       title: string;
+      role?: string;
       description: string;
       type: string;
       remote: boolean;

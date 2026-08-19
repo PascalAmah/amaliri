@@ -2,6 +2,7 @@
 title: 'BarqPix'
 description: 'Real-time event photo sharing platform with QR-based access. Guests scan a QR code to instantly join a private event gallery, upload photos, and view live updates no app installation required.'
 pubDate: '2025-01-15'
+category: 'Full-stack'
 tags: ['Next.js', 'Express.js', 'Firebase', 'AI']
 githubUrl: 'https://github.com/PascalAmah/BarqPix'
 liveUrl: 'https://barq-pix.vercel.app'

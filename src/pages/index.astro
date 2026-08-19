@@ -33,7 +33,7 @@ const pinnedGridProjects = gridCandidates
     return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
   });
 const fallbackGridProjects = gridCandidates.filter((project) => !project.data.homeOrder);
-const gridProjects = [...pinnedGridProjects, ...fallbackGridProjects].slice(0, 3);
+const gridProjects = [...pinnedGridProjects, ...fallbackGridProjects].slice(0, 5);
 
 const career = config.about.career;
 
@@ -48,6 +48,48 @@ const featuredPlaceholder = featured?.data.heroImage
 const featuredPlaceholderStyle = featuredPlaceholder
   ? `--tone-image-placeholder: url("${featuredPlaceholder.src}");`
   : undefined;
+
+// LQIP placeholders for the More Work scroll rows
+const gridPlaceholderEntries = await Promise.all(
+  gridProjects.map(
+    async (project) =>
+      [
+        project.id,
+        project.data.heroImage
+          ? (
+              await getImage({
+                src: project.data.heroImage,
+                width: 48,
+                format: 'webp',
+                quality: 28,
+              })
+            ).src
+          : undefined,
+      ] as const
+  )
+);
+const gridPlaceholderById = new Map<string, string | undefined>(gridPlaceholderEntries);
+
+// Pre-resolve full-size frame srcs for the scroll rows (landscape, 900px wide)
+const gridFrameSrcEntries = await Promise.all(
+  gridProjects.map(
+    async (project) =>
+      [
+        project.id,
+        project.data.heroImage
+          ? (
+              await getImage({
+                src: project.data.heroImage,
+                width: 900,
+                format: 'webp',
+                quality: 85,
+              })
+            ).src
+          : undefined,
+      ] as const
+  )
+);
+const gridFrameSrcById = new Map<string, string | undefined>(gridFrameSrcEntries);
 
 // Person JSON-LD for the homepage — richer entity for search/recruiters.
 const personJsonLd = serializeScriptJson({
@@ -160,61 +202,171 @@ const personJsonLd = serializeScriptJson({
       )
     }
 
-    {/* ── Featured Work ────────────────────── */}
+    {/* ── Featured Work (cinematic full-bleed) ── */}
     {
       featured && (
-        <Section
-          id="featured"
-          label="Selected work"
-          heading="Featured project"
-          variant="showcase"
-          class="section--featured"
-        >
-          <a href={withBase(`/projects/${featured.id}/`)} class="featured-card">
-            <div class="featured-text">
-              <h3 class="featured-title">{featured.data.title}</h3>
-              {featured.data.description && (
-                <p class="featured-desc">{featured.data.description}</p>
-              )}
-              {featured.data.tags && featured.data.tags.length > 0 && (
-                <div class="featured-tags">
-                  {featured.data.tags.slice(0, 4).map((tag) => (
-                    <span class="featured-tag">{tag}</span>
-                  ))}
-                </div>
-              )}
-              <span class="featured-cta">{tr.readLink}</span>
-            </div>
-            <div class="featured-thumb-wrap" style={featuredPlaceholderStyle}>
+        <section id="featured" class="section--featured featured-cinematic" data-reveal>
+          <div class="featured-cin__label">
+            <span class="featured-cin__label-text">Selected work</span>
+          </div>
+          <a
+            href={withBase(`/projects/${featured.id}/`)}
+            class="featured-cin__card"
+            aria-label={`View case study: ${featured.data.title}`}
+          >
+            {/* Background image */}
+            <div class="featured-cin__bg" style={featuredPlaceholderStyle}>
               {featured.data.heroImage ? (
                 <Image
                   src={featured.data.heroImage}
-                  alt={featured.data.title}
-                  class="featured-thumb"
-                  widths={[400, 720, 960, 1280]}
-                  sizes="(max-width: 600px) calc(100vw - 32px), 460px"
+                  alt=""
+                  aria-hidden="true"
+                  class="featured-cin__bg-img"
+                  widths={[800, 1200, 1600, 2000]}
+                  sizes="100vw"
                   quality={88}
                   loading="lazy"
                 />
               ) : (
-                <div class="featured-thumb card-img-placeholder" />
+                <div class="featured-cin__bg-placeholder" />
               )}
+              <div class="featured-cin__scrim" aria-hidden="true" />
+            </div>
+
+            {/* Content anchored bottom-left */}
+            <div class="featured-cin__content">
+              <p class="featured-cin__eyebrow">Featured project</p>
+              <h3 class="featured-cin__title">{featured.data.title}</h3>
+              {featured.data.description && (
+                <p class="featured-cin__desc">{featured.data.description}</p>
+              )}
+              {featured.data.tags && featured.data.tags.length > 0 && (
+                <div class="featured-cin__tags">
+                  {featured.data.tags.slice(0, 4).map((tag) => (
+                    <span class="featured-cin__tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+              <span class="featured-cin__cta" aria-hidden="true">
+                {tr.readLink} <span class="featured-cin__cta-arrow">↗</span>
+              </span>
             </div>
           </a>
-        </Section>
+        </section>
       )
     }
 
+    {/* ── More Work (Maxeene scroll rows) ─────── */}
     {
       gridProjects.length > 0 && (
-        <Section heading="More work" variant="showcase" class="section--grid" data-reveal>
-          <Fragment slot="actions">
-            <a href={withBase('/projects')} class="view-all">
+        <section class="section--grid mw-section">
+          <div class="mw-header">
+            <div class="mw-header__left">
+              <p class="mw-header__label">More work</p>
+            </div>
+            <a href={withBase('/projects')} class="view-all mw-header__viewall">
               {tr.viewAll}
             </a>
-          </Fragment>
-          <FeaturedProjectGrid projects={gridProjects} />
-        </Section>
+          </div>
+
+          <div class="mw-body">
+            {/* Left: scroll rows */}
+            <div class="mw-rows" id="mw-rows">
+              {gridProjects.map((project, index) => {
+                const lqip = gridPlaceholderById.get(project.id);
+                const lqipStyle = lqip ? `--tone-image-placeholder: url("${lqip}");` : undefined;
+                return (
+                  <a
+                    href={withBase(`/projects/${project.id}/`)}
+                    class="mw-row"
+                    data-mw-image={project.data.heroImage ? project.id : undefined}
+                    data-mw-title={project.data.title}
+                    data-mw-src={gridFrameSrcById.get(project.id)}
+                  >
+                    <span class="mw-row__counter" aria-hidden="true">
+                      0{index + 1}
+                    </span>
+                    <div class="mw-row__body">
+                      {/* Inline image — visible only on mobile */}
+                      {project.data.heroImage && (
+                        <div class="mw-row__mobile-img" style={lqipStyle}>
+                          <Image
+                            src={project.data.heroImage}
+                            alt={project.data.title}
+                            class="mw-row__mobile-img-el"
+                            widths={[480, 800]}
+                            sizes="calc(100vw - 48px)"
+                            quality={80}
+                            loading="lazy"
+                          />
+                        </div>
+                      )}
+                      <h3 class="mw-row__title">{project.data.title}</h3>
+                      {project.data.description && (
+                        <p class="mw-row__desc">{project.data.description}</p>
+                      )}
+                      {project.data.tags && project.data.tags.length > 0 && (
+                        <div class="mw-row__tags">
+                          {project.data.tags.slice(0, 3).map((tag) => (
+                            <span class="mw-row__tag">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                      {(project.data.liveUrl || project.data.githubUrl) && (
+                        <div class="mw-row__actions">
+                          {project.data.liveUrl && (
+                            <span
+                              class="mw-row__action"
+                              data-href={project.data.liveUrl}
+                              role="link"
+                              tabindex="0"
+                              aria-label={`${project.data.title} — live demo`}
+                              onclick="event.preventDefault();event.stopPropagation();window.open(this.dataset.href,'_blank','noopener')"
+                            >
+                              Live ↗
+                            </span>
+                          )}
+                          {project.data.githubUrl && (
+                            <span
+                              class="mw-row__action"
+                              data-href={project.data.githubUrl}
+                              role="link"
+                              tabindex="0"
+                              aria-label={`${project.data.title} — source on GitHub`}
+                              onclick="event.preventDefault();event.stopPropagation();window.open(this.dataset.href,'_blank','noopener')"
+                            >
+                              Source
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <span class="mw-row__arrow" aria-hidden="true">
+                      ↗
+                    </span>
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Right: sticky framed image */}
+            <div class="mw-frame" aria-hidden="true">
+              <div class="mw-frame__box" id="mw-frame-box">
+                {gridProjects[0]?.data.heroImage ? (
+                  <img
+                    src={gridFrameSrcById.get(gridProjects[0].id)}
+                    alt=""
+                    id="mw-frame-img"
+                    class="mw-frame__img"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="mw-frame__placeholder" id="mw-frame-img" />
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
       )
     }
 
@@ -234,7 +386,10 @@ const personJsonLd = serializeScriptJson({
                 <div class="timeline-marker" aria-hidden="true" />
                 <p class="timeline-period">{item.period}</p>
                 <div class="timeline-details">
-                  <h3 class="timeline-title">{item.title}</h3>
+                  <h3 class="timeline-title">
+                    {item.title}
+                    {item.role && <span class="timeline-role"> - {item.role}</span>}
+                  </h3>
                   <p class="timeline-company">{item.description}</p>
                   <p class="timeline-meta">
                     <span class="timeline-type">{item.type}</span>
