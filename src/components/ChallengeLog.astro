@@ -1,0 +1,592 @@
+---
+export interface Challenge {
+  day: number;
+  title: string;
+  tool: string;
+  category: string;
+  link: string;
+  preview: string;
+  note?: string;
+}
+
+interface Props {
+  challenges: Challenge[];
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+}
+
+const {
+  challenges,
+  eyebrow = "Build log",
+  heading = "30 days, 30 interfaces",
+  intro = "30 UI designs from a community challenge — each one built out in Astro. The designs came from the challenge brief; my job was to take them from static mockup to working, responsive code. Day 30 is the challenge portfolio itself.",
+} = Astro.props;
+
+const sorted = [...challenges].sort((a, b) => a.day - b.day);
+const total = 30;
+const shipped = sorted.length;
+const categories = [...new Set(sorted.map((c) => c.category))].sort((a, b) =>
+  a.localeCompare(b)
+);
+const pad = (n: number) => n.toString().padStart(2, "0");
+---
+
+<section class="cl" id="challenge-log" aria-labelledby="cl-heading">
+  <header class="cl-head" data-reveal>
+    <div class="cl-head-text">
+      <p class="cl-eyebrow">{eyebrow}</p>
+      <h2 class="cl-heading" id="cl-heading">{heading}</h2>
+      <p class="cl-intro">{intro}</p>
+    </div>
+
+    <div class="cl-tally" role="status">
+      <span class="cl-tally-num">
+        {pad(shipped)}<span class="cl-tally-slash">/</span>{pad(total)}
+      </span>
+      <span class="cl-tally-label">shipped</span>
+      <div class="cl-tally-bar">
+        <div class="cl-tally-fill" style={`width:${Math.min(100, (shipped / total) * 100)}%`}></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="cl-filters" role="group" aria-label="Filter by category" data-reveal>
+    <button type="button" class="cl-chip is-active" data-category="all">All</button>
+    {categories.map((cat) => (
+      <button type="button" class="cl-chip" data-category={cat}>{cat}</button>
+    ))}
+  </div>
+
+  <ul class="cl-grid">
+    {sorted.map((c) => (
+      <li class="cl-entry" data-category={c.category} data-reveal>
+        <button
+          type="button"
+          class="cl-preview"
+          data-title={c.title}
+          data-note={c.note ?? ""}
+          data-link={c.link}
+          data-tool={c.tool}
+          data-day={pad(c.day)}
+          data-preview={c.preview}
+          aria-label={`Open preview — day ${pad(c.day)}, ${c.title}`}
+        >
+          <img src={c.preview} alt="" loading="lazy" />
+          <span class="cl-tag">{c.category}</span>
+          <span class="cl-num" aria-hidden="true">{pad(c.day)}</span>
+        </button>
+
+        <div class="cl-entry-body">
+          <p class="cl-entry-meta">Day {pad(c.day)} · {c.category}</p>
+          <h3 class="cl-entry-title">{c.title}</h3>
+          {c.note && <p class="cl-entry-note">{c.note}</p>}
+          <a class="cl-entry-link" href={c.link} target="_blank" rel="noopener noreferrer">
+            View live <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  <p class="cl-empty" data-empty hidden>Nothing shipped with that tool yet.</p>
+
+  <dialog class="cl-modal" id="cl-modal">
+    <button type="button" class="cl-modal-close" data-close aria-label="Close preview">✕</button>
+    <img class="cl-modal-img" id="cl-modal-img" alt="" />
+    <div class="cl-modal-body">
+      <p class="cl-modal-meta">
+        <span id="cl-modal-day"></span> · <span id="cl-modal-tool"></span>
+      </p>
+      <h3 id="cl-modal-title"></h3>
+      <p id="cl-modal-note"></p>
+      <a id="cl-modal-link" target="_blank" rel="noopener noreferrer">
+        View live <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </dialog>
+</section>
+
+<script is:inline>
+  (function () {
+    function mountChallengeLog() {
+      var root = document.getElementById('challenge-log');
+      if (!root || root.dataset.clReady === 'true') return;
+      root.dataset.clReady = 'true';
+
+      var chips = root.querySelectorAll('.cl-chip');
+      var entries = root.querySelectorAll('.cl-entry');
+      var empty = root.querySelector('[data-empty]');
+
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          chips.forEach(function (c) { c.classList.remove('is-active'); });
+          chip.classList.add('is-active');
+          var category = chip.dataset.category;
+          var visible = 0;
+          entries.forEach(function (entry) {
+            var match = category === 'all' || entry.dataset.category === category;
+            entry.hidden = !match;
+            if (match) visible += 1;
+          });
+          if (empty) empty.hidden = visible !== 0;
+        });
+      });
+
+      var modal = document.getElementById('cl-modal');
+      var modalImg = document.getElementById('cl-modal-img');
+      var modalDay = document.getElementById('cl-modal-day');
+      var modalTool = document.getElementById('cl-modal-tool');
+      var modalTitle = document.getElementById('cl-modal-title');
+      var modalNote = document.getElementById('cl-modal-note');
+      var modalLink = document.getElementById('cl-modal-link');
+
+      root.querySelectorAll('.cl-preview').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!modal || !modalImg || !modalLink) return;
+          modalImg.src = btn.dataset.preview || '';
+          modalImg.alt = btn.dataset.title || '';
+          if (modalDay) modalDay.textContent = 'Day ' + btn.dataset.day;
+          if (modalTool) modalTool.textContent = btn.dataset.tool || '';
+          if (modalTitle) modalTitle.textContent = btn.dataset.title || '';
+          if (modalNote) modalNote.textContent = btn.dataset.note || '';
+          modalLink.href = btn.dataset.link || '#';
+          modal.showModal();
+        });
+      });
+
+      if (modal) {
+        modal.addEventListener('click', function (event) {
+          var target = event.target;
+          if (target === modal || target.closest('[data-close]')) modal.close();
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', mountChallengeLog);
+    } else {
+      mountChallengeLog();
+    }
+    document.addEventListener('astro:page-load', mountChallengeLog);
+  })();
+</script>
+
+<style>
+  /* ── Theme tokens scoped to this component ─────────────────
+     Light mode: warm parchment on white surface
+     Dark mode:  same dark-ink feel as the original design
+     ──────────────────────────────────────────────────────── */
+  .cl {
+    /* Light mode defaults */
+    --cl-bg:         var(--bg-primary);
+    --cl-bg-soft:    var(--bg-secondary);
+    --cl-ink:        var(--label-primary);
+    --cl-ink-soft:   var(--label-secondary);
+    --cl-ink-dim:    var(--label-tertiary);
+    --cl-amber:      var(--accent-strong);
+    --cl-amber-fill: var(--accent-bright);
+    --cl-line:       var(--separator);
+    --cl-card-bg:    var(--bg-secondary);
+    --cl-tag-color:  #fff;
+    --cl-tag-bg:     var(--accent-strong);
+    --cl-modal-bg:   var(--bg-tertiary);
+  }
+
+  /* Dark mode overrides live in the is:global block below */
+
+  .cl {
+    background: var(--cl-bg);
+    color: var(--cl-ink);
+    padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 3.5rem);
+    font-family: var(--font-sans);
+    transition:
+      background var(--duration-normal) var(--ease-out),
+      color var(--duration-normal) var(--ease-out);
+  }
+
+  .cl :is(h2, h3) {
+    font-family: var(--font-display);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  /* ── Header ── */
+  .cl-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--cl-line);
+    margin-bottom: 2rem;
+  }
+
+  .cl-head-text {
+    max-width: 42rem;
+  }
+
+  .cl-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption-1);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--cl-amber);
+    margin: 0 0 0.75rem;
+  }
+
+  .cl-heading {
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+    line-height: 1.05;
+    margin: 0 0 0.85rem;
+    color: var(--cl-ink);
+  }
+
+  .cl-intro {
+    color: var(--cl-ink-soft);
+    font-size: var(--text-callout);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  /* ── Tally counter ── */
+  .cl-tally {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
+    min-width: 9rem;
+  }
+
+  .cl-tally-num {
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    color: var(--cl-ink);
+    line-height: 1;
+  }
+
+  .cl-tally-slash {
+    color: var(--cl-ink-dim);
+    margin: 0 0.15rem;
+  }
+
+  .cl-tally-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption-2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cl-ink-dim);
+  }
+
+  .cl-tally-bar {
+    width: 100%;
+    height: 3px;
+    background: var(--cl-line);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .cl-tally-fill {
+    height: 100%;
+    background: var(--cl-amber);
+    transition: width 600ms var(--ease-out);
+  }
+
+  /* ── Filter chips ── */
+  .cl-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .cl-chip {
+    font-family: var(--font-mono);
+    font-size: var(--text-footnote);
+    letter-spacing: 0.02em;
+    color: var(--cl-ink-dim);
+    background: transparent;
+    border: 1px solid var(--cl-line);
+    border-radius: var(--radius-full);
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      background var(--duration-fast) var(--ease-out);
+  }
+
+  .cl-chip:hover {
+    color: var(--cl-ink);
+    border-color: var(--cl-ink-soft);
+  }
+
+  .cl-chip.is-active {
+    color: var(--cl-bg);
+    background: var(--cl-amber);
+    border-color: var(--cl-amber);
+  }
+
+  /* ── Card grid ── */
+  .cl-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 1.75rem 1.5rem;
+  }
+
+  .cl-entry {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Preview thumbnail ── */
+  .cl-preview {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    padding: 0;
+    border: 1px solid var(--cl-line);
+    border-radius: var(--radius-lg);
+    background: var(--cl-card-bg);
+    overflow: hidden;
+    cursor: zoom-in;
+    transition: border-color var(--duration-normal) var(--ease-out);
+  }
+
+  .cl-preview:hover {
+    border-color: var(--cl-amber);
+  }
+
+  .cl-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 400ms var(--ease-out);
+  }
+
+  .cl-preview:hover img {
+    transform: scale(1.04);
+  }
+
+  /* Tool badge */
+  .cl-tag {
+    position: absolute;
+    top: 0.6rem;
+    left: -0.4rem;
+    background: var(--cl-tag-bg);
+    color: var(--cl-tag-color);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    padding: 0.22rem 0.6rem 0.22rem 0.75rem;
+    transform: rotate(-3deg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Day number watermark */
+  .cl-num {
+    position: absolute;
+    bottom: 0.4rem;
+    right: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--cl-ink);
+    opacity: 0.2;
+    -webkit-text-stroke: 1px var(--cl-ink);
+    line-height: 1;
+  }
+
+  /* ── Card body ── */
+  .cl-entry-body {
+    padding-top: 0.9rem;
+  }
+
+  .cl-entry-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption-1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cl-ink-dim);
+    margin: 0 0 0.35rem;
+  }
+
+  .cl-entry-title {
+    font-size: var(--text-callout);
+    line-height: var(--leading-snug);
+    color: var(--cl-ink);
+    margin: 0 0 0.4rem;
+  }
+
+  .cl-entry-note {
+    font-size: var(--text-footnote);
+    line-height: var(--leading-relaxed);
+    color: var(--cl-ink-soft);
+    margin: 0 0 0.6rem;
+  }
+
+  .cl-entry-link {
+    font-family: var(--font-mono);
+    font-size: var(--text-footnote);
+    color: var(--cl-amber);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .cl-entry-link:hover {
+    border-color: var(--cl-amber);
+  }
+
+  /* ── Empty state ── */
+  .cl-empty {
+    color: var(--cl-ink-dim);
+    font-size: var(--text-callout);
+    padding: 2rem 0;
+    text-align: center;
+  }
+
+  /* ── Modal ── */
+  .cl-modal {
+    border: none;
+    border-radius: var(--radius-xl);
+    padding: 0;
+    max-width: 42rem;
+    width: min(90vw, 42rem);
+    background: var(--cl-modal-bg);
+    color: var(--cl-ink);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+  }
+
+  .cl-modal::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .cl-modal-img {
+    display: block;
+    width: 100%;
+    max-height: 60vh;
+    object-fit: cover;
+  }
+
+  .cl-modal-body {
+    padding: 1.5rem 1.75rem 1.75rem;
+    border-top: 1px solid var(--cl-line);
+  }
+
+  .cl-modal-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption-1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cl-ink-dim);
+    margin: 0 0 0.5rem;
+  }
+
+  .cl-modal-body h3 {
+    margin: 0 0 0.5rem;
+    font-size: var(--text-title-3);
+    color: var(--cl-ink);
+  }
+
+  .cl-modal-body p {
+    font-size: var(--text-footnote);
+    line-height: var(--leading-relaxed);
+    color: var(--cl-ink-soft);
+    margin: 0 0 1rem;
+  }
+
+  .cl-modal-body a {
+    font-family: var(--font-mono);
+    font-size: var(--text-footnote);
+    color: var(--cl-amber);
+    text-decoration: none;
+  }
+
+  .cl-modal-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--cl-line);
+    background: var(--cl-bg);
+    color: var(--cl-ink);
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .cl-modal-close:hover {
+    background: var(--cl-bg-soft);
+    border-color: var(--cl-ink-dim);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .cl-head {
+      align-items: flex-start;
+    }
+
+    .cl-tally {
+      align-items: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cl-preview img,
+    .cl-tally-fill {
+      transition: none;
+    }
+  }
+</style>
+
+<style is:global>
+  /* ChallengeLog dark-mode token overrides
+     Must live in is:global so the media query + attribute selectors resolve correctly */
+
+  [data-theme='dark'] .cl {
+    --cl-bg:         #12131a;
+    --cl-bg-soft:    #1b1d27;
+    --cl-ink:        #f3efe6;
+    --cl-ink-soft:   rgba(243, 239, 230, 0.72);
+    --cl-ink-dim:    rgba(243, 239, 230, 0.45);
+    --cl-amber:      #e8b04b;
+    --cl-amber-fill: #e8b04b;
+    --cl-line:       rgba(243, 239, 230, 0.12);
+    --cl-card-bg:    #1b1d27;
+    --cl-tag-color:  #12131a;
+    --cl-tag-bg:     #e8b04b;
+    --cl-modal-bg:   #1b1d27;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .cl {
+      --cl-bg:         #12131a;
+      --cl-bg-soft:    #1b1d27;
+      --cl-ink:        #f3efe6;
+      --cl-ink-soft:   rgba(243, 239, 230, 0.72);
+      --cl-ink-dim:    rgba(243, 239, 230, 0.45);
+      --cl-amber:      #e8b04b;
+      --cl-amber-fill: #e8b04b;
+      --cl-line:       rgba(243, 239, 230, 0.12);
+      --cl-card-bg:    #1b1d27;
+      --cl-tag-color:  #12131a;
+      --cl-tag-bg:     #e8b04b;
+      --cl-modal-bg:   #1b1d27;
+    }
+  }
+</style>

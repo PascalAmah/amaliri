@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ChallengeLog from '../components/ChallengeLog.astro';
+import { challenges } from '../data/challenges';
+
+const title = '30-Day UI Challenge';
+const description =
+  '30 UI experiences built in 30 days using Framer, Claude, Cursor, Codex, and more — hero sections, editorial layouts, pricing pages, animations, hover states, and parallax effects.';
+---
+
+<BaseLayout title={title} description={description} bodyClass="challenge-layout">
+  <div class="challenge-page">
+    <div class="challenge-breadcrumb">
+      <Breadcrumbs
+        items={[
+          { label: 'Home', path: '/' },
+          { label: '30-Day Challenge', path: '/30days' },
+        ]}
+      />
+    </div>
+    <ChallengeLog challenges={challenges} />
+  </div>
+</BaseLayout>
+
+<style>
+  .challenge-page {
+    min-height: 100vh;
+  }
+
+  /* Breadcrumb sits on the same background as the ChallengeLog */
+  .challenge-breadcrumb {
+    padding: var(--space-6) clamp(1.25rem, 5vw, 3.5rem) 0;
+    /* Light mode */
+    background: var(--bg-primary);
+  }
+</style>
+
+<style is:global>
+  /* Dark mode breadcrumb background matches ChallengeLog dark surface */
+  [data-theme='dark'] .challenge-breadcrumb {
+    background: #12131a;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .challenge-breadcrumb {
+      background: #12131a;
+    }
+  }
+</style>

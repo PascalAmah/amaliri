@@ -34,12 +34,14 @@ const config = {
   // Example: [{ label: 'Projects', href: '/projects' }, { label: 'About', href: '/about' }]
   nav: [
     { label: 'Projects', href: '/projects' },
+    { label: '30 Days', href: '/30days' },
     { label: 'About', href: '/about' },
   ] as NavItem[],
 
   // Footer links stay visible by default so readers have a stable way to move around.
   footerNav: [
     { label: 'Projects', href: '/projects' },
+    { label: '30-Day Challenge', href: '/30days' },
     { label: 'About', href: '/about' },
   ] as NavItem[],
 

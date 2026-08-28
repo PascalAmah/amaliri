@@ -42,3 +42,10 @@ local-docs/
 public/Portfolio-Website-V2-portfolio_v2.1.zip
 public/Portfolio-Website-V2-portfolio_v2.2.zip
 public/Portfolio-Website-V2-portfolio_v2.2/
+
+# 30-day challenge original (unoptimized) images — use public/30days-opt/ instead
+public/30days/
+
+# scratch files
+nul
+REDESIGN.md
