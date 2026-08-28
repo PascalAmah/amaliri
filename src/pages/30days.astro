@@ -30,14 +30,17 @@ const description =
 
   /* Breadcrumb sits on the same background as the ChallengeLog */
   .challenge-breadcrumb {
-    padding: var(--space-6) clamp(1.25rem, 5vw, 3.5rem) 0;
+    padding: var(--space-6) clamp(1.25rem, 5vw, 3.5rem) var(--space-3);
     /* Light mode */
     background: var(--bg-primary);
   }
 </style>
 
 <style is:global>
-  /* Dark mode breadcrumb background matches ChallengeLog dark surface */
+  .challenge-breadcrumb .breadcrumbs {
+    margin-bottom: 0;
+  }
+
   [data-theme='dark'] .challenge-breadcrumb {
     background: #12131a;
   }

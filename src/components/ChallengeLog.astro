@@ -26,9 +26,6 @@ const {
 const sorted = [...challenges].sort((a, b) => a.day - b.day);
 const total = 30;
 const shipped = sorted.length;
-const categories = [...new Set(sorted.map((c) => c.category))].sort((a, b) =>
-  a.localeCompare(b)
-);
 const pad = (n: number) => n.toString().padStart(2, "0");
 ---
 
@@ -51,16 +48,9 @@ const pad = (n: number) => n.toString().padStart(2, "0");
     </div>
   </header>
 
-  <div class="cl-filters" role="group" aria-label="Filter by category" data-reveal>
-    <button type="button" class="cl-chip is-active" data-category="all">All</button>
-    {categories.map((cat) => (
-      <button type="button" class="cl-chip" data-category={cat}>{cat}</button>
-    ))}
-  </div>
-
   <ul class="cl-grid">
     {sorted.map((c) => (
-      <li class="cl-entry" data-category={c.category} data-reveal>
+      <li class="cl-entry" data-category={c.category}>
         <button
           type="button"
           class="cl-preview"
@@ -111,27 +101,7 @@ const pad = (n: number) => n.toString().padStart(2, "0");
   (function () {
     function mountChallengeLog() {
       var root = document.getElementById('challenge-log');
-      if (!root || root.dataset.clReady === 'true') return;
-      root.dataset.clReady = 'true';
-
-      var chips = root.querySelectorAll('.cl-chip');
-      var entries = root.querySelectorAll('.cl-entry');
-      var empty = root.querySelector('[data-empty]');
-
-      chips.forEach(function (chip) {
-        chip.addEventListener('click', function () {
-          chips.forEach(function (c) { c.classList.remove('is-active'); });
-          chip.classList.add('is-active');
-          var category = chip.dataset.category;
-          var visible = 0;
-          entries.forEach(function (entry) {
-            var match = category === 'all' || entry.dataset.category === category;
-            entry.hidden = !match;
-            if (match) visible += 1;
-          });
-          if (empty) empty.hidden = visible !== 0;
-        });
-      });
+      if (!root) return;
 
       var modal = document.getElementById('cl-modal');
       var modalImg = document.getElementById('cl-modal-img');
@@ -158,17 +128,49 @@ const pad = (n: number) => n.toString().padStart(2, "0");
       if (modal) {
         modal.addEventListener('click', function (event) {
           var target = event.target;
-          if (target === modal || target.closest('[data-close]')) modal.close();
+          if (target === modal || (target && target.closest && target.closest('[data-close]'))) {
+            modal.close();
+          }
         });
       }
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', mountChallengeLog);
-    } else {
-      mountChallengeLog();
+    function mountCardReveal() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var cards = document.querySelectorAll('.cl-entry');
+      if (!cards.length) return;
+
+      var observer = new IntersectionObserver(function (batch) {
+        var rowMap = {};
+        batch.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var top = Math.round(entry.boundingClientRect.top / 10) * 10;
+          rowMap[top] = rowMap[top] || 0;
+          entry.target.style.transitionDelay = (rowMap[top] * 80) + 'ms';
+          rowMap[top]++;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+      cards.forEach(function (card) { observer.observe(card); });
     }
-    document.addEventListener('astro:page-load', mountChallengeLog);
+
+    function init() {
+      if (document.getElementById('challenge-log')) {
+        mountChallengeLog();
+        mountCardReveal();
+      }
+    }
+
+    // astro:after-swap fires after View Transitions swaps the new DOM in
+    document.addEventListener('astro:after-swap', init);
+    // DOMContentLoaded for direct page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
   })();
 </script>
 
@@ -198,7 +200,7 @@ const pad = (n: number) => n.toString().padStart(2, "0");
   .cl {
     background: var(--cl-bg);
     color: var(--cl-ink);
-    padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 3.5rem);
+    padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 5vw, 3.5rem) clamp(2.5rem, 6vw, 5rem);
     font-family: var(--font-sans);
     transition:
       background var(--duration-normal) var(--ease-out),
@@ -292,41 +294,6 @@ const pad = (n: number) => n.toString().padStart(2, "0");
     transition: width 600ms var(--ease-out);
   }
 
-  /* ── Filter chips ── */
-  .cl-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .cl-chip {
-    font-family: var(--font-mono);
-    font-size: var(--text-footnote);
-    letter-spacing: 0.02em;
-    color: var(--cl-ink-dim);
-    background: transparent;
-    border: 1px solid var(--cl-line);
-    border-radius: var(--radius-full);
-    padding: 0.4rem 0.9rem;
-    cursor: pointer;
-    transition:
-      border-color var(--duration-fast) var(--ease-out),
-      color var(--duration-fast) var(--ease-out),
-      background var(--duration-fast) var(--ease-out);
-  }
-
-  .cl-chip:hover {
-    color: var(--cl-ink);
-    border-color: var(--cl-ink-soft);
-  }
-
-  .cl-chip.is-active {
-    color: var(--cl-bg);
-    background: var(--cl-amber);
-    border-color: var(--cl-amber);
-  }
-
   /* ── Card grid ── */
   .cl-grid {
     list-style: none;
@@ -340,6 +307,24 @@ const pad = (n: number) => n.toString().padStart(2, "0");
   .cl-entry {
     display: flex;
     flex-direction: column;
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .cl-entry.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cl-entry {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 
   /* ── Preview thumbnail ── */
