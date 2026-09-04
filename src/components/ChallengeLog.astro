@@ -6,6 +6,7 @@ export interface Challenge {
   category: string;
   link: string;
   preview: string;
+  clip?: string;
   note?: string;
 }
 
@@ -60,6 +61,7 @@ const pad = (n: number) => n.toString().padStart(2, "0");
           data-tool={c.tool}
           data-day={pad(c.day)}
           data-preview={c.preview}
+          data-clip={c.clip ?? ""}
           aria-label={`Open preview — day ${pad(c.day)}, ${c.title}`}
         >
           <img src={c.preview} alt="" loading="lazy" />
@@ -83,7 +85,18 @@ const pad = (n: number) => n.toString().padStart(2, "0");
 
   <dialog class="cl-modal" id="cl-modal">
     <button type="button" class="cl-modal-close" data-close aria-label="Close preview">✕</button>
-    <img class="cl-modal-img" id="cl-modal-img" alt="" />
+    <div class="cl-modal-media">
+      <img class="cl-modal-img" id="cl-modal-img" alt="" />
+      <video
+        class="cl-modal-video"
+        id="cl-modal-video"
+        autoplay
+        loop
+        muted
+        playsinline
+        hidden
+      ></video>
+    </div>
     <div class="cl-modal-body">
       <p class="cl-modal-meta">
         <span id="cl-modal-day"></span> · <span id="cl-modal-tool"></span>
@@ -105,6 +118,7 @@ const pad = (n: number) => n.toString().padStart(2, "0");
 
       var modal = document.getElementById('cl-modal');
       var modalImg = document.getElementById('cl-modal-img');
+      var modalVideo = document.getElementById('cl-modal-video');
       var modalDay = document.getElementById('cl-modal-day');
       var modalTool = document.getElementById('cl-modal-tool');
       var modalTitle = document.getElementById('cl-modal-title');
@@ -114,8 +128,29 @@ const pad = (n: number) => n.toString().padStart(2, "0");
       root.querySelectorAll('.cl-preview').forEach(function (btn) {
         btn.addEventListener('click', function () {
           if (!modal || !modalImg || !modalLink) return;
-          modalImg.src = btn.dataset.preview || '';
-          modalImg.alt = btn.dataset.title || '';
+
+          var clip = btn.dataset.clip;
+          var hasClip = clip && clip.length > 0;
+
+          if (hasClip && modalVideo) {
+            // Show video, hide image
+            modalImg.hidden = true;
+            modalVideo.hidden = false;
+            modalVideo.src = clip;
+            modalVideo.load();
+            modalVideo.play();
+          } else {
+            // Show image, hide video
+            if (modalVideo) {
+              modalVideo.hidden = true;
+              modalVideo.pause();
+              modalVideo.src = '';
+            }
+            modalImg.hidden = false;
+            modalImg.src = btn.dataset.preview || '';
+            modalImg.alt = btn.dataset.title || '';
+          }
+
           if (modalDay) modalDay.textContent = 'Day ' + btn.dataset.day;
           if (modalTool) modalTool.textContent = btn.dataset.tool || '';
           if (modalTitle) modalTitle.textContent = btn.dataset.title || '';
@@ -129,6 +164,11 @@ const pad = (n: number) => n.toString().padStart(2, "0");
         modal.addEventListener('click', function (event) {
           var target = event.target;
           if (target === modal || (target && target.closest && target.closest('[data-close]'))) {
+            // Pause video when modal closes
+            if (modalVideo) {
+              modalVideo.pause();
+              modalVideo.src = '';
+            }
             modal.close();
           }
         });
@@ -454,11 +494,16 @@ const pad = (n: number) => n.toString().padStart(2, "0");
     backdrop-filter: blur(4px);
   }
 
-  .cl-modal-img {
+  .cl-modal-img,
+  .cl-modal-video {
     display: block;
     width: 100%;
     max-height: 60vh;
     object-fit: cover;
+  }
+
+  .cl-modal-video {
+    background: #000;
   }
 
   .cl-modal-body {

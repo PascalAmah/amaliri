@@ -3,12 +3,17 @@ import config from '../../astro-theme-config';
 import Button from './Button.astro';
 import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import { withBase } from '../utils/paths';
+import { isNavItemActive } from '../utils/nav-active';
+import { withBase, withoutBase } from '../utils/paths';
 
 const skipLinkLabel = 'Skip to content';
 const navAriaLabel = 'Primary navigation';
 const headerTitle = config.site.logoLabel || config.site.title;
-const navItems = [...config.nav, { label: 'Contact', href: '/#contact' }];
+const pathname = withoutBase(Astro.url.pathname);
+const navItems = [...config.nav, { label: 'Contact', href: '/#contact' }].map((item) => ({
+  ...item,
+  active: isNavItemActive(pathname, item.href),
+}));
 const resumeUrl = config.site.resumeUrl;
 ---
 
@@ -60,7 +65,12 @@ const resumeUrl = config.site.resumeUrl;
   <nav class="mobile-menu-nav" aria-label="Mobile navigation">
     {
       navItems.map((item) => (
-        <a href={withBase(item.href)} class="mobile-menu-link">
+        <a
+          href={withBase(item.href)}
+          data-nav-href={item.href}
+          aria-current={item.active ? 'page' : undefined}
+          class:list={['mobile-menu-link', { active: item.active }]}
+        >
           {item.label}
         </a>
       ))
@@ -167,9 +177,54 @@ const resumeUrl = config.site.resumeUrl;
       });
     }
 
+    function mountActiveNavSync() {
+      const header = document.querySelector('.site-header');
+      if (!header) return;
+      // The header survives Astro view transitions (persisted DOM), so bind this
+      // once and re-sync on every navigation instead of stacking listeners.
+      if (window.__navActiveSyncBound) return;
+      window.__navActiveSyncBound = true;
+
+      const normalize = (p) => {
+        const trimmed = p.replace(/\/+$/, '');
+        return trimmed === '' ? '/' : trimmed;
+      };
+
+      const sync = () => {
+        const current = normalize(window.location.pathname);
+        document.querySelectorAll('[data-nav-href]').forEach((el) => {
+          const link = el;
+          const resolved = link.getAttribute('href') || '/';
+          // Hash links (e.g. /#contact) point at the homepage — never active.
+          const isHashLink = resolved.includes('#');
+          const target = isHashLink ? '/' : normalize(resolved.split('#')[0]);
+          const active =
+            !isHashLink &&
+            target !== '/' &&
+            (current === target || current.startsWith(target + '/'));
+          link.classList.toggle('active', active);
+          if (active) {
+            link.setAttribute('aria-current', 'page');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+        });
+      };
+
+      // Sync as soon as the links are in the DOM, then again after every
+      // navigation or back/forward cache restore so the pill never goes stale.
+      sync();
+      document.addEventListener('astro:page-load', sync);
+      window.addEventListener('pageshow', sync);
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', sync, { once: true });
+      }
+    }
+
     function init() {
       mountAutoHideHeader();
       mountMobileMenu();
+      mountActiveNavSync();
     }
 
     if (document.readyState === 'loading') {
@@ -402,6 +457,12 @@ const resumeUrl = config.site.resumeUrl;
   }
 
   .mobile-menu-link--cta {
+    color: var(--accent-strong);
+    font-weight: var(--weight-semibold);
+  }
+
+  /* ── Active page in the mobile menu ── */
+  .mobile-menu-link.active {
     color: var(--accent-strong);
     font-weight: var(--weight-semibold);
   }

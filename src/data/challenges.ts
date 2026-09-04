@@ -8,6 +8,7 @@ export interface Challenge {
   category: string;
   link: string;
   preview: string;
+  clip?: string;
   note?: string;
 }
 
