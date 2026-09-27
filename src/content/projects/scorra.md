@@ -57,8 +57,9 @@ architecture:
     detail: 'AI judging & async export jobs'
   - label: 'PostgreSQL + Prisma'
     detail: 'Relational data & migrations'
+heroImage: './images/scorra/scorra-dashboard.png'
 uiImages:
-  - './images/scorra/scorra-dashboard.png'
+  - './images/scorra/scorra-landing.png'
   - './images/scorra/scorra-evaluate.png'
   - './images/scorra/scorra-analytics.png'
   - './images/scorra/scorra-datasets.png'
