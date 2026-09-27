@@ -19,15 +19,15 @@ interface Props {
 
 const {
   challenges,
-  eyebrow = "Build log",
-  heading = "30 days, 30 interfaces",
-  intro = "30 UI designs from a community challenge — each one built out in Astro. The designs came from the challenge brief; my job was to take them from static mockup to working, responsive code. Day 30 is the challenge portfolio itself.",
+  eyebrow = 'Build log',
+  heading = '30 days, 30 interfaces',
+  intro = '30 UI designs from a community challenge — each one built out in Astro. The designs came from the challenge brief; my job was to take them from static mockup to working, responsive code. Day 30 is the challenge portfolio itself.',
 } = Astro.props;
 
 const sorted = [...challenges].sort((a, b) => a.day - b.day);
 const total = 30;
 const shipped = sorted.length;
-const pad = (n: number) => n.toString().padStart(2, "0");
+const pad = (n: number) => n.toString().padStart(2, '0');
 ---
 
 <section class="cl" id="challenge-log" aria-labelledby="cl-heading">
@@ -50,35 +50,41 @@ const pad = (n: number) => n.toString().padStart(2, "0");
   </header>
 
   <ul class="cl-grid">
-    {sorted.map((c) => (
-      <li class="cl-entry" data-category={c.category}>
-        <button
-          type="button"
-          class="cl-preview"
-          data-title={c.title}
-          data-note={c.note ?? ""}
-          data-link={c.link}
-          data-tool={c.tool}
-          data-day={pad(c.day)}
-          data-preview={c.preview}
-          data-clip={c.clip ?? ""}
-          aria-label={`Open preview — day ${pad(c.day)}, ${c.title}`}
-        >
-          <img src={c.preview} alt="" loading="lazy" />
-          <span class="cl-tag">{c.category}</span>
-          <span class="cl-num" aria-hidden="true">{pad(c.day)}</span>
-        </button>
+    {
+      sorted.map((c) => (
+        <li class="cl-entry" data-category={c.category}>
+          <button
+            type="button"
+            class="cl-preview"
+            data-title={c.title}
+            data-note={c.note ?? ''}
+            data-link={c.link}
+            data-tool={c.tool}
+            data-day={pad(c.day)}
+            data-preview={c.preview}
+            data-clip={c.clip ?? ''}
+            aria-label={`Open preview — day ${pad(c.day)}, ${c.title}`}
+          >
+            <img src={c.preview} alt="" loading="lazy" />
+            <span class="cl-tag">{c.category}</span>
+            <span class="cl-num" aria-hidden="true">
+              {pad(c.day)}
+            </span>
+          </button>
 
-        <div class="cl-entry-body">
-          <p class="cl-entry-meta">Day {pad(c.day)} · {c.category}</p>
-          <h3 class="cl-entry-title">{c.title}</h3>
-          {c.note && <p class="cl-entry-note">{c.note}</p>}
-          <a class="cl-entry-link" href={c.link} target="_blank" rel="noopener noreferrer">
-            View live <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </li>
-    ))}
+          <div class="cl-entry-body">
+            <p class="cl-entry-meta">
+              Day {pad(c.day)} · {c.category}
+            </p>
+            <h3 class="cl-entry-title">{c.title}</h3>
+            {c.note && <p class="cl-entry-note">{c.note}</p>}
+            <a class="cl-entry-link" href={c.link} target="_blank" rel="noopener noreferrer">
+              View live <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </li>
+      ))
+    }
   </ul>
 
   <p class="cl-empty" data-empty hidden>Nothing shipped with that tool yet.</p>
@@ -94,8 +100,8 @@ const pad = (n: number) => n.toString().padStart(2, "0");
         loop
         muted
         playsinline
-        hidden
-      ></video>
+        preload="none"
+        hidden></video>
     </div>
     <div class="cl-modal-body">
       <p class="cl-modal-meta">
@@ -125,51 +131,85 @@ const pad = (n: number) => n.toString().padStart(2, "0");
       var modalNote = document.getElementById('cl-modal-note');
       var modalLink = document.getElementById('cl-modal-link');
 
+      var currentBtn = null;
+
+      function showImageFor(btn) {
+        if (!modalImg) return;
+        // Show image, hide + unload video
+        if (modalVideo) {
+          modalVideo.hidden = true;
+          modalVideo.pause();
+          modalVideo.removeAttribute('src');
+          modalVideo.load();
+        }
+        modalImg.hidden = false;
+        modalImg.src = btn.dataset.preview || '';
+        modalImg.alt = btn.dataset.title || '';
+      }
+
+      function openModalFor(btn) {
+        if (!modal || !modalLink) return;
+        currentBtn = btn;
+
+        var clip = btn.dataset.clip;
+        var hasClip = clip && clip.length > 0;
+        var canWebm =
+          modalVideo &&
+          modalVideo.canPlayType &&
+          modalVideo.canPlayType('video/webm; codecs="vp9"') !== '';
+
+        if (hasClip && modalVideo && canWebm) {
+          // Poster = the still preview, so there's no black flash while buffering
+          modalVideo.poster = btn.dataset.preview || '';
+          modalImg.hidden = true;
+          modalVideo.hidden = false;
+          modalVideo.src = clip;
+          modalVideo.load();
+          var played = modalVideo.play();
+          if (played && played.catch) {
+            played.catch(function () {
+              showImageFor(btn);
+            });
+          }
+        } else {
+          showImageFor(btn);
+        }
+
+        if (modalDay) modalDay.textContent = 'Day ' + btn.dataset.day;
+        if (modalTool) modalTool.textContent = btn.dataset.tool || '';
+        if (modalTitle) modalTitle.textContent = btn.dataset.title || '';
+        if (modalNote) modalNote.textContent = btn.dataset.note || '';
+        modalLink.href = btn.dataset.link || '#';
+        modal.showModal();
+      }
+
       root.querySelectorAll('.cl-preview').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          if (!modal || !modalImg || !modalLink) return;
-
-          var clip = btn.dataset.clip;
-          var hasClip = clip && clip.length > 0;
-
-          if (hasClip && modalVideo) {
-            // Show video, hide image
-            modalImg.hidden = true;
-            modalVideo.hidden = false;
-            modalVideo.src = clip;
-            modalVideo.load();
-            modalVideo.play();
-          } else {
-            // Show image, hide video
-            if (modalVideo) {
-              modalVideo.hidden = true;
-              modalVideo.pause();
-              modalVideo.src = '';
-            }
-            modalImg.hidden = false;
-            modalImg.src = btn.dataset.preview || '';
-            modalImg.alt = btn.dataset.title || '';
-          }
-
-          if (modalDay) modalDay.textContent = 'Day ' + btn.dataset.day;
-          if (modalTool) modalTool.textContent = btn.dataset.tool || '';
-          if (modalTitle) modalTitle.textContent = btn.dataset.title || '';
-          if (modalNote) modalNote.textContent = btn.dataset.note || '';
-          modalLink.href = btn.dataset.link || '#';
-          modal.showModal();
+          openModalFor(btn);
         });
       });
+
+      // If the browser can't actually decode the webm, fall back to the still
+      if (modalVideo) {
+        modalVideo.addEventListener('error', function () {
+          if (!modalVideo.hidden && currentBtn) showImageFor(currentBtn);
+        });
+      }
 
       if (modal) {
         modal.addEventListener('click', function (event) {
           var target = event.target;
           if (target === modal || (target && target.closest && target.closest('[data-close]'))) {
-            // Pause video when modal closes
-            if (modalVideo) {
-              modalVideo.pause();
-              modalVideo.src = '';
-            }
             modal.close();
+          }
+        });
+
+        // Stop the video on any close (✕, backdrop, or Esc) so it isn't fetched/played
+        modal.addEventListener('close', function () {
+          if (modalVideo) {
+            modalVideo.pause();
+            modalVideo.removeAttribute('src');
+            modalVideo.load();
           }
         });
       }
@@ -180,20 +220,25 @@ const pad = (n: number) => n.toString().padStart(2, "0");
       var cards = document.querySelectorAll('.cl-entry');
       if (!cards.length) return;
 
-      var observer = new IntersectionObserver(function (batch) {
-        var rowMap = {};
-        batch.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          var top = Math.round(entry.boundingClientRect.top / 10) * 10;
-          rowMap[top] = rowMap[top] || 0;
-          entry.target.style.transitionDelay = (rowMap[top] * 80) + 'ms';
-          rowMap[top]++;
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        });
-      }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+      var observer = new IntersectionObserver(
+        function (batch) {
+          var rowMap = {};
+          batch.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            var top = Math.round(entry.boundingClientRect.top / 10) * 10;
+            rowMap[top] = rowMap[top] || 0;
+            entry.target.style.transitionDelay = rowMap[top] * 80 + 'ms';
+            rowMap[top]++;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+      );
 
-      cards.forEach(function (card) { observer.observe(card); });
+      cards.forEach(function (card) {
+        observer.observe(card);
+      });
     }
 
     function init() {
@@ -221,18 +266,18 @@ const pad = (n: number) => n.toString().padStart(2, "0");
      ──────────────────────────────────────────────────────── */
   .cl {
     /* Light mode defaults */
-    --cl-bg:         var(--bg-primary);
-    --cl-bg-soft:    var(--bg-secondary);
-    --cl-ink:        var(--label-primary);
-    --cl-ink-soft:   var(--label-secondary);
-    --cl-ink-dim:    var(--label-tertiary);
-    --cl-amber:      var(--accent-strong);
+    --cl-bg: var(--bg-primary);
+    --cl-bg-soft: var(--bg-secondary);
+    --cl-ink: var(--label-primary);
+    --cl-ink-soft: var(--label-secondary);
+    --cl-ink-dim: var(--label-tertiary);
+    --cl-amber: var(--accent-strong);
     --cl-amber-fill: var(--accent-bright);
-    --cl-line:       var(--separator);
-    --cl-card-bg:    var(--bg-secondary);
-    --cl-tag-color:  #fff;
-    --cl-tag-bg:     var(--accent-strong);
-    --cl-modal-bg:   var(--bg-tertiary);
+    --cl-line: var(--separator);
+    --cl-card-bg: var(--bg-secondary);
+    --cl-tag-color: #fff;
+    --cl-tag-bg: var(--accent-strong);
+    --cl-modal-bg: var(--bg-tertiary);
   }
 
   /* Dark mode overrides live in the is:global block below */
@@ -494,8 +539,7 @@ const pad = (n: number) => n.toString().padStart(2, "0");
     backdrop-filter: blur(4px);
   }
 
-  .cl-modal-img,
-  .cl-modal-video {
+  .cl-modal-img {
     display: block;
     width: 100%;
     max-height: 60vh;
@@ -503,7 +547,17 @@ const pad = (n: number) => n.toString().padStart(2, "0");
   }
 
   .cl-modal-video {
+    display: block;
+    width: 100%;
+    max-height: 65vh;
+    /* Keep the whole page-action visible; letterbox instead of cropping */
+    object-fit: contain;
     background: #000;
+  }
+
+  .cl-modal-img[hidden],
+  .cl-modal-video[hidden] {
+    display: none;
   }
 
   .cl-modal-body {
@@ -589,34 +643,34 @@ const pad = (n: number) => n.toString().padStart(2, "0");
      Must live in is:global so the media query + attribute selectors resolve correctly */
 
   [data-theme='dark'] .cl {
-    --cl-bg:         #12131a;
-    --cl-bg-soft:    #1b1d27;
-    --cl-ink:        #f3efe6;
-    --cl-ink-soft:   rgba(243, 239, 230, 0.72);
-    --cl-ink-dim:    rgba(243, 239, 230, 0.45);
-    --cl-amber:      #e8b04b;
+    --cl-bg: #12131a;
+    --cl-bg-soft: #1b1d27;
+    --cl-ink: #f3efe6;
+    --cl-ink-soft: rgba(243, 239, 230, 0.72);
+    --cl-ink-dim: rgba(243, 239, 230, 0.45);
+    --cl-amber: #e8b04b;
     --cl-amber-fill: #e8b04b;
-    --cl-line:       rgba(243, 239, 230, 0.12);
-    --cl-card-bg:    #1b1d27;
-    --cl-tag-color:  #12131a;
-    --cl-tag-bg:     #e8b04b;
-    --cl-modal-bg:   #1b1d27;
+    --cl-line: rgba(243, 239, 230, 0.12);
+    --cl-card-bg: #1b1d27;
+    --cl-tag-color: #12131a;
+    --cl-tag-bg: #e8b04b;
+    --cl-modal-bg: #1b1d27;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) .cl {
-      --cl-bg:         #12131a;
-      --cl-bg-soft:    #1b1d27;
-      --cl-ink:        #f3efe6;
-      --cl-ink-soft:   rgba(243, 239, 230, 0.72);
-      --cl-ink-dim:    rgba(243, 239, 230, 0.45);
-      --cl-amber:      #e8b04b;
+      --cl-bg: #12131a;
+      --cl-bg-soft: #1b1d27;
+      --cl-ink: #f3efe6;
+      --cl-ink-soft: rgba(243, 239, 230, 0.72);
+      --cl-ink-dim: rgba(243, 239, 230, 0.45);
+      --cl-amber: #e8b04b;
       --cl-amber-fill: #e8b04b;
-      --cl-line:       rgba(243, 239, 230, 0.12);
-      --cl-card-bg:    #1b1d27;
-      --cl-tag-color:  #12131a;
-      --cl-tag-bg:     #e8b04b;
-      --cl-modal-bg:   #1b1d27;
+      --cl-line: rgba(243, 239, 230, 0.12);
+      --cl-card-bg: #1b1d27;
+      --cl-tag-color: #12131a;
+      --cl-tag-bg: #e8b04b;
+      --cl-modal-bg: #1b1d27;
     }
   }
 </style>
