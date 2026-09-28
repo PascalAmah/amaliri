@@ -26,7 +26,6 @@ tags:
   ]
 githubUrl: 'https://github.com/PascalAmah/scorra'
 liveUrl: 'https://scorra-web-gray.vercel.app/'
-liveUrl: 'https://scorra-web-gray.vercel.app/'
 status: 'completed'
 logo: './images/scorra/scorra-logo.png'
 problem: 'Evaluating LLM outputs at scale is messy. Teams end up with prompts in spreadsheets, scores spread across Notion docs, and no way to know how much two evaluators actually agree. Without a structured system, it is impossible to tell whether a model is genuinely better or whether the evaluators just happened to be in a good mood. Inter-rater agreement, weighted scoring criteria, and reproducible export formats all get lost in the noise.'
