@@ -25,7 +25,9 @@ tags:
     'Docker',
   ]
 githubUrl: 'https://github.com/PascalAmah/scorra'
-status: 'in-progress'
+liveUrl: 'https://scorra-web-gray.vercel.app/'
+liveUrl: 'https://scorra-web-gray.vercel.app/'
+status: 'completed'
 logo: './images/scorra/scorra-logo.png'
 problem: 'Evaluating LLM outputs at scale is messy. Teams end up with prompts in spreadsheets, scores spread across Notion docs, and no way to know how much two evaluators actually agree. Without a structured system, it is impossible to tell whether a model is genuinely better or whether the evaluators just happened to be in a good mood. Inter-rater agreement, weighted scoring criteria, and reproducible export formats all get lost in the noise.'
 whatWasBuilt: 'Scorra is a pnpm-workspaces monorepo built on Turborepo. The NestJS API handles three evaluation workflows — single-response scoring, pairwise A/B comparison, and multi-response ranking — backed by PostgreSQL via Prisma, Redis-based Bull job queues, and Passport/JWT auth with org-scoped roles. An org admin creates datasets (CSV, JSON, JSONL uploads), defines scoring criteria with per-dimension weights and ranges, spins up evaluation tasks, and invites evaluators. Each evaluator works through an independent queue so responses can be reviewed multiple times without overlap. The Next.js 15 frontend (App Router, TanStack Query, Zustand, React Hook Form, Zod, Tailwind CSS 4) is role-aware — admins see org-wide dashboards and analytics, evaluators see only their task queue. An AI judge powered by OpenAI, Anthropic, Groq, or Gemini can auto-evaluate responses or pre-fill scores for evaluator calibration, with full deterministic fallbacks when no API key is configured. Results export as JSONL, CSV, or JSON with optional filters.'
